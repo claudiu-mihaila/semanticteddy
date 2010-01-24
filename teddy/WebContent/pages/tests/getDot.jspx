@@ -1,0 +1,25 @@
+ <jsp:root 
+ 	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:jxee="http://www.jxee-lab.ro/jsf"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<t:div>		
+		<a4j:mediaOutput 
+	 		element="img" 
+	 		mimeType="image/jpeg"
+	 		cacheable="false" 
+	 		session="false"
+            createContent="#{mainPageController.paint}" 
+            value="#{mainPageController.timeStamp}"
+            style="width:200px; height:200px;">
+            <f:param value="#{mainPageController.timeStamp}" name="time"/>  
+		</a4j:mediaOutput>
+	</t:div>	
+</jsp:root>
