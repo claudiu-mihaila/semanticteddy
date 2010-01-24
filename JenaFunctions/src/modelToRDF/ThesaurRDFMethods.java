@@ -2,6 +2,7 @@ package modelToRDF;
 
 import org.sealife.skos.editor.SKOSVocabulary;
 
+import com.hp.hpl.jena.rdf.model.Bag;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -29,19 +30,35 @@ public class ThesaurRDFMethods {
 	}
 
 	public void addNarrowerConceptToRDF(String currentName, String newName){
-		Resource currentR = rdfModel.getResource(currentName);
-		if (currentR !=null){
-			Resource narrowConcept = rdfModel.createResource(newName);
-			currentR.addProperty(getNarrowChildProperty(), narrowConcept);
+		Resource currentR2 = rdfModel.getResource(currentName);
+		if (currentR2 != null){
+			 Bag childsBag = currentR2.getProperty(getNarrowChildProperty()).getBag();
+			 if (childsBag ==null){
+				 childsBag = rdfModel.createBag();
+				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
+			 }
+			 Resource narrowConcept = rdfModel.createResource(newName);
+			 childsBag.add(narrowConcept);
 		}
 	}
 	
-	public void addBroaderConceptToRDF(String currentName, String newName){
-		Resource currentR = rdfModel.getResource(currentName);
-		if (currentR !=  null)
-		{
-			Resource broadConcept = rdfModel.createResource(newName);
-			currentR.addProperty(getBroadParentProperty(), broadConcept);
+	public void addBroaderConceptToRDF(String currentName, String parentExistingName){
+		Resource currentR2 = rdfModel.getResource(currentName);
+		if (currentR2 != null){
+			 Bag parentsBag = currentR2.getProperty(getBroadParentProperty()).getBag();
+			 if (parentsBag ==null){
+				 parentsBag = rdfModel.createBag();
+				 currentR2.addProperty(getBroadParentProperty(), parentsBag);
+			 }
+			 Resource broadConcept = rdfModel.getResource(parentExistingName);
+			 parentsBag.add(broadConcept);
+			 
+			 Bag childsBag = broadConcept.getProperty(getNarrowChildProperty()).getBag();
+			 if (childsBag ==null){
+				 childsBag = rdfModel.createBag();
+				 broadConcept.addProperty(getNarrowChildProperty(), childsBag);
+			 }
+			 childsBag.add(currentR2);
 		}
 	}
 
@@ -56,6 +73,12 @@ public class ThesaurRDFMethods {
 	}
 	
 	//definition
+	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
+	{
+		Bag testBag = rdfModel.createBag("NarrowChilds");
+		
+	}
+	
 	public Model getRdfModel() {
 		return rdfModel;
 	}
