@@ -25,9 +25,11 @@ public class ThesaurJavaMethods {
 		rdfModel.addNarrowerConceptToRDF(currentConcept.getName(), name);
 	}
 	
-	public void addParentConcept(Concept currentConcept, String name){
-		currentConcept.getParents().add(new Concept(name));
-		rdfModel.addBroaderConceptToRDF(currentConcept.getName(), name);
+	public void addParentConcept(Concept currentConcept, Concept parent){
+		currentConcept.getParents().add(parent);
+		parent.getChilds().add(currentConcept);
+		
+		rdfModel.addBroaderConceptToRDF(currentConcept.getName(), parent.getName());
 	}
 	
 	public void updateDefinition(Concept currentConcept, String definition, String language){
