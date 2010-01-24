@@ -1,0 +1,49 @@
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:jxee="http://www.jxee-lab.ro/jsf"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form>
+		<rich:toolBar>
+			<rich:dropDownMenu>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:outputText value="File" />
+					</h:panelGroup>
+				</f:facet>
+				<rich:menuGroup value="New">
+					<rich:menuItem value="Empty Project" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+					<rich:menuItem value="Project from XML" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				</rich:menuGroup>
+				<rich:menuItem value="Open" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Save" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Close" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+			</rich:dropDownMenu>
+
+			<rich:dropDownMenu>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:outputText value="Tools" />
+					</h:panelGroup>
+				</f:facet>
+				<rich:menuItem value="SPARQL" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+			</rich:dropDownMenu>
+
+			<rich:dropDownMenu>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:outputText value="About" />
+					</h:panelGroup>
+				</f:facet>
+				<rich:menuItem value="Project" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Team" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Docs" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+			</rich:dropDownMenu>
+		</rich:toolBar>
+	</h:form>
+</ui:composition>
