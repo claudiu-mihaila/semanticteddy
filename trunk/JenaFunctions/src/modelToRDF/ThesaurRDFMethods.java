@@ -1,5 +1,7 @@
 package modelToRDF;
 
+import model.Concept;
+
 import org.sealife.skos.editor.SKOSVocabulary;
 
 import com.hp.hpl.jena.rdf.model.Bag;
@@ -88,6 +90,18 @@ public class ThesaurRDFMethods {
 		}
 	}
 	
+	//related
+	public void addRelatedRDF(String currentName, String relatedName){
+		Resource current = rdfModel.getResource(currentName);
+		Resource related = rdfModel.getResource(relatedName);
+		
+		Bag relatedBag = current.getProperty(getRelatedPrperty()).getBag();
+		if (relatedBag == null){
+			relatedBag = rdfModel.createBag();
+		}
+		relatedBag.add(related);
+		
+	}
 	public Model getRdfModel() {
 		return rdfModel;
 	}

@@ -40,6 +40,13 @@ public class ThesaurJavaMethods {
 		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getName(), definition, language);
 	}
 	
+	//related
+	public void addRelated(Concept currentConcept, Concept relatedConcept){
+		currentConcept.getRelated().add(relatedConcept);
+		relatedConcept.getRelated().add(currentConcept);
+		rdfModel.addRelatedRDF(currentConcept.getName(), relatedConcept.getName());
+	}
+	
 	public void printAsObject(Concept currentConcept)
 	{
 		if (currentConcept !=null)
