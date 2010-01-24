@@ -20,6 +20,7 @@ public class ThesaurRDFMethods {
 	Property relatedPrperty = rdfModel.createProperty(SKOSVocabulary.RELATED.toString());
 	
 	Property preferredNameProperty = rdfModel.createProperty("PreferredName");
+	Property definitionProperty = rdfModel.createProperty(SKOSVocabulary.DEFINITION.toString());
 	
 	public ThesaurRDFMethods(){
 		
@@ -75,8 +76,18 @@ public class ThesaurRDFMethods {
 	//definition
 	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
 	{
-		Bag testBag = rdfModel.createBag("NarrowChilds");
-		
+		Resource currentR2 = rdfModel.getResource(currentName);
+		if (currentR2 != null){
+			 Bag defBag = currentR2.getProperty(getDefinitionProperty()).getBag();
+			 if (defBag ==null){
+				 defBag = rdfModel.createBag();
+				 currentR2.addProperty(getDefinitionProperty(), defBag);
+			 }
+			 Resource definitionResource = rdfModel.createResource(definition);
+			 definitionResource.addProperty(DC.language, language);
+			 
+			 defBag.add(definitionResource);
+		}
 	}
 	
 	public Model getRdfModel() {
@@ -102,4 +113,9 @@ public class ThesaurRDFMethods {
 	public Property getPreferredNameProperty() {
 		return preferredNameProperty;
 	}
+
+	public Property getDefinitionProperty() {
+		return definitionProperty;
+	}
+	
 }
