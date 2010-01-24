@@ -44,6 +44,19 @@
 				<rich:menuItem value="Team" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
 				<rich:menuItem value="Docs" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
 			</rich:dropDownMenu>
+			
+			<rich:dropDownMenu>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:outputText value="Testing" />
+					</h:panelGroup>
+				</f:facet>
+				<rich:menuItem 
+					value="DOT" 
+					submitMode="ajax" 
+					action = "#{mainPageController.getDot}"
+					reRender = "testingDotImg"/>
+			</rich:dropDownMenu>
 		</rich:toolBar>
 	</h:form>
 </ui:composition>

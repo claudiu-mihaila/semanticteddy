@@ -9,5 +9,10 @@
 	xmlns:jxee="http://www.jxee-lab.ro/jsf"
 	xmlns:rich="http://richfaces.org/rich">
 	<h:form>
+		<t:div 
+			id = "testingDotImg"
+			rendered = "#{mainPageController.dotRendered}">
+			<ui:include src="tests/getDot.jspx" />
+		</t:div>
 	</h:form>
 </ui:composition>
