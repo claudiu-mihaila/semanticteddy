@@ -32,12 +32,12 @@ public class ThesaurJavaMethods {
 		rdfModel.addBroaderConceptToRDF(currentConcept.getName(), parent.getName());
 	}
 	
-	public void updateDefinition(Concept currentConcept, String definition, String language){
+	public void addDefinition(Concept currentConcept, String definition, String language){
 		List<String> definitions = currentConcept.getDefinitionPerLanguage().get(language);
 		if (definitions == null)
 			definitions = new ArrayList<String>();
 		definitions.add(definition);
-		
+		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getName(), definition, language);
 	}
 	
 	public void printAsObject(Concept currentConcept)
