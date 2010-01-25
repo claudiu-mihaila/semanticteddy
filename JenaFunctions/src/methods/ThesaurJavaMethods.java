@@ -37,6 +37,7 @@ public class ThesaurJavaMethods {
 		if (definitions == null)
 			definitions = new ArrayList<String>();
 		definitions.add(definition);
+		currentConcept.getDefinitionPerLanguage().put(language, definitions);
 		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getName(), definition, language);
 	}
 	
@@ -52,11 +53,32 @@ public class ThesaurJavaMethods {
 		if (currentConcept !=null)
 		{
 			System.out.println();
+			System.out.println("<<<");
 			System.out.println("Concept: " + currentConcept.getName());
+			System.out.println("PreferredName:" + (currentConcept.getPreferedName()==null?"":currentConcept.getPreferedName()));
+			
+			for (Concept parentC : currentConcept.getParents()){
+				System.out.println("Parinte: " + parentC.getName());
+			}
+			
+			for (Concept relatedC: currentConcept.getRelated()){
+				System.out.println("Related: " + relatedC.getName());
+			}
+			
+			for (String key : currentConcept.getDefinitionPerLanguage().keySet()){
+				System.out.print("Definition: ");
+				System.out.print("language: " + key );
+				List<String> values = currentConcept.getDefinitionPerLanguage().get(key);
+				if (values !=null)
+					for (String val : values){
+						System.out.println(" value: " + val);
+					}
+			}
 			for (Concept tempConcept : currentConcept.getChilds()){
 				System.out.print(" child: ");
 				printAsObject(tempConcept);
 			}
+			System.out.println(">>>");
 		}
 	}
 }
