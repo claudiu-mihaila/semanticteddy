@@ -20,9 +20,11 @@ public class ThesaurJavaMethods {
 		return rootConcept;
 	}
 	
-	public void addChildConcept(Concept currentConcept, String name){
-		currentConcept.getChilds().add(new Concept(name));
+	public Concept addChildConcept(Concept currentConcept, String name){
+		Concept childConcept = new Concept(name);
+		currentConcept.getChilds().add(childConcept);
 		rdfModel.addNarrowerConceptToRDF(currentConcept.getName(), name);
+		return childConcept;
 	}
 	
 	public void addParentConcept(Concept currentConcept, Concept parent){
