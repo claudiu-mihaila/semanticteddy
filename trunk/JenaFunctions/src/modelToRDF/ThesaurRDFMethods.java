@@ -9,6 +9,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.DC;
 
 public class ThesaurRDFMethods {
@@ -33,10 +34,14 @@ public class ThesaurRDFMethods {
 	public void addNarrowerConceptToRDF(String currentName, String newName){
 		Resource currentR2 = rdfModel.getResource(currentName);
 		if (currentR2 != null){
-			 Bag childsBag = currentR2.getProperty(getNarrowChildProperty()).getBag();
-			 if (childsBag ==null){
+			Statement temp = currentR2.getProperty(getNarrowChildProperty());
+			 Bag childsBag;
+			 if (temp ==null || (temp !=null && temp.getBag()==null)){
 				 childsBag = rdfModel.createBag();
 				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
+			 }
+			 else{
+				 childsBag = temp.getBag();
 			 }
 			 Resource narrowConcept = rdfModel.createResource(newName);
 			 childsBag.add(narrowConcept);
@@ -78,11 +83,15 @@ public class ThesaurRDFMethods {
 	{
 		Resource currentR2 = rdfModel.getResource(currentName);
 		if (currentR2 != null){
-			 Bag defBag = currentR2.getProperty(getDefinitionProperty()).getBag();
-			 if (defBag ==null){
-				 defBag = rdfModel.createBag();
-				 currentR2.addProperty(getDefinitionProperty(), defBag);
-			 }
+			Statement objR = currentR2.getProperty(getDefinitionProperty());
+			Bag defBag = null;
+			if (objR==null  || (objR!=null && objR.getBag()==null)){
+					defBag = rdfModel.createBag();
+					currentR2.addProperty(getDefinitionProperty(), defBag);
+			}
+			else
+				defBag = objR.getBag();
+			 
 			 Resource definitionResource = rdfModel.createResource(definition);
 			 definitionResource.addProperty(DC.language, language);
 			 
