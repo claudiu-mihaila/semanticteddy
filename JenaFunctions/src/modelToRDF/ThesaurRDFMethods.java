@@ -23,7 +23,8 @@ public class ThesaurRDFMethods {
 	Property broadParentProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.BROADER.toString());
 	Property relatedPrperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.RELATED.toString());
 	
-	Property preferredNameProperty = rdfModel.createProperty(SKOSURI + "PreferredName");
+	Property prefLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.PREFLABEL.toString());
+	Property altLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.ALTLABEL.toString());
 	Property definitionProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.DEFINITION.toString());
 	
 	public ThesaurRDFMethods(){
@@ -31,9 +32,16 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void addRootConceptToRDF(String name){
-		rdfModel.createResource(projectUri + name);
+		Resource newResource = rdfModel.createResource(projectUri + name);
+		newResource.addProperty(getPrefLabelProperty(), name);
 	}
 
+	public Resource createResourceWithName(String name){
+		Resource newResource = rdfModel.createResource(projectUri + name);
+		newResource.addProperty(getPrefLabelProperty(), name);
+		return newResource;
+	}
+	
 	public void addNarrowerConceptToRDF(String currentName, String newName){
 		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
 		if (currentR2 != null){
@@ -46,7 +54,7 @@ public class ThesaurRDFMethods {
 			 else{
 				 childsBag = temp.getBag();
 			 }
-			 Resource narrowConcept = rdfModel.createResource(projectUri + newName);
+			 Resource narrowConcept = createResourceWithName(newName);
 			 childsBag.add(narrowConcept);
 		}
 	}
@@ -95,11 +103,28 @@ public class ThesaurRDFMethods {
 			else
 				defBag = objR.getBag();
 			 
-			 Resource definitionResource = rdfModel.createResource(projectUri + definition);
+			 Resource definitionResource = createResourceWithName(definition);
 			 definitionResource.addProperty(DC.language, language);
 			 
 			 defBag.add(definitionResource);
 		}
+	}
+	
+	public void editPrefLabel(String currentName, String label){
+		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+	    currentR2.removeAll(getPrefLabelProperty());
+	    currentR2.addProperty(getPrefLabelProperty(), label);
+	}
+	
+	public void addAltLabel(String currentName, String label){
+		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+	    currentR2.addProperty(getAltLabelProperty(), label);
+	}
+	
+	public void editAltLabel(String currentName, String label){
+		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+	    currentR2.removeAll(getAltLabelProperty());
+	    currentR2.addProperty(getAltLabelProperty(), label);
 	}
 	
 	public void printRDfModel(){
@@ -143,12 +168,16 @@ public class ThesaurRDFMethods {
 		return relatedPrperty;
 	}
 
-	public Property getPreferredNameProperty() {
-		return preferredNameProperty;
-	}
-
 	public Property getDefinitionProperty() {
 		return definitionProperty;
+	}
+
+	public Property getPrefLabelProperty() {
+		return prefLabelProperty;
+	}
+
+	public Property getAltLabelProperty() {
+		return altLabelProperty;
 	}
 	
 }
