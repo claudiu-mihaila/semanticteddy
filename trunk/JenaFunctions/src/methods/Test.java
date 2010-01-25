@@ -11,12 +11,13 @@ public class Test {
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods();
 		 
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
-		 tools.addDefinition(rootConcept, "def1", "RO");
+    	 tools.addDefinition(rootConcept, "def1", "RO");
 		 
 		 tools.addChildConcept(rootConcept, "Child1");
 		 tools.addChildConcept(rootConcept, "Child2");
 		 
-		 tools.printAsObject(rootConcept);		 
+	//	 tools.printAsObject(rootConcept);
+		 tools.rdfModel.printRDfModel();
 	}
 
 }
