@@ -43,40 +43,77 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void addNarrowerConceptToRDF(String currentName, String newName){
+		//var cu bag
+//		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+//		if (currentR2 != null){
+//			Statement temp = currentR2.getProperty(getNarrowChildProperty());
+//			 Bag childsBag;
+//			 if (temp ==null || (temp !=null && temp.getBag()==null)){
+//				 childsBag = rdfModel.createBag(projectUri + "narrowBag");
+//				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
+//			 }
+//			 else{
+//				 childsBag = temp.getBag();
+//			 }
+//			 Resource narrowConcept = createResourceWithName(newName);
+//			 childsBag.add(narrowConcept);
+//		}
+		//var fara bag
 		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
 		if (currentR2 != null){
-			Statement temp = currentR2.getProperty(getNarrowChildProperty());
-			 Bag childsBag;
-			 if (temp ==null || (temp !=null && temp.getBag()==null)){
-				 childsBag = rdfModel.createBag(projectUri + "narrowBag");
-				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
-			 }
-			 else{
-				 childsBag = temp.getBag();
-			 }
 			 Resource narrowConcept = createResourceWithName(newName);
-			 childsBag.add(narrowConcept);
+			 currentR2.addProperty(getNarrowChildProperty(), narrowConcept);
 		}
+		
 	}
 	
 	public void addBroaderConceptToRDF(String currentName, String parentExistingName){
+		//var cu bag
+//		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+//		if (currentR2 != null){
+//			 Bag parentsBag = currentR2.getProperty(getBroadParentProperty()).getBag();
+//			 if (parentsBag ==null){
+//				 parentsBag = rdfModel.createBag(projectUri + "definitionBag");
+//				 currentR2.addProperty(getBroadParentProperty(), parentsBag);
+//			 }
+//			 Resource broadConcept = rdfModel.getResource(projectUri + parentExistingName);
+//			 parentsBag.add(broadConcept);
+//			 
+//			 Bag childsBag = broadConcept.getProperty(getNarrowChildProperty()).getBag();
+//			 if (childsBag ==null){
+//				 childsBag = rdfModel.createBag();
+//				 broadConcept.addProperty(getNarrowChildProperty(), childsBag);
+//			 }
+//			 childsBag.add(currentR2);
+//		}
+		
+		//var fara bag
 		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
-		if (currentR2 != null){
-			 Bag parentsBag = currentR2.getProperty(getBroadParentProperty()).getBag();
-			 if (parentsBag ==null){
-				 parentsBag = rdfModel.createBag(projectUri + "definitionBag");
-				 currentR2.addProperty(getBroadParentProperty(), parentsBag);
-			 }
-			 Resource broadConcept = rdfModel.getResource(projectUri + parentExistingName);
-			 parentsBag.add(broadConcept);
-			 
-			 Bag childsBag = broadConcept.getProperty(getNarrowChildProperty()).getBag();
-			 if (childsBag ==null){
-				 childsBag = rdfModel.createBag();
-				 broadConcept.addProperty(getNarrowChildProperty(), childsBag);
-			 }
-			 childsBag.add(currentR2);
+		Resource broadConcept = rdfModel.getResource(projectUri + parentExistingName);
+		
+		if (currentR2 != null && broadConcept != null){
+				 currentR2.addProperty(getBroadParentProperty(), broadConcept);
 		}
+	}
+
+	//related
+	public void addRelatedRDF(String currentName, String relatedName){
+		//var cu bag
+//		Resource current = rdfModel.getResource(projectUri + currentName);
+//		Resource related = rdfModel.getResource(projectUri + relatedName);
+//		
+//		Bag relatedBag = current.getProperty(getRelatedPrperty()).getBag();
+//		if (relatedBag == null){
+//			relatedBag = rdfModel.createBag(projectUri + "relatedBag");
+//		}
+//		relatedBag.add(related);
+		
+		//var fara bag
+		Resource current = rdfModel.getResource(projectUri + currentName);
+		Resource related = rdfModel.getResource(projectUri + relatedName);
+		
+		if (current!= null && related != null)
+			current.addProperty(getRelatedPrperty(), related);
 	}
 
 	public void addMetadataAuthorRDF(String currentName, String author){
@@ -92,6 +129,7 @@ public class ThesaurRDFMethods {
 	//definition
 	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
 	{
+		//var cu bag
 		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
 		if (currentR2 != null){
 			Statement objR = currentR2.getProperty(getDefinitionProperty());
@@ -136,19 +174,7 @@ public class ThesaurRDFMethods {
 
 	}
 	
-	//related
-	public void addRelatedRDF(String currentName, String relatedName){
-		Resource current = rdfModel.getResource(projectUri + currentName);
-		Resource related = rdfModel.getResource(projectUri + relatedName);
-		
-		Bag relatedBag = current.getProperty(getRelatedPrperty()).getBag();
-		if (relatedBag == null){
-			relatedBag = rdfModel.createBag(projectUri + "relatedBag");
-		}
-		relatedBag.add(related);
-		
-	}
-	public Model getRdfModel() {
+		public Model getRdfModel() {
 		return rdfModel;
 	}
 
