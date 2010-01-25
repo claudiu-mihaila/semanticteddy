@@ -50,6 +50,21 @@ public class ThesaurJavaMethods {
 		rdfModel.addRelatedRDF(currentConcept.getName(), relatedConcept.getName());
 	}
 	
+	public void editPrefLabel(Concept currentConcept, String label){
+		currentConcept.setPrefLabel(label);
+		rdfModel.editPrefLabel(currentConcept.getName(), label);
+	}
+	
+	public void addAltLabel(Concept currentConcept, String label){
+		currentConcept.setAltLabel(label);
+		rdfModel.addAltLabel(currentConcept.getName(), label);
+	}
+	
+	public void editAltLabel(Concept currentConcept, String label){
+		currentConcept.setAltLabel(label);
+		rdfModel.editAltLabel(currentConcept.getName(), label);
+	}
+	
 	public void printAsObject(Concept currentConcept)
 	{
 		if (currentConcept !=null)
@@ -57,7 +72,8 @@ public class ThesaurJavaMethods {
 			System.out.println();
 			System.out.println("<<<");
 			System.out.println("Concept: " + currentConcept.getName());
-			System.out.println("PreferredName:" + (currentConcept.getPreferedName()==null?"":currentConcept.getPreferedName()));
+			System.out.println("PreferredLabel:" + (currentConcept.getPrefLabel()==null?"":currentConcept.getPrefLabel()));
+			System.out.println("AlternativeLabel:" + (currentConcept.getAltLabel()==null?"":currentConcept.getAltLabel()));
 			
 			for (Concept parentC : currentConcept.getParents()){
 				System.out.println("Parinte: " + parentC.getName());

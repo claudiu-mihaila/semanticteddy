@@ -9,7 +9,8 @@ public class Concept {
 
 	//basic properties
 	private String name;
-	private String preferedName;
+	private String prefLabel;
+	private String altLabel;
 	private Map<String, List<String>> definitionPerLanguage = new HashMap<String, List<String>>();
 	
 	//metadata Properties
@@ -30,6 +31,7 @@ public class Concept {
 	
 	public Concept(String name){
 		this.name = name;
+		this.prefLabel = name;
 	}
 
 	public String getName() {
@@ -38,14 +40,7 @@ public class Concept {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getPreferedName() {
-		return preferedName;
-	}
-
-	public void setPreferedName(String preferedName) {
-		this.preferedName = preferedName;
+		this.prefLabel = name;
 	}
 
 	public Map<String, List<String>> getDefinitionPerLanguage() {
@@ -103,6 +98,22 @@ public class Concept {
 
 	public void setRelated(List<Concept> related) {
 		this.related = related;
+	}
+
+	public String getPrefLabel() {
+		return prefLabel;
+	}
+
+	public void setPrefLabel(String prefLabel) {
+		this.prefLabel = prefLabel;
+	}
+
+	public String getAltLabel() {
+		return altLabel;
+	}
+
+	public void setAltLabel(String altLabel) {
+		this.altLabel = altLabel;
 	}
 	
 	
