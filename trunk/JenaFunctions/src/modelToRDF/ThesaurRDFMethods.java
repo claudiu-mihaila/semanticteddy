@@ -101,6 +101,7 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void printRDfModel(){
+	//	rdfModel.write(System.out);
 		rdfModel.write(System.out, "N-TRIPLE");
 
 	}
