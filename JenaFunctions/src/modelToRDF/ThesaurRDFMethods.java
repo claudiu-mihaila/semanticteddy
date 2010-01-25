@@ -14,6 +14,7 @@ import com.hp.hpl.jena.vocabulary.DC;
 
 public class ThesaurRDFMethods {
 	
+	String defaultUri = "http://Teddy/";
 	Model rdfModel = ModelFactory.createDefaultModel();
 	
 	Property narrowChildProperty = rdfModel.createProperty(SKOSVocabulary.NARROWER.toString());
@@ -28,35 +29,35 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void addRootConceptToRDF(String name){
-		rdfModel.createResource(name);
+		rdfModel.createResource(defaultUri + name);
 	}
 
 	public void addNarrowerConceptToRDF(String currentName, String newName){
-		Resource currentR2 = rdfModel.getResource(currentName);
+		Resource currentR2 = rdfModel.getResource(defaultUri + currentName);
 		if (currentR2 != null){
 			Statement temp = currentR2.getProperty(getNarrowChildProperty());
 			 Bag childsBag;
 			 if (temp ==null || (temp !=null && temp.getBag()==null)){
-				 childsBag = rdfModel.createBag();
+				 childsBag = rdfModel.createBag(defaultUri + "narrowBag");
 				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
 			 }
 			 else{
 				 childsBag = temp.getBag();
 			 }
-			 Resource narrowConcept = rdfModel.createResource(newName);
+			 Resource narrowConcept = rdfModel.createResource(defaultUri + newName);
 			 childsBag.add(narrowConcept);
 		}
 	}
 	
 	public void addBroaderConceptToRDF(String currentName, String parentExistingName){
-		Resource currentR2 = rdfModel.getResource(currentName);
+		Resource currentR2 = rdfModel.getResource(defaultUri + currentName);
 		if (currentR2 != null){
 			 Bag parentsBag = currentR2.getProperty(getBroadParentProperty()).getBag();
 			 if (parentsBag ==null){
-				 parentsBag = rdfModel.createBag();
+				 parentsBag = rdfModel.createBag(defaultUri + "definitionBag");
 				 currentR2.addProperty(getBroadParentProperty(), parentsBag);
 			 }
-			 Resource broadConcept = rdfModel.getResource(parentExistingName);
+			 Resource broadConcept = rdfModel.getResource(defaultUri + parentExistingName);
 			 parentsBag.add(broadConcept);
 			 
 			 Bag childsBag = broadConcept.getProperty(getNarrowChildProperty()).getBag();
@@ -69,44 +70,49 @@ public class ThesaurRDFMethods {
 	}
 
 	public void addMetadataAuthorRDF(String currentName, String author){
-		Resource currentR = rdfModel.getResource(currentName);
+		Resource currentR = rdfModel.getResource(defaultUri + currentName);
 		currentR.addProperty(DC.creator, author);
 	}
 	
 	public void addMetadataDateCreatedRDF(String currentName, String date){
-		Resource currentR = rdfModel.getResource(currentName);
+		Resource currentR = rdfModel.getResource(defaultUri + currentName);
 		currentR.addProperty(DC.date, date);
 	}
 	
 	//definition
 	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
 	{
-		Resource currentR2 = rdfModel.getResource(currentName);
+		Resource currentR2 = rdfModel.getResource(defaultUri + currentName);
 		if (currentR2 != null){
 			Statement objR = currentR2.getProperty(getDefinitionProperty());
 			Bag defBag = null;
 			if (objR==null  || (objR!=null && objR.getBag()==null)){
-					defBag = rdfModel.createBag();
+					defBag = rdfModel.createBag(defaultUri+"definitionBag");
 					currentR2.addProperty(getDefinitionProperty(), defBag);
 			}
 			else
 				defBag = objR.getBag();
 			 
-			 Resource definitionResource = rdfModel.createResource(definition);
+			 Resource definitionResource = rdfModel.createResource(defaultUri + definition);
 			 definitionResource.addProperty(DC.language, language);
 			 
 			 defBag.add(definitionResource);
 		}
 	}
 	
+	public void printRDfModel(){
+		rdfModel.write(System.out, "N-TRIPLE");
+
+	}
+	
 	//related
 	public void addRelatedRDF(String currentName, String relatedName){
-		Resource current = rdfModel.getResource(currentName);
-		Resource related = rdfModel.getResource(relatedName);
+		Resource current = rdfModel.getResource(defaultUri + currentName);
+		Resource related = rdfModel.getResource(defaultUri + relatedName);
 		
 		Bag relatedBag = current.getProperty(getRelatedPrperty()).getBag();
 		if (relatedBag == null){
-			relatedBag = rdfModel.createBag();
+			relatedBag = rdfModel.createBag(defaultUri + "relatedBag");
 		}
 		relatedBag.add(related);
 		
