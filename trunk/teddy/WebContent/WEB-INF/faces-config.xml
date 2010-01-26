@@ -7,6 +7,11 @@
   <managed-bean-class>controllers.MainPageController</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>mainPageAdapter</managed-bean-name>
+  <managed-bean-class>adapters.MainPageAdapter</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
  <application>
   <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
  </application>

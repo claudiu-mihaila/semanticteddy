@@ -1,0 +1,46 @@
+.leftPanel{
+	width: 20%;
+	height: 100%;
+	
+}
+.rightPanel{	
+	width: 79%;
+	height: 100%;
+}
+p{
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+div{
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+body{
+	border: 0;
+	padding: 0;
+	margin: 0;	
+}
+.rich-panel-body_no {
+	border: 0;
+	padding: 0;
+	margin: 0;
+} 
+.rich-panel-body_page {
+	width: 100%;
+	height: 600px;
+	min-height: 600px;
+	max-height: 600px;
+	overflow: auto;
+	float: left;
+	table-layout: auto;
+	position: relative;
+}
+.rich-panel-body{
+	padding:0%;
+}
+.mainPanelGrid {
+	width: 100%;
+	
+}

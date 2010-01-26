@@ -6,9 +6,58 @@
 			xmlns:c="http://java.sun.com/jstl/core"
 			xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 			xmlns:rich="http://richfaces.org/rich"
-            xmlns:ui="http://java.sun.com/jsf/facelets">
+            xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:t="http://myfaces.apache.org/tomahawk">
 			
-			<ui:include src = "mainMenu.jspx"></ui:include>
-			<ui:include src = "mainTree.jspx"></ui:include>
-			<ui:include src = "mainContent.jspx"></ui:include>
+	<ui:composition template="/pages/common/template.jspx">
+		<ui:define name="left">
+			<ui:include src="/pages/mainTree.jspx" />
+		</ui:define>
+		<ui:define name="right">
+			<rich:tabPanel
+				id = "appTabPanel"
+				switchType="ajax">
+				<rich:tab
+					id = "SKOSTab"
+					name = "SKOS"
+					label="SKOS">test1
+				</rich:tab>					
+				<rich:tab
+					id = "METATab"
+					name = "META"
+					label="Metadata">test2
+				</rich:tab>
+				<rich:tab
+					id = "DOTTab"
+					name = "DOT"
+					label="Vizualization">
+					<t:div 
+						id = "testingDotImg"
+						rendered = "#{mainPageController.dotRendered}">
+						<ui:include src="tests/getDot.jspx" />
+					</t:div>
+				</rich:tab>
+				<rich:tab
+					id = "GMAPTab"
+					name = "GMAP"
+					label="Google Maps">
+					<t:div>
+						<rich:gmap 
+							gmapVar="map" 
+							style="width:800px;height:400px" 
+							id="gmap" 
+							lat="37.4419"
+							long = "-122.1419"
+							zoom = "10"
+							onclick="addPin(map)"/>
+					</t:div>
+				</rich:tab>
+			</rich:tabPanel>
+		</ui:define>
+		
+		<ui:define name="modals">
+		
+		</ui:define>
+	</ui:composition>
+		
 </jsp:root>
