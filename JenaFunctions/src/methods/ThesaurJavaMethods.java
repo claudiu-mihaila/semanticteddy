@@ -62,7 +62,7 @@ public class ThesaurJavaMethods {
 	
 	public void editAltLabel(Concept currentConcept, String label){
 		currentConcept.setAltLabel(label);
-		rdfModel.editAltLabel(currentConcept.getName(), label);
+		rdfModel.editAltLabel(currentConcept.getUuid(), label);
 	}
 	
 	public void printAsObject(Concept currentConcept)
@@ -87,7 +87,7 @@ public class ThesaurJavaMethods {
 				System.out.print("Definition: ");
 				System.out.print("language: " + key );
 				List<String> values = currentConcept.getDefinitionPerLanguage().get(key);
-				if (values !=null)
+				if (values != null)
 					for (String val : values){
 						System.out.println(" value: " + val);
 					}
