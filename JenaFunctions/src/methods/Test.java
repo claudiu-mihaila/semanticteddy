@@ -17,6 +17,10 @@ public class Test {
 		 
 		 Concept child1 = tools.addChildConcept(rootConcept, "Child1");
 		 tools.addAltLabel(child1, "Irina");
+		 tools.addLatitude(rootConcept, "-55.2355542");
+		 tools.addLongitude(rootConcept, "44.2359957");
+		 tools.editLatitude(rootConcept, "55.2355542");
+		 tools.editLongitude(rootConcept, "-44.2359957");
 		 
 		 Concept child2 = tools.addChildConcept(rootConcept, "Child2");
 		 tools.editPrefLabel(child2, "Ioan");
@@ -32,7 +36,7 @@ public class Test {
 		 
 		 
 	//	 tools.printAsObject(rootConcept);
-		 tools.rdfModel.printRDfModel();
+		 tools.rdfModel.printRDFModel();
 	}
 
 }

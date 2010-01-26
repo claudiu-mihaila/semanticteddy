@@ -19,8 +19,8 @@ public class Concept {
 	private Metadata metadata;
 	
 	//geo properties
-	private String xCoordinate;
-	private String yCoordinate;
+	private String latitude;
+	private String longitude;
 	
 	//relations
 	private List<Concept> children = new ArrayList<Concept>();
@@ -63,20 +63,20 @@ public class Concept {
 		this.metadata = metadata;
 	}
 	
-	public String getxCoordinate() {
-		return xCoordinate;
+	public String getLatitude() {
+		return latitude;
 	}
 
-	public void setxCoordinate(String xCoordinate) {
-		this.xCoordinate = xCoordinate;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
-	public String getyCoordinate() {
-		return yCoordinate;
+	public String getLongitude() {
+		return longitude;
 	}
 
-	public void setyCoordinate(String yCoordinate) {
-		this.yCoordinate = yCoordinate;
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 
 	public List<Concept> getChildren() {

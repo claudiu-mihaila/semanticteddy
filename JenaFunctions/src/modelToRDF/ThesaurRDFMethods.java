@@ -6,6 +6,8 @@ import model.Concept;
 
 import org.sealife.skos.editor.SKOSVocabulary;
 
+import vocabulary.GeoVocabulary;
+
 import com.hp.hpl.jena.rdf.model.Bag;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -28,6 +30,10 @@ public class ThesaurRDFMethods {
 	Property prefLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.PREFLABEL.toString());
 	Property altLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.ALTLABEL.toString());
 	Property definitionProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.DEFINITION.toString());
+
+	Resource pointResource = rdfModel.createResource(GeoVocabulary.POINT);
+	Property latitudeProperty = rdfModel.createProperty(GeoVocabulary.LATITUDE);
+	Property longitudeProperty = rdfModel.createProperty(GeoVocabulary.LONGITUDE);
 	
 	public ThesaurRDFMethods(){
 		
@@ -94,8 +100,8 @@ public class ThesaurRDFMethods {
 		}
 	}
 	
-	public void editPrefLabel(UUID currentName, String label){
-		Resource currentR2 = rdfModel.getResource(projectUri + currentName.toString());
+	public void editPrefLabel(UUID currentUUID, String label){
+		Resource currentR2 = rdfModel.getResource(projectUri + currentUUID.toString());
 	    currentR2.removeAll(getPrefLabelProperty());
 	    currentR2.addProperty(getPrefLabelProperty(), label);
 	}
@@ -111,9 +117,32 @@ public class ThesaurRDFMethods {
 	    currentR2.addProperty(getAltLabelProperty(), label);
 	}
 	
-	public void printRDfModel(){
+	public void addLatitude(UUID currentUUID, String lat) {
+		Resource resource = rdfModel.getResource(projectUri + currentUUID.toString());
+		resource.addProperty(getLatitudeProperty(), lat);
+	}
+	
+	public void editLatitude(UUID currentUUID, String lat) {
+		Resource resource = rdfModel.getResource(projectUri + currentUUID.toString());
+		resource.removeAll(getLatitudeProperty());
+		resource.addProperty(getLatitudeProperty(), lat);
+	}	
+	
+	public void addLongitude(UUID currentUUID, String lon) {
+		Resource resource = rdfModel.getResource(projectUri + currentUUID.toString());
+		resource.addProperty(getLongitudeProperty(), lon);
+	}
+	
+	public void editLongitude(UUID currentUUID, String lon) {
+		Resource resource = rdfModel.getResource(projectUri + currentUUID.toString());
+		resource.removeAll(getLongitudeProperty());
+		resource.addProperty(getLongitudeProperty(), lon);
+	}
+	
+	public void printRDFModel(){
 		rdfModel.setNsPrefix( "Teddy", projectUri );
-		rdfModel.setNsPrefix("SKOS", SKOSURI);
+		rdfModel.setNsPrefix("skos", SKOSURI);
+		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
 		rdfModel.write(System.out);
 //		rdfModel.write(System.out, "N-TRIPLE");
 	}
@@ -148,6 +177,14 @@ public class ThesaurRDFMethods {
 
 	public Property getAltLabelProperty() {
 		return altLabelProperty;
+	}
+
+	public Property getLatitudeProperty() {
+		return latitudeProperty;
+	}
+
+	public Property getLongitudeProperty() {
+		return longitudeProperty;
 	}
 	
 }
