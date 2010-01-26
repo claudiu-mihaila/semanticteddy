@@ -23,7 +23,7 @@ public class ThesaurRDFMethods {
 	
 	Property narrowChildProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.NARROWER.toString());
 	Property broadParentProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.BROADER.toString());
-	Property relatedPrperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.RELATED.toString());
+	Property relatedProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.RELATED.toString());
 	
 	Property prefLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.PREFLABEL.toString());
 	Property altLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.ALTLABEL.toString());
@@ -72,7 +72,7 @@ public class ThesaurRDFMethods {
 		Resource related = rdfModel.getResource(projectUri + relatedName.toString());
 		
 		if (current!= null && related != null)
-			current.addProperty(getRelatedPrperty(), related);
+			current.addProperty(getRelatedProperty(), related);
 	}
 
 	public void addMetadataAuthorRDF(String currentName, String author){
@@ -86,9 +86,9 @@ public class ThesaurRDFMethods {
 	}
 	
 	//definition
-	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
+	public void addDefinitionPerLanguageRDf(UUID currentUUID, String definition, String language )
 	{
-		Resource currentR = rdfModel.getResource(projectUri + currentName);
+		Resource currentR = rdfModel.getResource(projectUri + currentUUID.toString());
 		if (currentR != null){
 			currentR.addProperty(getDefinitionProperty(), rdfModel.createLiteral(definition, language));
 		}
@@ -134,8 +134,8 @@ public class ThesaurRDFMethods {
 		return broadParentProperty;
 	}
 
-	public Property getRelatedPrperty() {
-		return relatedPrperty;
+	public Property getRelatedProperty() {
+		return relatedProperty;
 	}
 
 	public Property getDefinitionProperty() {
