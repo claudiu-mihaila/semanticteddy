@@ -90,11 +90,7 @@ public class ThesaurRDFMethods {
 	{
 		Resource currentR = rdfModel.getResource(projectUri + currentName);
 		if (currentR != null){
-			
-			Resource defValue = createResourceWithValue(definition);
-			defValue.addProperty(DC.language, language);
-			
-			currentR.addProperty(getDefinitionProperty(), defValue);
+			currentR.addProperty(getDefinitionProperty(), rdfModel.createLiteral(definition, language));
 		}
 	}
 	
