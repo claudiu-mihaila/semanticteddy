@@ -65,6 +65,30 @@ public class ThesaurJavaMethods {
 		rdfModel.editAltLabel(currentConcept.getUuid(), label);
 	}
 	
+//	public void addGeoPoint()
+	
+	public void addLatitude(Concept currentConcept, String lat) {
+		
+		currentConcept.setLatitude(lat);
+		rdfModel.addLatitude(currentConcept.getUuid(), lat);
+		
+	}
+	
+	public void editLatitude(Concept currentConcept, String lat) {
+		currentConcept.setLatitude(lat);
+		rdfModel.editLatitude(currentConcept.getUuid(), lat);
+	}
+	
+	public void addLongitude(Concept currentConcept, String lon) {
+		currentConcept.setLongitude(lon);
+		rdfModel.addLongitude(currentConcept.getUuid(), lon);
+	}	
+	
+	public void editLongitude(Concept currentConcept, String lon) {
+		currentConcept.setLongitude(lon);
+		rdfModel.editLongitude(currentConcept.getUuid(), lon);
+	}
+	
 	public void printAsObject(Concept currentConcept)
 	{
 		if (currentConcept !=null)
