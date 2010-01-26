@@ -40,7 +40,8 @@
 				<rich:tab
 					id = "GMAPTab"
 					name = "GMAP"
-					label="Google Maps">
+					label="Google Maps"
+					switchType="server">
 					<t:div>
 						<rich:gmap 
 							gmapVar="map" 
