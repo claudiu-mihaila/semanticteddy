@@ -16,22 +16,22 @@ public class ThesaurJavaMethods {
 	
 	public Concept addRootConcept(String name){
 		Concept rootConcept =  new Concept(name);
-		rdfModel.addRootConceptToRDF(name);
+		rdfModel.addRootConceptToRDF(rootConcept.getUuid(), name);
 		return rootConcept;
 	}
 	
 	public Concept addChildConcept(Concept currentConcept, String name){
 		Concept childConcept = new Concept(name);
-		currentConcept.getChilds().add(childConcept);
-		rdfModel.addNarrowerConceptToRDF(currentConcept.getName(), name);
+		currentConcept.getChildren().add(childConcept);
+		rdfModel.addNarrowerConceptToRDF(currentConcept.getUuid(), childConcept.getUuid(), name);
 		return childConcept;
 	}
 	
 	public void addParentConcept(Concept currentConcept, Concept parent){
 		currentConcept.getParents().add(parent);
-		parent.getChilds().add(currentConcept);
+		parent.getChildren().add(currentConcept);
 		
-		rdfModel.addBroaderConceptToRDF(currentConcept.getName(), parent.getName());
+		rdfModel.addBroaderConceptToRDF(currentConcept.getUuid(), parent.getUuid());
 	}
 	
 	public void addDefinition(Concept currentConcept, String definition, String language){
@@ -47,17 +47,17 @@ public class ThesaurJavaMethods {
 	public void addRelated(Concept currentConcept, Concept relatedConcept){
 		currentConcept.getRelated().add(relatedConcept);
 		relatedConcept.getRelated().add(currentConcept);
-		rdfModel.addRelatedRDF(currentConcept.getName(), relatedConcept.getName());
+		rdfModel.addRelatedRDF(currentConcept.getUuid(), relatedConcept.getUuid());
 	}
 	
 	public void editPrefLabel(Concept currentConcept, String label){
 		currentConcept.setPrefLabel(label);
-		rdfModel.editPrefLabel(currentConcept.getName(), label);
+		rdfModel.editPrefLabel(currentConcept.getUuid(), label);
 	}
 	
 	public void addAltLabel(Concept currentConcept, String label){
 		currentConcept.setAltLabel(label);
-		rdfModel.addAltLabel(currentConcept.getName(), label);
+		rdfModel.addAltLabel(currentConcept.getUuid(), label);
 	}
 	
 	public void editAltLabel(Concept currentConcept, String label){
@@ -92,7 +92,7 @@ public class ThesaurJavaMethods {
 						System.out.println(" value: " + val);
 					}
 			}
-			for (Concept tempConcept : currentConcept.getChilds()){
+			for (Concept tempConcept : currentConcept.getChildren()){
 				System.out.print(" child: ");
 				printAsObject(tempConcept);
 			}

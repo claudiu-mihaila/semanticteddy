@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class Concept {
 
 	//basic properties
+	private UUID uuid;
 	private String name;
 	private String prefLabel;
 	private String altLabel;
@@ -21,7 +23,7 @@ public class Concept {
 	private String yCoordinate;
 	
 	//relations
-	private List<Concept> childs = new ArrayList<Concept>();
+	private List<Concept> children = new ArrayList<Concept>();
 	private List<Concept> parents = new ArrayList<Concept>();
 	private List<Concept> related = new ArrayList<Concept>();
 	
@@ -30,6 +32,7 @@ public class Concept {
 	}
 	
 	public Concept(String name){
+		this.uuid = UUID.randomUUID();
 		this.name = name;
 		this.prefLabel = name;
 	}
@@ -76,12 +79,12 @@ public class Concept {
 		this.yCoordinate = yCoordinate;
 	}
 
-	public List<Concept> getChilds() {
-		return childs;
+	public List<Concept> getChildren() {
+		return children;
 	}
 
-	public void setChilds(List<Concept> childs) {
-		this.childs = childs;
+	public void setChildren(List<Concept> childs) {
+		this.children = childs;
 	}
 
 	public List<Concept> getParents() {
@@ -115,6 +118,13 @@ public class Concept {
 	public void setAltLabel(String altLabel) {
 		this.altLabel = altLabel;
 	}
-	
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}	
 	
 }
