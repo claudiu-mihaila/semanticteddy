@@ -43,24 +43,12 @@ public class ThesaurRDFMethods {
 		newResource.addProperty(getPrefLabelProperty(), name);
 		return newResource;
 	}
+	public Resource createResourceWithValue(String value){
+		Resource newResource = rdfModel.createResource(projectUri + value);
+		return newResource;
+	}
 	
 	public void addNarrowerConceptToRDF(UUID currentName, UUID newUuid, String newName){
-		//var cu bag
-//		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
-//		if (currentR2 != null){
-//			Statement temp = currentR2.getProperty(getNarrowChildProperty());
-//			 Bag childsBag;
-//			 if (temp ==null || (temp !=null && temp.getBag()==null)){
-//				 childsBag = rdfModel.createBag(projectUri + "narrowBag");
-//				 currentR2.addProperty(getNarrowChildProperty(), childsBag);
-//			 }
-//			 else{
-//				 childsBag = temp.getBag();
-//			 }
-//			 Resource narrowConcept = createResourceWithName(newName);
-//			 childsBag.add(narrowConcept);
-//		}
-		//var fara bag
 		Resource currentR2 = rdfModel.getResource(projectUri + currentName.toString());
 		if (currentR2 != null){
 			 Resource narrowConcept = createResourceWithName(newUuid, newName);
@@ -70,26 +58,6 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void addBroaderConceptToRDF(UUID currentUUID, UUID parentExistingUUID){
-		//var cu bag
-//		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
-//		if (currentR2 != null){
-//			 Bag parentsBag = currentR2.getProperty(getBroadParentProperty()).getBag();
-//			 if (parentsBag ==null){
-//				 parentsBag = rdfModel.createBag(projectUri + "definitionBag");
-//				 currentR2.addProperty(getBroadParentProperty(), parentsBag);
-//			 }
-//			 Resource broadConcept = rdfModel.getResource(projectUri + parentExistingName);
-//			 parentsBag.add(broadConcept);
-//			 
-//			 Bag childsBag = broadConcept.getProperty(getNarrowChildProperty()).getBag();
-//			 if (childsBag ==null){
-//				 childsBag = rdfModel.createBag();
-//				 broadConcept.addProperty(getNarrowChildProperty(), childsBag);
-//			 }
-//			 childsBag.add(currentR2);
-//		}
-		
-		//var fara bag
 		Resource currentR2 = rdfModel.getResource(projectUri + currentUUID);
 		Resource broadConcept = rdfModel.getResource(projectUri + parentExistingUUID);
 		
@@ -100,17 +68,6 @@ public class ThesaurRDFMethods {
 
 	//related
 	public void addRelatedRDF(UUID currentName, UUID relatedName){
-		//var cu bag
-//		Resource current = rdfModel.getResource(projectUri + currentName);
-//		Resource related = rdfModel.getResource(projectUri + relatedName);
-//		
-//		Bag relatedBag = current.getProperty(getRelatedPrperty()).getBag();
-//		if (relatedBag == null){
-//			relatedBag = rdfModel.createBag(projectUri + "relatedBag");
-//		}
-//		relatedBag.add(related);
-		
-		//var fara bag
 		Resource current = rdfModel.getResource(projectUri + currentName.toString());
 		Resource related = rdfModel.getResource(projectUri + relatedName.toString());
 		
@@ -131,25 +88,14 @@ public class ThesaurRDFMethods {
 	//definition
 	public void addDefinitionPerLanguageRDf(String currentName, String definition, String language )
 	{
-		//var cu bag
-//		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
-//		if (currentR2 != null){
-//			Statement objR = currentR2.getProperty(getDefinitionProperty());
-//			Bag defBag = null;
-//			if (objR==null  || (objR!=null && objR.getBag()==null)){
-//					defBag = rdfModel.createBag(projectUri+"definitionBag");
-//					currentR2.addProperty(getDefinitionProperty(), defBag);
-//			}
-//			else
-//				defBag = objR.getBag();
-//			 
-//			 Resource definitionResource = createResourceWithName(definition);
-//			 definitionResource.addProperty(DC.language, language);
-//			 
-//			 defBag.add(definitionResource);	
-//		}
-		//var fara bag
-		;
+		Resource currentR = rdfModel.getResource(projectUri + currentName);
+		if (currentR != null){
+			
+			Resource defValue = createResourceWithValue(definition);
+			defValue.addProperty(DC.language, language);
+			
+			currentR.addProperty(getDefinitionProperty(), defValue);
+		}
 	}
 	
 	public void editPrefLabel(UUID currentName, String label){

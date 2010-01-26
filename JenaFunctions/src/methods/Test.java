@@ -12,6 +12,8 @@ public class Test {
 		 
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
+    	 tools.addDefinition(rootConcept, "def2", "RO");
+    	 tools.addDefinition(rootConcept, "def3", "EN");
 		 
 		 Concept child1 = tools.addChildConcept(rootConcept, "Child1");
 		 tools.addAltLabel(child1, "Irina");
