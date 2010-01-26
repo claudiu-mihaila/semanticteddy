@@ -6,9 +6,8 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
-	xmlns:jxee="http://www.jxee-lab.ro/jsf"
 	xmlns:rich="http://richfaces.org/rich">
-	<h:form>
+	<h:form id = "menuHForm">
 		<rich:toolBar>
 			<rich:dropDownMenu>
 				<f:facet name="label">

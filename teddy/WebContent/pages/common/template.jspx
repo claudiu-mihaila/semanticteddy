@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:jxee="http://www.jxee-lab.ro/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns="http://www.w3.org/1999/xhtml">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" type="text/css" href="/teddy/pages/common/css/layout.css" />		
+		<script src="/teddy/pages/common/js/util.js"></script>
+		<title>Teddy Project</title>
+	</head>
+	
+	<body>
+		<f:view>
+			<rich:panel id="page" bodyClass="rich-panel-body_no">
+				<t:div id="menuTDiv">
+					<ui:insert name="Menu">
+						<ui:include src="menu.jspx" />
+					</ui:insert>
+				</t:div>
+				<h:form id="applicationForm">
+					<h:panelGrid id = "pageMainGrid" columns="2" columnClasses="leftPanel,rightPanel" styleClass="mainPanelGrid" cellspacing="1">
+						<rich:panel id = "leftPanel" styleClass="rich-panel-body_page">
+							<ui:insert name="left" />
+						</rich:panel>
+						<rich:panel id = "rightPanel" styleClass="rich-panel-body_page">
+							<ui:insert name="right" />
+						</rich:panel>
+					</h:panelGrid>
+				</h:form>
+	
+				<rich:panel id="footerPanel" bodyClass="rich-panel-body_no">
+					<ui:include src="/pages/common/footer.jspx" />
+				</rich:panel>
+	
+				<ui:insert name="modals"/>
+			</rich:panel>
+		</f:view>
+	</body>
+</html>
+
+

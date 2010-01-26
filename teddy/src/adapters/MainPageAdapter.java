@@ -9,6 +9,8 @@ import org.richfaces.model.TreeNodeImpl;
 
 public class MainPageAdapter implements Serializable {
 
+	
+
 	/**
 	 * 
 	 */
