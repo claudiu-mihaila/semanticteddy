@@ -163,8 +163,8 @@ public class ThesaurRDFMethods {
 	    currentR2.addProperty(getAltLabelProperty(), label);
 	}
 	
-	public void editAltLabel(String currentName, String label){
-		Resource currentR2 = rdfModel.getResource(projectUri + currentName);
+	public void editAltLabel(UUID currentUUID, String label){
+		Resource currentR2 = rdfModel.getResource(projectUri + currentUUID.toString());
 	    currentR2.removeAll(getAltLabelProperty());
 	    currentR2.addProperty(getAltLabelProperty(), label);
 	}
