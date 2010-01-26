@@ -40,7 +40,7 @@ public class ThesaurJavaMethods {
 			definitions = new ArrayList<String>();
 		definitions.add(definition);
 		currentConcept.getDefinitionPerLanguage().put(language, definitions);
-		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getName(), definition, language);
+		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getUuid(), definition, language);
 	}
 	
 	//related
