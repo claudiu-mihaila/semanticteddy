@@ -11,9 +11,9 @@ public class Concept {
 	//basic properties
 	private UUID uuid;
 	private String name;
-	private String prefLabel;
-	private String altLabel;
-	private Map<String, List<String>> definitionPerLanguage = new HashMap<String, List<String>>();
+	private Map<String, String> prefLabels = new HashMap<String, String>();
+	private Map<String, List<String>> altLabels = new HashMap<String, List<String>>();
+	private Map<String, List<String>> definitions = new HashMap<String, List<String>>();
 	
 	//metadata Properties
 	private Metadata metadata;
@@ -27,14 +27,12 @@ public class Concept {
 	private List<Concept> parents = new ArrayList<Concept>();
 	private List<Concept> related = new ArrayList<Concept>();
 	
-	public Concept(){
-		
-	}
+	public Concept() {}
 	
-	public Concept(String name){
+	public Concept(String name, String language){
 		this.uuid = UUID.randomUUID();
 		this.name = name;
-		this.prefLabel = name;
+		this.prefLabels.put(language, name);
 	}
 
 	public String getName() {
@@ -43,16 +41,15 @@ public class Concept {
 
 	public void setName(String name) {
 		this.name = name;
-		this.prefLabel = name;
 	}
 
-	public Map<String, List<String>> getDefinitionPerLanguage() {
-		return definitionPerLanguage;
+	public Map<String, List<String>> getDefinitions() {
+		return definitions;
 	}
 
-	public void setDefinitionPerLanguage(
-			Map<String, List<String>> definitionPerLanguage) {
-		this.definitionPerLanguage = definitionPerLanguage;
+	public void setDefinitions(
+			Map<String, List<String>> definitions) {
+		this.definitions = definitions;
 	}
 
 	public Metadata getMetadata() {
@@ -103,27 +100,27 @@ public class Concept {
 		this.related = related;
 	}
 
-	public String getPrefLabel() {
-		return prefLabel;
+	public Map<String, String> getPrefLabels() {
+		return prefLabels;
 	}
 
-	public void setPrefLabel(String prefLabel) {
-		this.prefLabel = prefLabel;
+	public void setPrefLabels(Map<String, String> prefLabels) {
+		this.prefLabels = prefLabels;
 	}
 
-	public String getAltLabel() {
-		return altLabel;
+	public Map<String, List<String>> getAltLabels() {
+		return altLabels;
 	}
 
-	public void setAltLabel(String altLabel) {
-		this.altLabel = altLabel;
+	public void setAltLabels(Map<String, List<String>> altLabel) {
+		this.altLabels = altLabel;
 	}
 
-	public UUID getUuid() {
+	public UUID getUUID() {
 		return uuid;
 	}
 
-	public void setUuid(UUID uuid) {
+	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}	
 	
