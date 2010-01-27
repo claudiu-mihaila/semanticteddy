@@ -27,6 +27,14 @@ public class ThesaurJavaMethods {
 		return childConcept;
 	}
 	
+	public Concept removeChildConcept(Concept currentConcept, Concept child) {
+		currentConcept.getChildren().remove(child);
+		child.getParents().remove(currentConcept);
+		rdfModel.removeNarrowerConcept(currentConcept.getUuid(), child.getUuid());
+		rdfModel.removeBroaderConcept(child.getUuid(), currentConcept.getUuid());
+		return currentConcept;
+	}
+	
 	public void addParentConcept(Concept currentConcept, Concept parent){
 		currentConcept.getParents().add(parent);
 		parent.getChildren().add(currentConcept);
@@ -34,14 +42,22 @@ public class ThesaurJavaMethods {
 		rdfModel.addBroaderConceptToRDF(currentConcept.getUuid(), parent.getUuid());
 	}
 	
-	public void addDefinition(Concept currentConcept, String definition, String language){
-		List<String> definitions = currentConcept.getDefinitionPerLanguage().get(language);
-		if (definitions == null)
-			definitions = new ArrayList<String>();
-		definitions.add(definition);
-		currentConcept.getDefinitionPerLanguage().put(language, definitions);
-		rdfModel.addDefinitionPerLanguageRDf(currentConcept.getUuid(), definition, language);
+	public Concept removeParentConcept(Concept currentConcept, Concept parent) {
+		currentConcept.getParents().remove(parent);
+		parent.getChildren().remove(currentConcept);
+		rdfModel.removeNarrowerConcept(parent.getUuid(), currentConcept.getUuid());
+		rdfModel.removeBroaderConcept(currentConcept.getUuid(), parent.getUuid());
+		return currentConcept;
 	}
+	
+	public void addDefinition(Concept currentConcept, String definition, String language){
+        List<String> definitions = currentConcept.getDefinitionPerLanguage().get(language);
+        if (definitions == null)
+                definitions = new ArrayList<String>();
+        definitions.add(definition);
+        currentConcept.getDefinitionPerLanguage().put(language, definitions);
+        rdfModel.addDefinitionPerLanguageRDf(currentConcept.getUuid(), definition, language);
+}
 	
 	//related
 	public void addRelated(Concept currentConcept, Concept relatedConcept){
@@ -65,13 +81,9 @@ public class ThesaurJavaMethods {
 		rdfModel.editAltLabel(currentConcept.getUuid(), label);
 	}
 	
-//	public void addGeoPoint()
-	
 	public void addLatitude(Concept currentConcept, String lat) {
-		
 		currentConcept.setLatitude(lat);
 		rdfModel.addLatitude(currentConcept.getUuid(), lat);
-		
 	}
 	
 	public void editLatitude(Concept currentConcept, String lat) {
@@ -107,15 +119,16 @@ public class ThesaurJavaMethods {
 				System.out.println("Related: " + relatedC.getName());
 			}
 			
-			for (String key : currentConcept.getDefinitionPerLanguage().keySet()){
-				System.out.print("Definition: ");
-				System.out.print("language: " + key );
-				List<String> values = currentConcept.getDefinitionPerLanguage().get(key);
-				if (values != null)
-					for (String val : values){
-						System.out.println(" value: " + val);
-					}
-			}
+            for (String key : currentConcept.getDefinitionPerLanguage().keySet()){
+                System.out.print("Definition: ");
+                System.out.print("language: " + key );
+                List<String> values = currentConcept.getDefinitionPerLanguage().get(key);
+                if (values != null)
+                        for (String val : values){
+                                System.out.println(" value: " + val);
+                        }
+            }
+
 			for (Concept tempConcept : currentConcept.getChildren()){
 				System.out.print(" child: ");
 				printAsObject(tempConcept);
