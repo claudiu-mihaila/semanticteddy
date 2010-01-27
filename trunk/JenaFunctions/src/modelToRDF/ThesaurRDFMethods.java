@@ -12,8 +12,10 @@ import com.hp.hpl.jena.rdf.model.Bag;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.DC;
 
 public class ThesaurRDFMethods {
@@ -60,7 +62,24 @@ public class ThesaurRDFMethods {
 			 Resource narrowConcept = createResourceWithName(newUuid, newName);
 			 currentR2.addProperty(getNarrowChildProperty(), narrowConcept);
 		}
+	}
+	
+	public void removeNarrowerConcept(UUID parent, UUID child) {
+		Resource par = rdfModel.getResource(projectUri + parent.toString());
+		Resource chi = rdfModel.getResource(projectUri + child.toString());
 		
+		if (par != null && chi != null) {
+			rdfModel.remove(par, getNarrowChildProperty(), chi.as(RDFNode.class));
+		}
+	}
+	
+	public void removeBroaderConcept(UUID child, UUID parent) {
+		Resource par = rdfModel.getResource(projectUri + parent.toString());
+		Resource chi = rdfModel.getResource(projectUri + child.toString());
+		
+		if (par != null && chi != null) {
+			rdfModel.remove(chi, getBroadParentProperty(), chi.as(RDFNode.class));
+		}
 	}
 	
 	public void addBroaderConceptToRDF(UUID currentUUID, UUID parentExistingUUID){
@@ -96,6 +115,17 @@ public class ThesaurRDFMethods {
 	{
 		Resource currentR = rdfModel.getResource(projectUri + currentUUID.toString());
 		if (currentR != null){
+//			// check definitions of current resource if language already included
+//			StmtIterator si = currentR.listProperties(getDefinitionProperty());
+//			while(si.hasNext()) {
+//				Statement s = si.nextStatement();
+//				// if language already included, replace with new definition
+//				if (language.equals(s.getLanguage())) {
+//					s.changeObject(definition, language);
+//					return;
+//				}
+//			}
+//			// it not included, include it
 			currentR.addProperty(getDefinitionProperty(), rdfModel.createLiteral(definition, language));
 		}
 	}
