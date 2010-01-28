@@ -124,4 +124,7 @@ public class Concept {
 		this.uuid = uuid;
 	}	
 	
+	public String toString(){
+		return this.name;
+	}
 }
