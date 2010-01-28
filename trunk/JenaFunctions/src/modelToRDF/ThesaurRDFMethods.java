@@ -173,6 +173,19 @@ public class ThesaurRDFMethods {
 		}
 	}
 	
+	
+	public void removePrefLabel(UUID currentUuid, String label, String language) {
+		Resource currentResource = rdfModel.getResource(projectUri + currentUuid.toString());
+		
+		if(currentResource != null) {
+			StmtIterator si = rdfModel.listStatements(currentResource, getPrefLabelProperty(), label, language);
+			if (si.hasNext()) {
+				Statement s = si.nextStatement();
+				rdfModel.remove(s);
+			}
+		}
+	}
+	
 	public void addAltLabel(UUID currentUuid, String label, String language){
 		Resource currentResource = rdfModel.getResource(projectUri + currentUuid.toString());
 		if (currentResource != null) {

@@ -108,6 +108,15 @@ public class ThesaurJavaMethods {
         }
 	}
 	
+	public void removePrefLabel(Concept currentConcept, String label, String language){
+        String isLabel = currentConcept.getPrefLabels().get(language);
+        if (isLabel != null)
+        {
+        	currentConcept.getPrefLabels().remove(language);
+            rdfModel.removePrefLabel(currentConcept.getUUID(), label, language);
+        }
+	}
+	
 	public void addAltLabel(Concept currentConcept, String label, String language){
         List<String> labels = currentConcept.getAltLabels().get(language);
         if (labels == null)
