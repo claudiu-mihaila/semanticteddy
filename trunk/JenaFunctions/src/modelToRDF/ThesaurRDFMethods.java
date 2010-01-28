@@ -10,6 +10,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.vocabulary.DC;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import utils.Globals;
 import vocabulary.GeoVocabulary;
@@ -20,6 +21,9 @@ public class ThesaurRDFMethods {
 	
 	Model rdfModel = ModelFactory.createDefaultModel();
 	
+	Resource conceptResource = rdfModel.createResource(SKOSURI + SKOSVocabulary.CONCEPT);
+	Resource conceptSchemeResource = rdfModel.createResource(SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
+
 	Property narrowerProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.NARROWER.toString());
 	Property broaderProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.BROADER.toString());
 	Property relatedProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.RELATED.toString());
@@ -34,20 +38,29 @@ public class ThesaurRDFMethods {
 	
 	public ThesaurRDFMethods() {}
 	
+	/**
+	 * Creates a root resource.
+	 * @param uuid the UUID of the resource
+	 * @param name the name of the resource
+	 * @param language
+	 */
 	public void addRootConcept(UUID uuid, String name, String language) {
 		Resource resource = rdfModel.createResource(Globals.projectUri + uuid.toString());
+		resource.addProperty(RDF.type, conceptSchemeResource);
 		resource.addProperty(getPrefLabelProperty(), name, language);
 	}
 
 	public Resource createResourceWithName(UUID uuid, String name, String language){
 		Resource resource = rdfModel.createResource(Globals.projectUri + uuid.toString());
+		resource.addProperty(RDF.type, conceptResource);
 		resource.addProperty(getPrefLabelProperty(), name, language);
 		return resource;
 	}
-	public Resource createResourceWithValue(String value){
-		Resource resource = rdfModel.createResource(Globals.projectUri + value);
-		return resource;
-	}
+	
+//	public Resource createResourceWithValue(String value){
+//		Resource resource = rdfModel.createResource(Globals.projectUri + value);
+//		return resource;
+//	}
 	
 	public void addNarrowerResource(UUID parentUuid, UUID childUuid, String childName, String language){
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid.toString());
@@ -250,14 +263,14 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void printRDFModel(){
-		rdfModel.setNsPrefix( "Teddy", Globals.projectUri );
+		rdfModel.setNsPrefix("teddy", Globals.projectUri);
 		rdfModel.setNsPrefix("skos", SKOSURI);
 		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
 		rdfModel.write(System.out);
 //		rdfModel.write(System.out, "N-TRIPLE");
 	}
 	
-		public Model getRdfModel() {
+	public Model getRdfModel() {
 		return rdfModel;
 	}
 
