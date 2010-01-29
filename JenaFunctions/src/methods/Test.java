@@ -31,10 +31,16 @@ public class Test {
 		 
 		 Concept subChild1 = tools.addChildConcept(child3, "sub3_1");
 		 Concept subChild2 = tools.addChildConcept(child2, "sub3_2");
-		 tools.addParentConcept(subChild1, rootConcept);
+		 tools.linkParentConcept(subChild1, rootConcept);
 		 tools.addRelatedConcept(subChild2, child2);
 		 tools.addRelatedConcept(subChild2, child3);
 		 
+		 Concept child4 = tools.addChildConcept(subChild2, "Child 4");
+		 tools.addPrefLabel(child4, "Copil 4", "EN");
+		 tools.addAltLabel(child4, "copilas", "RO");
+		 tools.addDefinition(child4, "definit", "FR");
+		 tools.addLatitude(child4, "23.555");
+		 tools.addLongitude(child4, "-55");		 
 		 
 		 tools.printAsObject(rootConcept);
 		 tools.rdfModel.printRDFModel();
@@ -48,6 +54,7 @@ public class Test {
 		 tools.removeRelatedConcept(child2, subChild2);
 		 tools.editAltLabel(child1, "Irene", "Mary", "EN");
 		 tools.removeAltLabel(child1, "Irina", "RO");
+		 tools.deleteConcept(child4);
 		 
 		 tools.printAsObject(rootConcept);
 		 tools.rdfModel.printRDFModel();
@@ -60,6 +67,6 @@ public class Test {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
-			}
+		}
 	}
 }

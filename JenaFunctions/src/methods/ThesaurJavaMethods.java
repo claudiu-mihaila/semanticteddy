@@ -31,6 +31,22 @@ public class ThesaurJavaMethods {
 //	}
 	
 	/**
+	 * Deletes a concept from the model
+	 * @param currentConcept the current concept
+	 * @throws Exception if the current concept still has narrower/related concepts
+	 */
+	public void deleteConcept(Concept currentConcept) throws Exception {
+		if (currentConcept.getChildren().size() > 0)
+			throw new Exception("The concept has narrower concepts!");
+		if (currentConcept.getRelated().size() > 0)
+			throw new Exception("The concept has related concepts!");
+		for (Concept parent : currentConcept.getParents()) {
+			parent.getChildren().remove(currentConcept);
+		}
+		rdfModel.deleteConcept(currentConcept.getUUID());
+	}
+	
+	/**
 	 * Creates a new child concept
 	 * @param parentConcept the current concept, which will be the parent
 	 * @param name the name of the child concept
@@ -41,6 +57,24 @@ public class ThesaurJavaMethods {
 		parentConcept.getChildren().add(childConcept);
 		rdfModel.addNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), name, Globals.defaultLanguage);
 		return childConcept;
+	}
+	
+	/**
+	 * Links an already existing concept to a concept's parents
+	 * @param childConcept the current child concept
+	 * @param parentConcept the already existing parent
+	 * @throws Exception if childConcept has a broader/related relation with parentConcept
+	 */
+	public void linkChildConcept(Concept parentConcept, Concept childConcept) throws Exception{
+		if (parentConcept.getParents().contains(childConcept) == true)
+			throw new Exception("The concepts already share a broader/narrower relation!");
+		if (parentConcept.getRelated().contains(childConcept) == true)
+			throw new Exception("The concepts already share a related relation!");
+		if (parentConcept.getParents().contains(childConcept) == false) {
+			parentConcept.getChildren().add(childConcept);
+			childConcept.getParents().add(parentConcept);
+			rdfModel.linkNarrowerResource(parentConcept.getUUID(), childConcept.getUUID());
+		}
 	}
 	
 	/**
@@ -58,14 +92,21 @@ public class ThesaurJavaMethods {
 	}
 	
 	/**
-	 * Adds an already existing concept to a concept's parents
+	 * Links an already existing concept to a concept's parents
 	 * @param childConcept the current child concept
 	 * @param parentConcept the already existing parent
+	 * @throws Exception if childConcept has a narrower/related relation with parentConcept
 	 */
-	public void addParentConcept(Concept childConcept, Concept parentConcept){
-		childConcept.getParents().add(parentConcept);
-		parentConcept.getChildren().add(childConcept);
-		rdfModel.addBroaderResource(childConcept.getUUID(), parentConcept.getUUID());
+	public void linkParentConcept(Concept childConcept, Concept parentConcept) throws Exception{
+		if (childConcept.getChildren().contains(parentConcept) == true)
+			throw new Exception("The concepts already share a broader/narrower relation!");
+		if (childConcept.getRelated().contains(parentConcept) == true)
+			throw new Exception("The concepts already share a related relation!");
+		if (childConcept.getParents().contains(parentConcept) == false) {
+			childConcept.getParents().add(parentConcept);
+			parentConcept.getChildren().add(childConcept);
+			rdfModel.linkBroaderResource(childConcept.getUUID(), parentConcept.getUUID());
+		}
 	}
 	
 	/**
@@ -86,11 +127,17 @@ public class ThesaurJavaMethods {
 	 * Adds an already existing concept to a concept's related concepts 
 	 * @param currentConcept the current concept
 	 * @param relatedConcept the already existing concept 
+	 * @throws Exception if currentConcept has a broader/narrower relation to relatedConcept
 	 */
-	public void addRelatedConcept(Concept currentConcept, Concept relatedConcept){
-		currentConcept.getRelated().add(relatedConcept);
-		relatedConcept.getRelated().add(currentConcept);
-		rdfModel.addRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID());
+	public void addRelatedConcept(Concept currentConcept, Concept relatedConcept) throws Exception{
+		if (currentConcept.getChildren().contains(relatedConcept) == true ||
+				currentConcept.getParents().contains(relatedConcept) == true)
+			throw new Exception("The concepts already share a broader/narrower relation!");
+		if (currentConcept.getRelated().contains(relatedConcept) == false) {
+			currentConcept.getRelated().add(relatedConcept);
+			relatedConcept.getRelated().add(currentConcept);
+			rdfModel.addRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID());
+		}
 	}
 	
 	/**

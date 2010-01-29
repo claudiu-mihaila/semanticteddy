@@ -58,6 +58,13 @@ public class ThesaurRDFMethods {
 		return resource;
 	}
 	
+	public void deleteConcept(UUID uuid) {
+		Resource resource = rdfModel.createResource(Globals.projectUri + uuid.toString());
+		
+		rdfModel.removeAll(resource, null, null);
+		rdfModel.removeAll(null, null, resource);
+	}
+	
 //	public Resource createResourceWithValue(String value){
 //		Resource resource = rdfModel.createResource(Globals.projectUri + value);
 //		return resource;
@@ -70,6 +77,15 @@ public class ThesaurRDFMethods {
 			 parentResource.addProperty(getNarrowerProperty(), childResource);
 		}
 	}
+
+	public void linkNarrowerResource(UUID parentUuid, UUID childUuid){
+		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
+		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
+		
+		if (parentResource != null && childResource != null){
+				 parentResource.addProperty(getNarrowerProperty(), childResource);
+		}
+	}
 	
 	public void removeNarrowerResource(UUID parentUuid, UUID childUuid) {
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid.toString());
@@ -80,7 +96,7 @@ public class ThesaurRDFMethods {
 		}
 	}
 
-	public void addBroaderResource(UUID childUuid, UUID parentUuid){
+	public void linkBroaderResource(UUID childUuid, UUID parentUuid){
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
 		
