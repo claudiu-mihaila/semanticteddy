@@ -13,6 +13,7 @@ public class SparqlEndpoint {
 		Query query = QueryFactory.create(queryString);
 		QueryExecution qe = QueryExecutionFactory.create(query, model);
 		ResultSet results = qe.execSelect();
+		qe.close();
 		return results;
 	}
 }
