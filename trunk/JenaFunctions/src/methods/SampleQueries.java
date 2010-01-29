@@ -62,7 +62,7 @@ public class SampleQueries {
 			String queryString = "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> "
 					+ "SELECT distinct ?concept ?label WHERE {"
 					+ "?concept skos:PREFLABEL [] ;"
-					+ "skos:PREFLABEL ?label.}" + "ORDER BY ?label";
+					+ "skos:PREFLABEL ?label.} ORDER BY ?label";
 
 			Query query = QueryFactory.create(queryString);
 

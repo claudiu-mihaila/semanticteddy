@@ -114,7 +114,7 @@ public class ThesaurRDFMethods {
 		}
 	}
 	//related
-	public void addRelatedResource(UUID currentUuid, UUID relatedUuid){
+	public void linkRelatedResource(UUID currentUuid, UUID relatedUuid){
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		Resource relatedResource = rdfModel.getResource(Globals.projectUri + relatedUuid.toString());
 		
