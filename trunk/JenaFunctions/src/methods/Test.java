@@ -1,5 +1,18 @@
 package methods;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+
 import model.Concept;
 
 public class Test {
@@ -9,7 +22,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods();
-		 
+		 		 
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
     	 tools.addDefinition(rootConcept, "def2", "RO");
@@ -51,6 +64,40 @@ public class Test {
 		 
 		 tools.printAsObject(rootConcept);
 		 tools.rdfModel.printRDFModel();
+		
+		 try
+		 {
+		InputStream in = new FileInputStream(new File("teddy.rdf"));
+
+		Model model = ModelFactory.createMemModelMaker().createFreshModel();
+		model.read(in,null); // null base URI, since model URIs are absolute
+		in.close();
+
+		/*String queryString =
+			"select distinct ?name where {[] a ?name } LIMIT 10";*/
+		
+		String queryString =
+			"PREFIX skos: <http://www.w3.org/2004/02/skos/core#> "+
+			"SELECT distinct ?x ?label ?definition WHERE {" +
+					  "?x skos:PREFLABEL [] ;" +
+					  "skos:DEFINITION ?definition ;" +
+					  "skos:PREFLABEL ?label." +	"}";
+					  //"FILTER regex (?definition, \"EN$\", \"i\") }";
+
+		Query query = QueryFactory.create(queryString);
+
+		QueryExecution qe = QueryExecutionFactory.create(query, model);
+		ResultSet results = qe.execSelect();
+
+		ResultSetFormatter.out(System.out, results, query);
+
+		qe.close();
 		 }
+		 catch(Exception e)
+		 {
+		 e.printStackTrace();
+		 
+		 }
+	}
 
 }

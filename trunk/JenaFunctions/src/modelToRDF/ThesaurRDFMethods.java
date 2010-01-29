@@ -1,5 +1,6 @@
 package modelToRDF;
 
+import java.io.FileWriter;
 import java.util.UUID;
 import org.sealife.skos.editor.SKOSVocabulary;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -263,11 +264,20 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void printRDFModel(){
+		try
+		{
+		FileWriter fstream = new FileWriter("teddy.rdf");
 		rdfModel.setNsPrefix("teddy", Globals.projectUri);
 		rdfModel.setNsPrefix("skos", SKOSURI);
 		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
 		rdfModel.write(System.out);
-//		rdfModel.write(System.out, "N-TRIPLE");
+		rdfModel.write(fstream);
+		//		rdfModel.write(System.out, "N-TRIPLE");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public Model getRdfModel() {
