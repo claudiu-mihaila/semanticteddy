@@ -157,13 +157,18 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param label the label to be assigned to the concept
 	 * @param language the language of the label
+	 * @throws Exception if the language already has a label defined or if the label is already an alternative label for the language
 	 */
-	public void addPrefLabel(Concept currentConcept, String label, String language) {
+	public void addPrefLabel(Concept currentConcept, String label, String language) throws Exception {
         String isLabel = currentConcept.getPrefLabels().get(language);
-        if (isLabel == null) {
-        	currentConcept.getPrefLabels().put(language, isLabel);
-        	rdfModel.addPrefLabel(currentConcept.getUUID(), label, language);
-        }
+        if (isLabel != null)
+        	throw new Exception("The selected language already has a preferred label set!");
+        List<String> altLabels = currentConcept.getAltLabels().get(language);
+        if (altLabels != null)
+        	if (altLabels.contains(label) == true)
+        		throw new Exception("This label is already an alternative label for this language!");
+        currentConcept.getPrefLabels().put(language, label);
+        rdfModel.addPrefLabel(currentConcept.getUUID(), label, language);
 	}
 	
 	/**
@@ -172,14 +177,22 @@ public class ThesaurJavaMethods {
 	 * @param oldLabel the existing label
 	 * @param newLabel the new label
 	 * @param language the language of the labels
+	 * @throws Exception if the language does not have a preferred label defined, if the old label does not match the existing label, or if the new label is already an alternative label for the language
 	 */
-	public void editPrefLabel(Concept currentConcept, String oldLabel, String newLabel, String language) {
+	public void editPrefLabel(Concept currentConcept, String oldLabel, String newLabel, String language) throws Exception {
         String isLabel = currentConcept.getPrefLabels().get(language);
-        if (isLabel != null) {
-        	currentConcept.getPrefLabels().remove(language);
-        	currentConcept.getPrefLabels().put(language, newLabel);
-        	rdfModel.editPrefLabel(currentConcept.getUUID(), oldLabel, newLabel, language);
-        }
+        if (isLabel == null)
+        	throw new Exception("The selected language already does not have a preferred label set!");
+        	// addPrefLabel(currentConcept, newLabel, language);
+        if (isLabel.equals(oldLabel) == false)
+        	throw new Exception("The old label does not match the existing label!");
+        List<String> altLabels = currentConcept.getAltLabels().get(language);
+        if (altLabels != null)
+        	if (altLabels.contains(newLabel) == true)
+        		throw new Exception("This label is already an alternative label for this language!");	
+        currentConcept.getPrefLabels().remove(language);
+        currentConcept.getPrefLabels().put(language, newLabel);
+        rdfModel.editPrefLabel(currentConcept.getUUID(), oldLabel, newLabel, language);
 	}
 	
 	/**
@@ -187,14 +200,14 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept 
 	 * @param label the label to be removed
 	 * @param language the language of the label
+	 * @throws Exception if there is no preferred label set for the given language
 	 */
-	public void removePrefLabel(Concept currentConcept, String label, String language){
+	public void removePrefLabel(Concept currentConcept, String label, String language) throws Exception{
         String isLabel = currentConcept.getPrefLabels().get(language);
-        if (isLabel != null)
-        {
-        	currentConcept.getPrefLabels().remove(language);
-            rdfModel.removePrefLabel(currentConcept.getUUID(), label, language);
-        }
+        if (isLabel == null)
+        	throw new Exception("There is no preferred label for this language!");
+        currentConcept.getPrefLabels().remove(language);
+        rdfModel.removePrefLabel(currentConcept.getUUID(), label, language);
 	}
 	
 	/**
@@ -202,14 +215,21 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the concept to be labeled
 	 * @param label the label to be assigned to the concept
 	 * @param language the language of the label
+	 * @throws Exception if the label is already a preferred label for the given language
 	 */
-	public void addAltLabel(Concept currentConcept, String label, String language){
-        List<String> labels = currentConcept.getAltLabels().get(language);
-        if (labels == null)
-            labels = new ArrayList<String>();
-        labels.add(label);
-        currentConcept.getAltLabels().put(language, labels);
-        rdfModel.addAltLabel(currentConcept.getUUID(), label, language);
+	public void addAltLabel(Concept currentConcept, String label, String language) throws Exception{
+		String prefLabel = currentConcept.getPrefLabels().get(language);
+		if (prefLabel != null)
+			if (prefLabel.equals(label) == true)
+				throw new Exception("This label is already a preferred label for this language!");
+        List<String> altLabels = currentConcept.getAltLabels().get(language);
+		if (altLabels == null)
+		    altLabels = new ArrayList<String>();
+		if (altLabels.contains(label) == false) {
+			altLabels.add(label);
+			currentConcept.getAltLabels().put(language, altLabels);
+			rdfModel.addAltLabel(currentConcept.getUUID(), label, language);
+		}
 	}
 	
 	/**
@@ -218,14 +238,21 @@ public class ThesaurJavaMethods {
 	 * @param oldLabel the existing label
 	 * @param newLabel the new label
 	 * @param language the language of the labels
+	 * @throws Exception if there are no labels set, if there is no old label set, or if the new label is already a preferred label for the given language
 	 */
-	public void editAltLabel(Concept currentConcept, String oldLabel, String newLabel, String language){
+	public void editAltLabel(Concept currentConcept, String oldLabel, String newLabel, String language) throws Exception{
+		String prefLabel = currentConcept.getPrefLabels().get(language);
+		if (prefLabel != null)
+			if (prefLabel.equals(newLabel) == true)
+				throw new Exception("This label is already a preferred label for this language!");
         List<String> labels = currentConcept.getAltLabels().get(language);
+        if (labels == null)
+        	throw new Exception("There are no labels defined for this language");
         int index = labels.indexOf(oldLabel);
-        if (index >= 0) {
-        	labels.set(index, newLabel);
-    		rdfModel.editAltLabel(currentConcept.getUUID(), oldLabel, newLabel, language);
-        }
+        if (index < 0)
+        	throw new Exception("This old label does not exist for this language!");
+        labels.set(index, newLabel);
+    	rdfModel.editAltLabel(currentConcept.getUUID(), oldLabel, newLabel, language);
 	}
 	
 	/**
@@ -233,15 +260,17 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param label the label to be removed
 	 * @param language the language of the label
+	 * @throws Exception if there are no alternative labels or if the label does not exist for the given language
 	 */
-	public void removeAltLabel(Concept currentConcept, String label, String language){
+	public void removeAltLabel(Concept currentConcept, String label, String language) throws Exception{
         List<String> labels = currentConcept.getAltLabels().get(language);
-        if (labels != null)
-        {
-        	labels.remove(label);
-            currentConcept.getDefinitions().put(language, labels);
-            rdfModel.removeAltLabel(currentConcept.getUUID(), label, language);
-        }
+        if (labels == null)
+        	throw new Exception("There are no alternative labels for this language!");
+        if (labels.contains(label) == false)
+        	throw new Exception("The label does not exist as an alternative label for this language!");
+        labels.remove(label);
+        currentConcept.getDefinitions().put(language, labels);
+        rdfModel.removeAltLabel(currentConcept.getUUID(), label, language);
 	}
 	
 	/**
@@ -249,7 +278,12 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param latitude the latitude of the concept
 	 */
-	public void addLatitude(Concept currentConcept, String latitude) {
+	public void addLatitude(Concept currentConcept, String latitude) throws NumberFormatException {
+		try {
+			Float.parseFloat(latitude);
+		} catch (NumberFormatException ex) {
+			throw ex;
+		}
 		currentConcept.setLatitude(latitude);
 		rdfModel.addLatitude(currentConcept.getUUID(), latitude);
 	}
@@ -259,7 +293,12 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param latitude the latitude of the concept
 	 */
-	public void editLatitude(Concept currentConcept, String latitude) {
+	public void editLatitude(Concept currentConcept, String latitude) throws NumberFormatException {
+		try {
+			Float.parseFloat(latitude);
+		} catch (NumberFormatException ex) {
+			throw ex;
+		}
 		currentConcept.setLatitude(latitude);
 		rdfModel.editLatitude(currentConcept.getUUID(), latitude);
 	}
@@ -278,7 +317,12 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param longitude the longitude of the concept
 	 */
-	public void addLongitude(Concept currentConcept, String longitude) {
+	public void addLongitude(Concept currentConcept, String longitude) throws NumberFormatException {
+		try {
+			Float.parseFloat(longitude);
+		} catch (NumberFormatException ex) {
+			throw ex;
+		}
 		currentConcept.setLongitude(longitude);
 		rdfModel.addLongitude(currentConcept.getUUID(), longitude);
 	}	
@@ -288,7 +332,12 @@ public class ThesaurJavaMethods {
 	 * @param currentConcept the current concept
 	 * @param longitude the longitude of the concept
 	 */
-	public void editLongitude(Concept currentConcept, String longitude) {
+	public void editLongitude(Concept currentConcept, String longitude) throws NumberFormatException {
+		try {
+			Float.parseFloat(longitude);
+		} catch (NumberFormatException ex) {
+			throw ex;
+		}
 		currentConcept.setLongitude(longitude);
 		rdfModel.editLongitude(currentConcept.getUUID(), longitude);
 	}

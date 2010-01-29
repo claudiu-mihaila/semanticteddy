@@ -5,6 +5,7 @@ import model.Concept;
 public class Test {
 
 	public static void main(String[] args) {
+		try {
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods();
 		 		 
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
@@ -24,6 +25,7 @@ public class Test {
 		 
 		 Concept child2 = tools.addChildConcept(rootConcept, "Child2");
 		 tools.addDefinition(child2, "Boy", "EN");
+		 tools.addPrefLabel(child2, "Ana", "DE");
 		 
 		 Concept child3 = tools.addChildConcept(rootConcept, "Child3");
 		 
@@ -42,6 +44,7 @@ public class Test {
 		 tools.editDefinition(rootConcept, "def2", "definitie", "RO");
 		 tools.editPrefLabel(child2, "Child2", "Ioan", "RO");
 		 tools.addPrefLabel(child2, "John", "EN");
+		 tools.removePrefLabel(child2, "Ana", "DE");
 		 tools.removeRelatedConcept(child2, subChild2);
 		 tools.editAltLabel(child1, "Irene", "Mary", "EN");
 		 tools.removeAltLabel(child1, "Irina", "RO");
@@ -53,5 +56,10 @@ public class Test {
 		 SampleQueries.SampleQuery2(tools.rdfModel.getRdfModel());
 		 SampleQueries.SampleQuery3(tools.rdfModel.getRdfModel());
 		 SampleQueries.SampleQuery4(tools.rdfModel.getRdfModel());
+		 
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
+			}
 	}
 }
