@@ -49,5 +49,9 @@ public class Test {
 		 tools.printAsObject(rootConcept);
 		 tools.rdfModel.printRDFModel();
 		 
+		 SampleQueries.SampleQuery1(tools.rdfModel.getRdfModel());
+		 SampleQueries.SampleQuery2(tools.rdfModel.getRdfModel());
+		 SampleQueries.SampleQuery3(tools.rdfModel.getRdfModel());
+		 SampleQueries.SampleQuery4(tools.rdfModel.getRdfModel());
 	}
 }
