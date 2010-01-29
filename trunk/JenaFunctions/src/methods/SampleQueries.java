@@ -15,21 +15,22 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class SampleQueries {
 
-	private static Model model;
-
-	public static void init() {
+	public static Model init() {
 		try {
+			Model model;
 			InputStream in = new FileInputStream(new File("teddy.rdf"));
 			model = ModelFactory.createMemModelMaker().createFreshModel();
 			model.read(in, null); // null base URI, since model URIs are
 									// absolute
 			in.close();
+			return model;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public static void SampleQuery1() {
+	public static void SampleQuery1(Model model) {
 		System.out.println("Query 1: Conceptele care au o eticheta preferata si o definitie atasata"+
 				", iar aceasta din urma este in engleza");
 		try {
@@ -54,7 +55,7 @@ public class SampleQueries {
 		}
 	}
 
-	public static void SampleQuery2() {
+	public static void SampleQuery2(Model model) {
 		System.out.println("\nQuery 2: Toate conceptele cu etichetele lor preferate, ordonate dupa eticheta");
 		try {
 
@@ -77,7 +78,7 @@ public class SampleQueries {
 		}
 	}
 
-	public static void SampleQuery3() {
+	public static void SampleQuery3(Model model) {
 		System.out.println("\nQuery 3: Toate conceptele a caror eticheta preferata incepe cu litera c");
 		try {
 
@@ -102,7 +103,7 @@ public class SampleQueries {
 		}
 	}
 	
-	public static void SampleQuery4() {
+	public static void SampleQuery4(Model model) {
 		System.out.println("\nQuery 4: Afiseaza primele 3 seturi de etichete preferate + alternative ale conceptelor care le au definite pe amandoua");
 		try {
 
@@ -129,11 +130,11 @@ public class SampleQueries {
 
 	public static void main(String[] args) {
 
-		init();
-		SampleQuery1();
-		SampleQuery2();
-		SampleQuery3();
-		SampleQuery4();
+		Model model = init();
+		SampleQuery1(model);
+		SampleQuery2(model);
+		SampleQuery3(model);
+		SampleQuery4(model);
 	}
 
 }
