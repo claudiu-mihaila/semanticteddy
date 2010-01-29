@@ -65,7 +65,9 @@ public class ThesaurJavaMethods {
 	 * @param parentConcept the already existing parent
 	 * @throws Exception if childConcept has a broader/related relation with parentConcept
 	 */
-	public void linkChildConcept(Concept parentConcept, Concept childConcept) throws Exception{
+	public void linkChildConcept(Concept parentConcept, Concept childConcept) throws Exception {
+		if (parentConcept.equals(childConcept) == true)
+			throw new Exception("The two concepts are identical!");
 		if (parentConcept.getParents().contains(childConcept) == true)
 			throw new Exception("The concepts already share a broader/narrower relation!");
 		if (parentConcept.getRelated().contains(childConcept) == true)
@@ -98,6 +100,8 @@ public class ThesaurJavaMethods {
 	 * @throws Exception if childConcept has a narrower/related relation with parentConcept
 	 */
 	public void linkParentConcept(Concept childConcept, Concept parentConcept) throws Exception{
+		if (parentConcept.equals(childConcept) == true)
+			throw new Exception("The two concepts are identical!");
 		if (childConcept.getChildren().contains(parentConcept) == true)
 			throw new Exception("The concepts already share a broader/narrower relation!");
 		if (childConcept.getRelated().contains(parentConcept) == true)
@@ -129,14 +133,16 @@ public class ThesaurJavaMethods {
 	 * @param relatedConcept the already existing concept 
 	 * @throws Exception if currentConcept has a broader/narrower relation to relatedConcept
 	 */
-	public void addRelatedConcept(Concept currentConcept, Concept relatedConcept) throws Exception{
+	public void linkRelatedConcept(Concept currentConcept, Concept relatedConcept) throws Exception{
+		if (currentConcept.equals(relatedConcept) == true)
+			throw new Exception("The two concepts are identical!");
 		if (currentConcept.getChildren().contains(relatedConcept) == true ||
 				currentConcept.getParents().contains(relatedConcept) == true)
 			throw new Exception("The concepts already share a broader/narrower relation!");
 		if (currentConcept.getRelated().contains(relatedConcept) == false) {
 			currentConcept.getRelated().add(relatedConcept);
 			relatedConcept.getRelated().add(currentConcept);
-			rdfModel.addRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID());
+			rdfModel.linkRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID());
 		}
 	}
 	

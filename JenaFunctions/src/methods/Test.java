@@ -1,5 +1,12 @@
 package methods;
 
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.sparql.engine.binding.Binding;
+
+import utils.Globals;
 import model.Concept;
 
 public class Test {
@@ -32,8 +39,8 @@ public class Test {
 		 Concept subChild1 = tools.addChildConcept(child3, "sub3_1");
 		 Concept subChild2 = tools.addChildConcept(child2, "sub3_2");
 		 tools.linkParentConcept(subChild1, rootConcept);
-		 tools.addRelatedConcept(subChild2, child2);
-		 tools.addRelatedConcept(subChild2, child3);
+		 tools.linkRelatedConcept(subChild2, child2);
+		 tools.linkRelatedConcept(subChild2, child3);
 		 
 		 Concept child4 = tools.addChildConcept(subChild2, "Child 4");
 		 tools.addPrefLabel(child4, "Copil 4", "EN");
@@ -60,9 +67,19 @@ public class Test {
 		 tools.rdfModel.printRDFModel();
 		 
 		 SampleQueries.SampleQuery1(tools.rdfModel.getRdfModel());
-		 SampleQueries.SampleQuery2(tools.rdfModel.getRdfModel());
-		 SampleQueries.SampleQuery3(tools.rdfModel.getRdfModel());
-		 SampleQueries.SampleQuery4(tools.rdfModel.getRdfModel());
+
+		 // Afisare prin iterarea solutiilor
+		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.rdfModel.getRdfModel(), Globals.queryString1); 
+		 for (String var : results.getResultVars())
+			 System.out.print(var + "\t"); 
+		 System.out.println();
+		 while(results.hasNext() == true) {
+			 QuerySolution qs = results.next();
+			 System.out.print(results.getRowNumber() + "\t");
+			 for (String var : results.getResultVars())
+				 System.out.print(qs.get(var).toString() + "\t");
+			 System.out.println();
+		 }
 		 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
