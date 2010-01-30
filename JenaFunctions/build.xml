@@ -1,0 +1,58 @@
+<project name="JenaFunctions" default="4_deploy">
+	<property environment="env" />
+	<property name="jboss_home.dir" value="${env.JBOSS_HOME}" />
+	<property name="Jena" value="G:/eclipsework/DUMP"></property>
+	<property name="Jena_CLASSES" value="${Jena}/classes"></property>
+	<property name="Jena_JAR" value="${Jena}/jar"></property>
+	
+	<path id="classpath">
+		<fileset dir="${jboss_home.dir}">
+			<include name="client/**/*.jar"/>
+			<include name="server/default/deploy/jboss-web.deployer/jsf-libs/*.jar"/>
+			<include name="server/default/lib/*.jar"/>
+		</fileset>
+		<fileset dir = "${basedir}">
+			<include name = "lib/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="1_init">
+		<antcall target="5_clean"/>
+		<mkdir dir="${Jena}"/>
+		<mkdir dir="${Jena_CLASSES}"/>
+		<mkdir dir="${Jena_JAR}"/>
+	</target>
+	
+	<target name="2_build" depends="1_init">
+		<javac srcdir="src" destdir="${Jena_CLASSES}" optimize="false" debug="true" encoding="ISO-8859-1">
+			<classpath refid="classpath"></classpath>
+		</javac>
+	</target>
+	
+	<target name="3_pack" depends="2_build">
+		<echo message="Compiling the ${ant.project.name} project"/>
+		
+		<jar destfile="${Jena_JAR}/1_JenaFunctions.jar">
+			<fileset dir="${Jena_CLASSES}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="src">
+				<include name="**/*.xml"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="4_deploy" depends="3_pack">
+		<copy file="${Jena_JAR}/1_JenaFunctions.jar" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"></copy>		
+	</target>
+	
+	<target name="5_clean">
+		<delete dir="${Jena_JAR}" failonerror="false"/>
+		<delete dir="${Jena_CLASSES}" failonerror="false"/>
+		<delete dir="${Jena}" failonerror="false"/>
+	</target>
+	
+	<target name="6_undeploy">
+		<delete file="${jboss_home.dir}/server/default/deploy/1_JenaFunctions.jar" failonerror="false"></delete>
+	</target>
+</project>
