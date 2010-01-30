@@ -18,20 +18,18 @@ import vocabulary.GeoVocabulary;
 
 public class ThesaurRDFMethods {
 	
-	String SKOSURI = "http://www.w3.org/2004/02/skos/core#";
-	
 	Model rdfModel = ModelFactory.createDefaultModel();
 	
-	Resource conceptResource = rdfModel.createResource(SKOSURI + SKOSVocabulary.CONCEPT);
-	Resource conceptSchemeResource = rdfModel.createResource(SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
+	Resource conceptResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPT);
+	Resource conceptSchemeResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
 
-	Property narrowerProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.NARROWER.toString());
-	Property broaderProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.BROADER.toString());
-	Property relatedProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.RELATED.toString());
+	Property narrowerProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.NARROWER.toString());
+	Property broaderProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.BROADER.toString());
+	Property relatedProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.RELATED.toString());
 	
-	Property prefLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.PREFLABEL.toString());
-	Property altLabelProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.ALTLABEL.toString());
-	Property definitionProperty = rdfModel.createProperty(SKOSURI + SKOSVocabulary.DEFINITION.toString());
+	Property prefLabelProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.PREFLABEL.toString());
+	Property altLabelProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.ALTLABEL.toString());
+	Property definitionProperty = rdfModel.createProperty(Globals.SKOSURI + SKOSVocabulary.DEFINITION.toString());
 
 	Resource pointResource = rdfModel.createResource(GeoVocabulary.POINT);
 	Property latitudeProperty = rdfModel.createProperty(GeoVocabulary.LATITUDE);
@@ -65,11 +63,6 @@ public class ThesaurRDFMethods {
 		rdfModel.removeAll(null, null, resource);
 	}
 	
-//	public Resource createResourceWithValue(String value){
-//		Resource resource = rdfModel.createResource(Globals.projectUri + value);
-//		return resource;
-//	}
-	
 	public void addNarrowerResource(UUID parentUuid, UUID childUuid, String childName, String language){
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid.toString());
 		if (parentResource != null){
@@ -82,8 +75,18 @@ public class ThesaurRDFMethods {
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		
+		boolean found = false;
 		if (parentResource != null && childResource != null){
-				 parentResource.addProperty(getNarrowerProperty(), childResource);
+				StmtIterator si = childResource.listProperties(getBroaderProperty());
+				while(si.hasNext() && found==false) {
+					Statement s = si.nextStatement();
+					Resource broaderResource = (Resource)s.getObject();
+					if (parentResource.equals(broaderResource)) {
+						found = true;
+					}
+				}
+				if (found ==false)
+				      parentResource.addProperty(getNarrowerProperty(), childResource);
 		}
 	}
 	
@@ -100,7 +103,17 @@ public class ThesaurRDFMethods {
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
 		
+		boolean found = false;
 		if (childResource != null && parentResource != null){
+			StmtIterator si = childResource.listProperties(getNarrowerProperty());
+			while(si.hasNext() && found==false) {
+				Statement s = si.nextStatement();
+				Resource narrResource = (Resource)s.getObject();
+				if (parentResource.equals(narrResource)) {
+					found = true;
+				}
+			}
+			if (found ==false)
 				 childResource.addProperty(getBroaderProperty(), parentResource);
 		}
 	}
@@ -146,17 +159,6 @@ public class ThesaurRDFMethods {
 	{
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		if (currentResource != null){
-//			// check definitions of current resource if language already included
-//			StmtIterator si = currentR.listProperties(getDefinitionProperty());
-//			while(si.hasNext()) {
-//				Statement s = si.nextStatement();
-//				// if language already included, replace with new definition
-//				if (language.equals(s.getLanguage())) {
-//					s.changeObject(definition, language);
-//					return;
-//				}
-//			}
-//			// it not included, include it
 			currentResource.addProperty(getDefinitionProperty(), definition, language);
 		}
 	}
@@ -284,7 +286,7 @@ public class ThesaurRDFMethods {
 		{
 		FileWriter fstream = new FileWriter("teddy.rdf");
 		rdfModel.setNsPrefix("teddy", Globals.projectUri);
-		rdfModel.setNsPrefix("skos", SKOSURI);
+		rdfModel.setNsPrefix("skos", Globals.SKOSURI);
 		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
 		rdfModel.write(System.out);
 		rdfModel.write(fstream);
