@@ -1,4 +1,4 @@
-<project name="TeddyWeb">
+<project name="TeddyWeb" default="4_2_deploy_as_ear">
 	<property environment="env" />
 	<property name="jboss_home.dir" value="${env.JBOSS_HOME}" />
 	<property name="Teddy" value="G:/eclipsework/DUMP"></property>
@@ -67,22 +67,26 @@
 		<copy file="${Teddy_JAR}/2_Teddy_web.ear" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"></copy>
 		<antcall target="5_clean"/>
 	</target>
-		
 	
-	<target name="4_deploy" depends="3_pack_web">
-		<copy file="${Jena_JAR}/1_JenaFunctions.jar" todir="${jboss_home.dir}/server/default/deploy"></copy>		
-	</target>
-	
-	<target name="5_clean">
+	<target name="5_clean" description="delete .class from dump folder">
 		<delete dir="${Teddy_JAR}" failonerror="false"/>
 		<delete dir="${Teddy_CLASSES}" failonerror="false"/>
 		<delete dir="${Teddy}" failonerror="false"/>
 	</target>
 	
-	<target name="6_undeploy">			
+	<target name="6_undeploy" description="delete jars from jboss">			
 		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy1_web.jar"/>
 		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy2_web.war"/>
 		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy_web.ear"/>
+	</target>
+	
+	<target name="7_libs" description="to be executed only when new libs are added in the classpath, moves new dirs in deploy folder on JBoss">
+		<echo message="copy Teddy WEB libs folder content to ${jboss_home.dir}/server/default/deploy"></echo>
+		<copy verbose="true" todir="${jboss_home.dir}/server/default/lib" overwrite="true">
+			<fileset dir = "${basedir}/WebContent/WEB-INF/lib">
+				<include name = "*.jar"/>
+			</fileset>
+		</copy>
 	</target>
 
 </project>
