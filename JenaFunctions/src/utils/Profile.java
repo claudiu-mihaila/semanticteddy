@@ -6,7 +6,7 @@ import java.util.Map;
 import model.Concept;
 
 public class Profile {
-	private String profileName;
+	private User profileUser;
 	private String profileDefaultLanguage;
 	private Map<Concept,Boolean> profileProjects = new HashMap<Concept, Boolean>(); 
 	
@@ -14,18 +14,18 @@ public class Profile {
 		
 	}
 	
-	public Profile(String  usr, String language, Map<Concept, Boolean> projects){
-		this.profileName = usr;
+	public Profile(User  usr, String language, Map<Concept, Boolean> projects){
+		this.profileUser = usr;
 		this.profileDefaultLanguage = language;
 		this.profileProjects = projects;
 	}
 	
-	public String getProfileName() {
-		return profileName;
+	public User getProfileUser() {
+		return profileUser;
 	}
 
-	public void setProfileName(String profileName) {
-		this.profileName = profileName;
+	public void setProfileUser(User profileUser) {
+		this.profileUser = profileUser;
 	}
 
 	public String getProfileDefaultLanguage() {

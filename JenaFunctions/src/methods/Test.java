@@ -4,13 +4,14 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 import utils.Globals;
+import utils.User;
 import model.Concept;
 
 public class Test {
 
 	public static void main(String[] args) {
 		try {
-		 ThesaurJavaMethods tools = new ThesaurJavaMethods();
+		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"));
 		 		 
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
@@ -47,7 +48,7 @@ public class Test {
 		 tools.addLongitude(child4, "-55");		 
 		 
 		 tools.printAsObject(rootConcept);
-		 tools.rdfModel.printRDFModel();
+		 tools.getRdfModel().printRDFModel();
 		 
 		 tools.removeChildConcept(child3, subChild1);
 		 tools.removeDefinition(rootConcept, "def1", "RO");
@@ -61,12 +62,12 @@ public class Test {
 		 tools.deleteConcept(child4);
 		 
 		 tools.printAsObject(rootConcept);
-		 tools.rdfModel.printRDFModel();
+		 tools.getRdfModel().printRDFModel();
 		 
-		 SampleQueries.SampleQuery1(tools.rdfModel.getRdfModel());
+		 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());
 
 		 // Afisare prin iterarea solutiilor
-		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.rdfModel.getRdfModel(), Globals.queryString1); 
+		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.getRdfModel().getRdfModel(), Globals.queryString1); 
 		 for (Object var : results.getResultVars())
 			 System.out.print(var.toString() + "\t"); 
 		 System.out.println();

@@ -4,9 +4,8 @@ import java.util.Date;
 
 public class Metadata {
 	private String author;
-	private Date created;
-	//pentru inceput...sa nu folosim ultimele doua proprietati..
-	private Date lastChange;
+	private Date dateCreated;
+	private Date lastChangeDate;
 	private String lastChangeBy;
 	
 	public Metadata(){}
@@ -19,22 +18,6 @@ public class Metadata {
 		this.author = author;
 	}
 
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public Date getLastChange() {
-		return lastChange;
-	}
-
-	public void setLastChange(Date lastChange) {
-		this.lastChange = lastChange;
-	}
-
 	public String getLastChangeBy() {
 		return lastChangeBy;
 	}
@@ -42,6 +25,21 @@ public class Metadata {
 	public void setLastChangeBy(String lastChangeBy) {
 		this.lastChangeBy = lastChangeBy;
 	}
-	
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getLastChangeDate() {
+		return lastChangeDate;
+	}
+
+	public void setLastChangeDate(Date lastChangeDate) {
+		this.lastChangeDate = lastChangeDate;
+	}
 	
 }
