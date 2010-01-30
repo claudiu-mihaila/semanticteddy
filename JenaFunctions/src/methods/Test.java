@@ -67,14 +67,14 @@ public class Test {
 
 		 // Afisare prin iterarea solutiilor
 		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.rdfModel.getRdfModel(), Globals.queryString1); 
-		 for (String var : results.getResultVars())
-			 System.out.print(var + "\t"); 
+		 for (Object var : results.getResultVars())
+			 System.out.print(var.toString() + "\t"); 
 		 System.out.println();
 		 while(results.hasNext() == true) {
-			 QuerySolution qs = results.next();
+			 QuerySolution qs = (QuerySolution)results.next();
 			 System.out.print(results.getRowNumber() + "\t");
-			 for (String var : results.getResultVars())
-				 System.out.print(qs.get(var).toString() + "\t");
+			 for (Object var : results.getResultVars())
+				 System.out.print(qs.get(var.toString()).toString() + "\t");
 			 System.out.println();
 		 }
 		 
