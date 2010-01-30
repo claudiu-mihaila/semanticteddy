@@ -1,7 +1,7 @@
 <project name="JenaFunctions" default="4_deploy">
 	<property environment="env" />
 	<property name="jboss_home.dir" value="${env.JBOSS_HOME}" />
-	<property name="Jena" value="G:/eclipsework/DUMP"></property>
+	<property name="Jena" value="${basedir}/DUMP"></property>
 	<property name="Jena_CLASSES" value="${Jena}/classes"></property>
 	<property name="Jena_JAR" value="${Jena}/jar"></property>
 	
