@@ -10,7 +10,6 @@
             xmlns:t="http://myfaces.apache.org/tomahawk">
 			
 	<ui:composition template="/pages/common/template.jspx">
-		<p>hello from ANT files</p>
 		<ui:define name="left">
 		</ui:define>
 		<ui:define name="right">
@@ -20,7 +19,8 @@
 				<rich:tab
 					id = "SKOSTab"
 					name = "SKOS"
-					label="SKOS">test1
+					label="SKOS">
+					<ui:include src="tabs/SKOS.jspx" />
 				</rich:tab>					
 				<rich:tab
 					id = "METATab"
