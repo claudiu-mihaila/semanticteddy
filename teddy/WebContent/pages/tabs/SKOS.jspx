@@ -1,0 +1,64 @@
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:jxee="http://www.jxee-lab.ro/jsf"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:panelGrid columns = "2">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detail Info" />
+			</f:facet>
+			<h:panelGrid columns="2">
+				<h:outputText value="Name: " />
+				<rich:inplaceInput label="Name:"
+					value="#{mainPageAdapter.conceptAdapter.concept.name}"
+				
+					defaultLabel="name" showControls="true" />
+			</h:panelGrid>
+
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Preferred Labels" />
+				</f:facet>
+			</rich:panel>
+
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Alternative Labels" />
+				</f:facet>
+			</rich:panel>
+
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Hidden Labels" />
+				</f:facet>
+			</rich:panel>
+		</rich:panel>
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Relations" />
+			</f:facet>
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Broader" />
+				</f:facet>
+			</rich:panel>
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Narrower" />
+				</f:facet>
+			</rich:panel>
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Related Concepts" />
+				</f:facet>
+			</rich:panel>
+		</rich:panel>
+	</h:panelGrid>
+	</ui:composition>

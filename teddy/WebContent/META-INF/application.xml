@@ -4,7 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_5.xsd"
 	version="5">
 	<display-name>teddy</display-name>
-
+	<icon>
+		<large-icon>images.jpg</large-icon>
+	</icon>
 	<module>
 		<web>
 			<web-uri>2_Teddy2_web.war</web-uri>
