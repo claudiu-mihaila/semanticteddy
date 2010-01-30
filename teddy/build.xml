@@ -1,0 +1,88 @@
+<project name="TeddyWeb">
+	<property environment="env" />
+	<property name="jboss_home.dir" value="${env.JBOSS_HOME}" />
+	<property name="Teddy" value="G:/eclipsework/DUMP"></property>
+	<property name="Teddy_CLASSES" value="${Teddy}/classes"></property>
+	<property name="Teddy_JAR" value="${Teddy}/jar"></property>
+	
+	<path id="classpath">
+		<fileset dir="${jboss_home.dir}">
+			<include name="client/**/*.jar"/>
+			<include name="server/default/deploy/jboss-web.deployer/jsf-libs/*.jar"/>
+			<include name="server/default/lib/*.jar"/>
+			<include name="server/default/deploy/*.jar"/>
+		</fileset>
+		<fileset dir = "${basedir}">
+			<include name = "lib/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="1_init">
+		<antcall target="5_clean"/>
+		<mkdir dir="${Teddy}"/>
+		<mkdir dir="${Teddy_CLASSES}"/>
+		<mkdir dir="${Teddy_JAR}"/>
+	</target>
+	
+	<target name="2_build_web" depends="1_init" >
+		<echo message="Compiling the ${ant.project.name} project web classes"/>
+		<echo message="1_JenaFunctions.jar must exist in ${jboss_home.dir}/server/default/deploy"/>
+		<javac srcdir="src" destdir="${Teddy_CLASSES}" optimize="false" debug="true" encoding="UTF-8">			
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+	
+	<target name="3_pack_web" depends="2_build_web">
+		<jar destfile="${Teddy_JAR}/2_Teddy1_web.jar">
+			<fileset dir="${Teddy_CLASSES}">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+			
+		<war destfile="${Teddy_JAR}/2_Teddy2_web.war">
+			<fileset dir="WebContent">
+				<include name="**/*.jspx"/>
+				<include name="**/*.css"/>
+				<include name="**/*.html"/>
+				<include name="**/*.js"/>
+				<include name="**/*.xml"/>
+			</fileset>			
+		</war>
+	</target>
+	
+	<target name="4_1_deploy_as_war" depends="3_pack_web">
+		<echo message="deploying Teddy WEB project to ${jboss_home.dir}/server/default/deploy"></echo>
+		<copy file="${Teddy_JAR}/2_Teddy1_web.jar" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"/>
+		<copy file="${Teddy_JAR}/2_Teddy2_web.war" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"/>
+		<antcall target="5_clean"/>
+	</target>
+
+	<target name="4_2_deploy_as_ear" depends="3_pack_web">
+		<ear destfile="${Teddy_JAR}/2_Teddy_web.ear" appxml="WebContent/META-INF/application.xml">
+			<fileset dir="${Teddy_JAR}">
+				<include name="*.jar"/>
+				<include name="*.war"/>
+			</fileset>						
+		</ear>
+		<copy file="${Teddy_JAR}/2_Teddy_web.ear" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"></copy>
+		<antcall target="5_clean"/>
+	</target>
+		
+	
+	<target name="4_deploy" depends="3_pack_web">
+		<copy file="${Jena_JAR}/1_JenaFunctions.jar" todir="${jboss_home.dir}/server/default/deploy"></copy>		
+	</target>
+	
+	<target name="5_clean">
+		<delete dir="${Teddy_JAR}" failonerror="false"/>
+		<delete dir="${Teddy_CLASSES}" failonerror="false"/>
+		<delete dir="${Teddy}" failonerror="false"/>
+	</target>
+	
+	<target name="6_undeploy">			
+		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy1_web.jar"/>
+		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy2_web.war"/>
+		<delete file="${jboss_home.dir}/server/default/deploy/2_Teddy_web.ear"/>
+	</target>
+
+</project>

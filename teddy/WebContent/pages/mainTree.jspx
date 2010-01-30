@@ -14,7 +14,6 @@
 		value="#{mainPageAdapter.treeData}" 
 		var="item" 
 		treeNodeVar="treeNode"
-		rowKeyVar="rowKeyVar" 
 		stateVar="stateVar" 
 		ignoreDupResponses="true"
 		rightClickSelection="true" 

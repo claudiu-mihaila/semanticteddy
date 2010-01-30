@@ -10,8 +10,8 @@
             xmlns:t="http://myfaces.apache.org/tomahawk">
 			
 	<ui:composition template="/pages/common/template.jspx">
+		<p>hello from ANT files</p>
 		<ui:define name="left">
-			<ui:include src="/pages/mainTree.jspx" />
 		</ui:define>
 		<ui:define name="right">
 			<rich:tabPanel
