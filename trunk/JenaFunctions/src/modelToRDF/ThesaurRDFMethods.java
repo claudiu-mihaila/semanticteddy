@@ -102,20 +102,20 @@ public class ThesaurRDFMethods {
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		
-		boolean found = false;
+//		boolean found = false;
 		if (parentResource != null && childResource != null){
-				StmtIterator si = childResource.listProperties(getBroaderProperty());
-				while(si.hasNext() && found==false) {
-					Statement s = si.nextStatement();
-					Resource broaderResource = (Resource)s.getObject();
-					if (parentResource.equals(broaderResource)) {
-						found = true;
-					}
-				}
-				if (found ==false){
+//				StmtIterator si = childResource.listProperties(getBroaderProperty());
+//				while(si.hasNext() && found==false) {
+//					Statement s = si.nextStatement();
+//					Resource broaderResource = (Resource)s.getObject();
+//					if (parentResource.equals(broaderResource)) {
+//						found = true;
+//					}
+//				}
+//				if (found ==false){
 				      parentResource.addProperty(getNarrowerProperty(), childResource);
 				      addMetadataToOldResource(parentResource, user);
-				}
+//				}
 		}
 	}
 	
@@ -133,20 +133,20 @@ public class ThesaurRDFMethods {
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
 		
-		boolean found = false;
+//		boolean found = false;
 		if (childResource != null && parentResource != null){
-			StmtIterator si = childResource.listProperties(getNarrowerProperty());
-			while(si.hasNext() && found==false) {
-				Statement s = si.nextStatement();
-				Resource narrResource = (Resource)s.getObject();
-				if (parentResource.equals(narrResource)) {
-					found = true;
-				}
-			}
-			if (found ==false){
+//			StmtIterator si = childResource.listProperties(getNarrowerProperty());
+//			while(si.hasNext() && found==false) {
+//				Statement s = si.nextStatement();
+//				Resource narrResource = (Resource)s.getObject();
+//				if (parentResource.equals(narrResource)) {
+//					found = true;
+//				}
+//			}
+//			if (found ==false){
 				 childResource.addProperty(getBroaderProperty(), parentResource);
-				 addMetadataToOldResource(childResource, user);
-			}
+//				 addMetadataToOldResource(childResource, user);
+//			}
 		}
 	}
 	
