@@ -15,8 +15,8 @@ public class ThesaurJavaMethods {
 	private ThesaurRDFMethods rdfModel ;
 	public Profile currentProfile;
 	
-	public ThesaurJavaMethods(User usr){
-		rdfModel = new ThesaurRDFMethods();
+	public ThesaurJavaMethods(User usr, String modelPath){
+		rdfModel = new ThesaurRDFMethods(modelPath);
 		//se citeste din rdf profilul coresp userului;
 		currentProfile =this.loadProfile(usr); 
 		if (currentProfile == null){
@@ -27,6 +27,7 @@ public class ThesaurJavaMethods {
 	public void closeProject(){
 		rdfModel.closeSession();
 	}
+	
 	public Profile createProfile(User usr, String defLanguage){
 		Profile prof = new Profile(usr,defLanguage, new HashMap<Concept, Boolean>());
 		this.currentProfile = prof;
