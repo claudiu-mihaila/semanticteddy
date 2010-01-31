@@ -1,6 +1,8 @@
 package modelToRDF;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,10 +24,9 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ThesaurRDFMethods {
 	
-	String defaultDirectory = "C:\\Users\\Pavlos\\workspace\\teddyModel";
 //	Model rdfModel = ModelFactory.createDefaultModel();
-	Model rdfModel = TDBFactory.createModel(defaultDirectory);
-	
+	public String modelPath = Globals.projectFolder;
+	Model rdfModel = loadModelOrCreate(modelPath);
 	Resource conceptResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPT);
 	Resource conceptSchemeResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
 	Resource userResource = rdfModel.createResource(Globals.projectUri + "PROJECTCREATOR");
@@ -42,12 +43,57 @@ public class ThesaurRDFMethods {
 	Property latitudeProperty = rdfModel.createProperty(GeoVocabulary.LATITUDE);
 	Property longitudeProperty = rdfModel.createProperty(GeoVocabulary.LONGITUDE);
 	
-	public ThesaurRDFMethods() {}
+	
+	public ThesaurRDFMethods(String modelPath) {
+		this.modelPath = modelPath;
+	}
+	
+	//In cazul in care directorul este gol, TDB va crea indecsii si tabela de noduri,
+	//altfel, daca exista modelul, din rulari anterioare de programe,
+	//atunci se va conecta la informatiile deja existente.
+	public Model loadModelOrCreate(String modelPath){
+        if (modelPath.equals("")){
+        	return TDBFactory.createModel(Globals.projectFolder);
+        }
+        else
+        	return TDBFactory.createModel(modelPath); 
+	}
+	
+	public void exportXML(String xmlFilePath){
+		try
+		{
+	//	FileWriter fstream = new FileWriter("teddy.rdf");
+		PrintWriter outputXML = new PrintWriter(new File(xmlFilePath));
+		
+		rdfModel.setNsPrefix("teddy", Globals.projectUri);
+		rdfModel.setNsPrefix("skos", Globals.SKOSURI);
+		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
+		
+		rdfModel.write(System.out);
+		rdfModel.write(outputXML);
+	//	rdfModel.write(fstream);
+		//		rdfModel.write(System.out, "N-TRIPLE");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void exportTurtle(String turtleFilePath){
+		
+	}
+	
+	public void exportRDFa(String rdfaFilePath){
+		
+	}
 	
 	public void closeSession(){
 		rdfModel.close();
 		rdfModel.commit();
 	}
+	
+	
 	public Resource addMetadataToNewResource(Resource res, String user){
 		//metadata info
 		Resource authorResource = rdfModel.createResource(Globals.projectUri + user);
@@ -329,23 +375,6 @@ public class ThesaurRDFMethods {
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		currentResource.removeAll(getLongitudeProperty());
 		addMetadataToOldResource(currentResource, user);
-	}
-	
-	public void printRDFModel(){
-		try
-		{
-		FileWriter fstream = new FileWriter("teddy.rdf");
-		rdfModel.setNsPrefix("teddy", Globals.projectUri);
-		rdfModel.setNsPrefix("skos", Globals.SKOSURI);
-		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
-		rdfModel.write(System.out);
-		rdfModel.write(fstream);
-		//		rdfModel.write(System.out, "N-TRIPLE");
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public Model getRdfModel() {
