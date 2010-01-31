@@ -87,4 +87,28 @@ public class ConceptAdapter implements Serializable {
 		
 	}
 	
+	public String getDOTCode() {
+		String result = "digraph G { ";
+		result = result + "node [shape = doublecircle]; \"" + concept.getName() + "\";";
+		
+		result = result + "node [shape = ellipse];";
+		for (Concept c : concept.getChildren())
+			result = result + "\""+ c.getName() + "\"; ";
+		for (Concept c : concept.getParents())
+			result = result + "\""+ c.getName() + "\"; ";
+			
+		result = result + "node [color = \"#000000\", fillcolor = \"#EEEEEE\", style = filled];";
+		for (Concept c : concept.getRelated())
+			result = result + "\""+ c.getName() + "\"; ";
+		
+		for (Concept c : concept.getChildren())
+			result = result + "\""+ concept.getName() + " -> " + c.getName() + "[label = \"N\", color = \"#000000\"]" + "\"; ";
+		for (Concept c : concept.getParents())
+			result = result + "\""+ concept.getName() + " -> " + c.getName() + "[label = \"B\", color = \"#000000\"]" + "\"; ";
+		for (Concept c : concept.getRelated())
+			result = result + "\""+ concept.getName() + " -> " + c.getName() + "[label = \"R\", color = \"#999999\"]" + "\"; ";	
+	
+		result = result + "}";
+		return result;
+	}
 }
