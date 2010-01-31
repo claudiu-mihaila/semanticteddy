@@ -10,19 +10,21 @@ import utils.Globals;
 import vocabulary.GeoVocabulary;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.DC_10;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ThesaurRDFMethods {
 	
-	Model rdfModel = ModelFactory.createDefaultModel();
+	String defaultDirectory = "C:\\Users\\Pavlos\\workspace\\teddyModel";
+//	Model rdfModel = ModelFactory.createDefaultModel();
+	Model rdfModel = TDBFactory.createModel(defaultDirectory);
 	
 	Resource conceptResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPT);
 	Resource conceptSchemeResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
@@ -42,6 +44,10 @@ public class ThesaurRDFMethods {
 	
 	public ThesaurRDFMethods() {}
 	
+	public void closeSession(){
+		rdfModel.close();
+		rdfModel.commit();
+	}
 	public Resource addMetadataToNewResource(Resource res, String user){
 		//metadata info
 		Resource authorResource = rdfModel.createResource(Globals.projectUri + user);
