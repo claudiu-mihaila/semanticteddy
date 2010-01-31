@@ -2,6 +2,7 @@ package utils;
 
 
 public class Globals {
+	public static String projectFolder="C:\\Users\\Pavlos\\workspace\\teddyModel";
 	public static String projectUri= "http://Teddy#";
 	public static String SKOSURI = "http://www.w3.org/2004/02/skos/core#";
 	public static String defaultLanguage = "RO";
