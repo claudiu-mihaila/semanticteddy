@@ -65,4 +65,13 @@
 			</fileset>
 		</copy>
 	</target>
+	
+	<target name="7_libs_SemWeb" description="to be executed only when new libs are added in the classpath, moves new dirs in deploy folder on JBoss">
+			<echo message="copy JenaFunctions libs folder content to ${jboss_home.dir}/server/default/deploy"></echo>
+			<copy verbose="true" todir="${jboss_home.dir}/server/default/lib" overwrite="true">
+				<fileset dir = "${basedir}/libForSemW">
+					<include name = "*.jar"/>
+				</fileset>
+			</copy>
+		</target>
 </project>
