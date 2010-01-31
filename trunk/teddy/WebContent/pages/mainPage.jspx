@@ -31,11 +31,7 @@
 					id = "DOTTab"
 					name = "DOT"
 					label="Vizualization">
-					<t:div 
-						id = "testingDotImg"
-						rendered = "#{mainPageController.dotRendered}">
-						<ui:include src="tests/getDot.jspx" />
-					</t:div>
+					<ui:include src="tabs/DOT.jspx" />
 				</rich:tab>
 				<rich:tab
 					id = "GMAPTab"
