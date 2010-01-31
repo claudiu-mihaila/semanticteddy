@@ -1,6 +1,12 @@
 package utils;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 805178257404306374L;
 	private String username;
 	private String password;
 	
