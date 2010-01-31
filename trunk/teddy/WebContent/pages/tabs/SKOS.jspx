@@ -18,13 +18,14 @@
 				<h:inputText
 					id = "conceptName"
 					value="#{mainPageAdapter.conceptAdapter.concept.name}"/>
-			</h:panelGrid>
-
+			</h:panelGrid>			
+			
 			<rich:dataTable
 				id = "preferredTable"
 				value="#{mainPageAdapter.conceptAdapter.preferredLabelsDM}"
 				var="row"
-				rowKeyVar="rkv">					
+				rowKeyVar="rkv"
+				rows="4">					
 				<f:facet name="header">
 					<h:outputText value="Preferred Labels" />
 				</f:facet>
@@ -55,13 +56,17 @@
 						</a4j:support>
 					</h:inputText>
 				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller />
+		        </f:facet>
 			</rich:dataTable>
 
 			<rich:dataTable
 				id = "alternativeTable"
 				value="#{mainPageAdapter.conceptAdapter.alternativeLabelsDM}"
 				var="row"
-				rowKeyVar="rkv">
+				rowKeyVar="rkv"
+				rows="4">
 				<f:facet name="header">
 					<h:outputText value="Alternative Labels" />
 				</f:facet>
@@ -77,31 +82,36 @@
 						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForAlternativeLabels}"  />
 						<a4j:support 
 							event="onchange" 
-							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLineLang}" 
 							reRender = "alternativeTable">
 						</a4j:support>
 					</h:selectOneMenu>
 				</rich:column>
 				<rich:column>
-					<rich:dataList 
-						id = "def#{rkv}" 
+					<rich:dataTable
 						var = "def" 
 						value = "#{row.value}">				
 						<h:inputText value = "#{def}">
 							<a4j:support 
 								event="onchange" 
-								actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
+								actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLineLabel}" 
 								reRender = "alternativeTable">
 							</a4j:support>
 						</h:inputText>
-					</rich:dataList>
+					</rich:dataTable>
 				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller />
+		        </f:facet>
 			</rich:dataTable>
 
-			<rich:dataTable>
+			<rich:dataTable rows = "4">
 				<f:facet name="header">
 					<h:outputText value="Definitions" />
 				</f:facet>
+				<f:facet name="footer">
+					<rich:datascroller />
+		        </f:facet>
 			</rich:dataTable>
 		</rich:panel>
 		<rich:panel>
