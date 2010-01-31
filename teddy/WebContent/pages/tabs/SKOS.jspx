@@ -1,4 +1,3 @@
-
 <ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -15,11 +14,10 @@
 				<h:outputText value="Detail Info" />
 			</f:facet>
 			<h:panelGrid columns="2">
-				<h:outputText value="Name: " />
-				<rich:inplaceInput label="Name:"
-					value="#{mainPageAdapter.conceptAdapter.concept.name}"
-				
-					defaultLabel="name" showControls="true" />
+				<h:outputLabel for = "conceptName" value="Name: " />
+				<h:inputText
+					id = "conceptName"
+					value="#{mainPageAdapter.conceptAdapter.concept.name}"/>
 			</h:panelGrid>
 
 			<rich:dataTable
@@ -38,8 +36,9 @@
 					<h:selectOneMenu
 						id = "prefLangSelect" 
 						value = "#{row.key}" 
-						rendered = "#{empty(row.key)}">
-						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForPreferredLabels}" />
+						rendered = "#{empty(row.key)}"
+						>
+						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForPreferredLabels}"  />
 						<a4j:support 
 							event="onchange" 
 							actionListener="#{mainPageAdapter.conceptAdapter.addNewPrefLine}" 
@@ -58,10 +57,40 @@
 				</rich:column>
 			</rich:dataTable>
 
-			<rich:dataTable>
+			<rich:dataTable
+				id = "alternativeTable"
+				value="#{mainPageAdapter.conceptAdapter.alternativeLabelsDM}"
+				var="row"
+				rowKeyVar="rkv">
 				<f:facet name="header">
 					<h:outputText value="Alternative Labels" />
 				</f:facet>
+				<rich:column>
+					<h:outputText 
+						id = "altLang" 
+						value = "#{row.key}" 
+						rendered = "#{not(empty(row.key))}"/>
+					<h:selectOneMenu
+						id = "altLangSelect" 
+						value = "#{row.key}" 
+						rendered = "#{empty(row.key)}">
+						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForAlternativeLabels}"  />
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
+							reRender = "alternativeTable">
+						</a4j:support>
+					</h:selectOneMenu>
+				</rich:column>
+				<rich:column>
+					<h:inputText value = "#{row.value}">
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
+							reRender = "alternativeTable">
+						</a4j:support>
+					</h:inputText>
+				</rich:column>
 			</rich:dataTable>
 
 			<rich:dataTable>

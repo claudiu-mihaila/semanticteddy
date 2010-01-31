@@ -43,4 +43,8 @@ public class MapEntryView<K,V> implements Serializable{
 		this.value = value;
 	}
 
+	@Override
+	public String toString() {
+		return "{ " + this.getKey() + ", " + this.getValue() + "}" ;
+	}
 }

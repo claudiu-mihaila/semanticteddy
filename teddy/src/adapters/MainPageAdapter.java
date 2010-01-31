@@ -22,7 +22,8 @@ public class MainPageAdapter implements Serializable {
 	private TreeNode<Concept> treeData;
 	
 	public MainPageAdapter() {
-		this.conceptAdapter = new ConceptAdapter(this);
+		if (null==this.conceptAdapter)
+			this.conceptAdapter = new ConceptAdapter(this);
 	}
 	
 	public ConceptAdapter getConceptAdapter() {
