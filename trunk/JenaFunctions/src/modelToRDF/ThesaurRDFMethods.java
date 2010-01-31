@@ -2,16 +2,21 @@ package modelToRDF;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.UUID;
 
 import org.sealife.skos.editor.SKOSVocabulary;
 
+import tdb.turtle;
 import utils.Globals;
 import vocabulary.GeoVocabulary;
 
+import com.hp.hpl.jena.n3.turtle.parser.TurtleParser;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -24,9 +29,9 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ThesaurRDFMethods {
 	
-//	Model rdfModel = ModelFactory.createDefaultModel();
-	public String modelPath = Globals.projectFolder;
-	Model rdfModel = loadModelOrCreate(modelPath);
+	Model rdfModel = ModelFactory.createDefaultModel();
+	//public String modelPath = Globals.projectFolder;
+//	Model rdfModel = loadModelOrCreate(modelPath);
 	Resource conceptResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPT);
 	Resource conceptSchemeResource = rdfModel.createResource(Globals.SKOSURI + SKOSVocabulary.CONCEPTSCHEME);
 	Resource userResource = rdfModel.createResource(Globals.projectUri + "PROJECTCREATOR");
@@ -45,7 +50,7 @@ public class ThesaurRDFMethods {
 	
 	
 	public ThesaurRDFMethods(String modelPath) {
-		this.modelPath = modelPath;
+	//	this.modelPath = modelPath;
 	}
 	
 	//In cazul in care directorul este gol, TDB va crea indecsii si tabela de noduri,
@@ -68,12 +73,15 @@ public class ThesaurRDFMethods {
 		rdfModel.setNsPrefix("teddy", Globals.projectUri);
 		rdfModel.setNsPrefix("skos", Globals.SKOSURI);
 		rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
+		rdfModel.setNsPrefix("dcTerms",DCTerms.getURI());
+		rdfModel.setNsPrefix("dc_10", DC_10.getURI());
 		
 		rdfModel.write(System.out);
 		rdfModel.write(outputXML);
+		
+		
 	//	rdfModel.write(fstream);
-		//		rdfModel.write(System.out, "N-TRIPLE");
-		}
+						}
 		catch(Exception e)
 		{
 			e.printStackTrace();
@@ -81,7 +89,6 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void exportTurtle(String turtleFilePath){
-		
 	}
 	
 	public void exportRDFa(String rdfaFilePath){

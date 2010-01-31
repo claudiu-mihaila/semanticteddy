@@ -72,7 +72,7 @@ public class Test {
 		 tools.printAsObject(rootConcept);
 		
 		 tools.getRdfModel().exportXML("D://MyTestFolderr//XMLTry.xml");
-		 tools.closeProject();
+		// tools.closeProject();
 		
 	//	 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());
 
