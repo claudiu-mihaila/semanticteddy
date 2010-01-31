@@ -1,22 +1,16 @@
 package methods;
 
-import org.ontoware.rdf2go.RDF2Go;
-import org.ontoware.rdf2go.model.Model;
-import org.ontoware.rdf2go.model.node.URI;
-import org.ontoware.rdf2go.exception.ModelRuntimeException;
-import org.ontoware.rdf2go.model.QueryResultTable;
-import org.ontoware.rdf2go.model.QueryRow;
-import org.ontoware.rdf2go.model.node.Node;
-import org.ontoware.rdf2go.model.node.PlainLiteral;
-import org.ontoware.rdf2go.model.node.Resource;
-import org.ontoware.rdf2go.vocabulary.XSD;
-
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
@@ -28,16 +22,12 @@ public class SparqlTestQueries {
      * @param args the command line arguments
      */
 	private static Model model;
-	private static URI hasTag;
 	
-	private static void init() throws ModelRuntimeException {
-		model = RDF2Go.getModelFactory().createModel();
-		model.open();
+	private static void init() {
+		model = ModelFactory.createDefaultModel();
+//		model.open();
 	}
 	
-	public static void tag(Resource resource, Node tag) throws ModelRuntimeException {
-		model.addStatement(resource, hasTag, tag);
-	}
 	public static void QueryEnclave()
 	{
 		System.out.println("Query 1:");
@@ -112,7 +102,7 @@ public class SparqlTestQueries {
 
         try {
             ResultSet results = qexec.execSelect();
-            for ( ; results.hasNext() ; )
+            while( results.hasNext() )
         {
             QuerySolution soln = results.nextSolution() ;
             String x = soln.get("Concept").toString();
@@ -190,7 +180,7 @@ public class SparqlTestQueries {
         	"PREFIX prop: <http://dbpedia.org/property/> "+
        		"ASK { <http://dbpedia.org/resource/Amazon_River> prop:length ?lungAmazon . "+
         		  "<http://dbpedia.org/resource/Nile> prop:length ?lungNil ."+
-        		  " FILTER (?lungAmazon > ?lungNil) .}";
+        		  " FILTER (?lungAmazon < ?lungNil) .}";
 
         Query query = QueryFactory.create(sparqlQueryString);
 
@@ -210,53 +200,57 @@ public static void PopulateQuery()
 	init();
 	// creating URIs
 	// persons
-	URI max = model.createURI("http://xam.de/foaf.rdf.xml#i");
-	URI konrad = model.createURI("http://example.com/persons#konrad");
-	URI guido = model.createURI("http://example.com/persons#guido");
-	URI james = model.createURI("http://example.com/persons#james");
+	Resource max = model.createResource("http://xam.de/foaf.rdf.xml#i");
+	Resource konrad = model.createResource("http://example.com/persons#konrad");
+	Resource guido = model.createResource("http://example.com/persons#guido");
+	Resource james = model.createResource("http://example.com/persons#james");
 	// relations
-	URI hasName = model.createURI("http://xmlns.com/foaf/0.1/#term_name");
-	URI hasAge = model.createURI("http://example.com/relations#age");
-	hasTag = model.createURI("http://example.com/relations#hasTag");
+	Property hasName = model.createProperty("http://xmlns.com/foaf/0.1/#term_name");
+	Property hasAge = model.createProperty("http://example.com/relations#age");
+	Property hasTag = model.createProperty("http://example.com/relations#hasTag");
 	// tags
-	PlainLiteral tagJava = model.createPlainLiteral("Java");
-	PlainLiteral tagPython = model.createPlainLiteral("Python");
+	Literal tagJava = model.createLiteral("Java");
+	Literal tagPython = model.createLiteral("Python");
 	// adding statements
 	// naming
-	model.addStatement(max, hasName, "Max Völkel");
-	model.addStatement(konrad, hasName, "Konrad V");
-	model.addStatement(guido, hasName, "Guido van Rossum");
-	model.addStatement(james, hasName, "James Gosling");
+	model.add(max, hasName, "Max Völkel");
+	model.add(konrad, hasName, "Konrad V");
+	model.add(guido, hasName, "Guido van Rossum");
+	model.add(james, hasName, "James Gosling");
 	
 	// a typed property, age
-	model.addStatement(konrad, hasAge, model.createDatatypeLiteral("19", XSD._integer));
-	model.addStatement(max, hasAge, model.createDatatypeLiteral("29", XSD._integer));
+	model.add(konrad, hasAge, model.createTypedLiteral(19));
+	model.add(max, hasAge, model.createTypedLiteral(29));
 	
 	// tagging
-	tag(max, tagJava);
-	tag(james, tagJava);
-	tag(konrad, tagJava);
-	tag(konrad, tagPython);
-	tag(guido, tagPython);
-	model.dump();
+	model.add(max, hasTag, tagJava);
+	model.add(james, hasTag, tagJava);
+	model.add(konrad, hasTag, tagJava);
+	model.add(konrad, hasTag, tagPython);
+	model.add(guido, hasTag, tagPython);
+//	model.dump();
 	System.out.println("Query 2:");
 	String queryString = "SELECT ?resource ?tag WHERE { ?resource <"+hasTag+"> ?tag }";
-	QueryResultTable results = model.sparqlSelect(queryString);
-	for(String var : results.getVariables()) {
+	Query query = QueryFactory.create(queryString);
+	QueryExecution qe = QueryExecutionFactory.create(query, model);
+	ResultSet results = qe.execSelect();
+	for(String var : results.getResultVars()) {
 		System.out.println(var);
 	}
-	for(QueryRow row : results) {
-		System.out.println(row.getValue("resource") + " is tagged as " + row.getValue("tag"));
+	while (results.hasNext())
+	{
+		QuerySolution row = results.nextSolution();
+		System.out.println(row.get("resource") + " is tagged as " + row.get("tag"));
 	}
 }
-    public static void main(String[] args) throws ModelRuntimeException {
+    public static void main(String[] args) {
 
 		/*System.out.println("Query 1:");
 		String queryString = "SELECT ?person WHERE { ?person <"+hasTag+"> "+tagJava.toSPARQL()+" }";*/
 		PopulateQuery();
-		/*QueryEnclave();
+		QueryEnclave();
 		QueryEscu();
-		QuerySimple();*/
+		QuerySimple();
 		QueryQ();
 		QueryRomania();
 
