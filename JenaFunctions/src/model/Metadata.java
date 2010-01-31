@@ -1,8 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Metadata {
+public class Metadata  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9223001260141880240L;
 	private String author;
 	private Date dateCreated;
 	private Date lastChangeDate;
