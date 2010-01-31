@@ -24,6 +24,9 @@ public class ThesaurJavaMethods {
 		}
 	}
 	
+	public void closeProject(){
+		rdfModel.closeSession();
+	}
 	public Profile createProfile(User usr, String defLanguage){
 		Profile prof = new Profile(usr,defLanguage, new HashMap<Concept, Boolean>());
 		this.currentProfile = prof;
