@@ -4,7 +4,9 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
 
 public class Globals {
-	public static String projectFolder="C:\\Users\\Pavlos\\workspace\\teddyModel";
+	public static String projectFolder="D:\\TeddyModel\\";
+	public static String xmlDefaultExportPath = "D:\\TeddyExport\\TeddyXML.xml";
+	public static String turtleDefaultExportPath = "D:\\TeddyExport\\TeddyTurtle.xml";
 	public static String projectUri= "http://Teddy#";
 	public static String SKOSURI = "http://www.w3.org/2004/02/skos/core#";
 	public static String defaultLanguage = "RO";

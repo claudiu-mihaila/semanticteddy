@@ -15,7 +15,7 @@ public class ThesaurJavaMethods {
 	private ThesaurRDFMethods rdfModel ;
 	public Profile currentProfile;
 	
-	public ThesaurJavaMethods(User usr, String modelPath){
+	public ThesaurJavaMethods(User usr, String modelPath) throws Exception{
 		rdfModel = new ThesaurRDFMethods(modelPath);
 		//se citeste din rdf profilul coresp userului;
 		currentProfile =this.loadProfile(usr); 
