@@ -12,8 +12,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"));
-		 
+		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"), "C:\\Users\\Pavlos\\workspace\\teddyModel");
 	//	 Model myModel = TDBFactory.createModel("C:\\MyTEstFolder2222");
 	//		Resource myR = myModel.createResource("http://testUri/sim");
 	//		myR.addProperty(FOAF.accountName, "xulescu");
@@ -57,7 +56,7 @@ public class Test {
 		 tools.addLongitude(child4, "-55");		 
 		 
 		 tools.printAsObject(rootConcept);
-		 tools.getRdfModel().printRDFModel();
+		// tools.getRdfModel().printRDFModel();
 		 
 		 tools.removeChildConcept(child3, subChild1);
 		 tools.removeDefinition(rootConcept, "def1", "RO");
@@ -72,9 +71,9 @@ public class Test {
 		 
 		 tools.printAsObject(rootConcept);
 		
-		 tools.getRdfModel().printRDFModel();
+		 tools.getRdfModel().exportXML("D://MyTestFolderr//XMLTry.xml");
 		 tools.closeProject();
-		 
+		
 	//	 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());
 
 		 // Afisare prin iterarea solutiilor
