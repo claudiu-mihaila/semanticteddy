@@ -22,23 +22,53 @@
 					defaultLabel="name" showControls="true" />
 			</h:panelGrid>
 
-			<rich:panel>
+			<rich:dataTable
+				id = "preferredTable"
+				value="#{mainPageAdapter.conceptAdapter.preferredLabelsDM}"
+				var="row"
+				rowKeyVar="rkv">					
 				<f:facet name="header">
 					<h:outputText value="Preferred Labels" />
 				</f:facet>
-			</rich:panel>
+				<rich:column>
+					<h:outputText 
+						id = "prefLang" 
+						value = "#{row.key}" 
+						rendered = "#{not(empty(row.key))}"/>
+					<h:selectOneMenu
+						id = "prefLangSelect" 
+						value = "#{row.key}" 
+						rendered = "#{empty(row.key)}">
+						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForPreferredLabels}" />
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewPrefLine}" 
+							reRender = "preferredTable">
+						</a4j:support>
+					</h:selectOneMenu>
+				</rich:column>
+				<rich:column>
+					<h:inputText value = "#{row.value}">
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewPrefLine}" 
+							reRender = "preferredTable">
+						</a4j:support>
+					</h:inputText>
+				</rich:column>
+			</rich:dataTable>
 
-			<rich:panel>
+			<rich:dataTable>
 				<f:facet name="header">
 					<h:outputText value="Alternative Labels" />
 				</f:facet>
-			</rich:panel>
+			</rich:dataTable>
 
-			<rich:panel>
+			<rich:dataTable>
 				<f:facet name="header">
 					<h:outputText value="Hidden Labels" />
 				</f:facet>
-			</rich:panel>
+			</rich:dataTable>
 		</rich:panel>
 		<rich:panel>
 			<f:facet name="header">
@@ -61,4 +91,4 @@
 			</rich:panel>
 		</rich:panel>
 	</h:panelGrid>
-	</ui:composition>
+</ui:composition>
