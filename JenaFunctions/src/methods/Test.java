@@ -1,18 +1,27 @@
 package methods;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.tdb.TDBFactory;
 
-import utils.Globals;
-import utils.User;
 import model.Concept;
+import utils.User;
 
 public class Test {
 
 	public static void main(String[] args) {
 		try {
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"));
-		 		 
+		 
+	//	 Model myModel = TDBFactory.createModel("C:\\MyTEstFolder2222");
+	//		Resource myR = myModel.createResource("http://testUri/sim");
+	//		myR.addProperty(FOAF.accountName, "xulescu");
+			
+//			myModel.close();
+//			myModel.commit();
+//			myModel.write(System.out);
+			
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
     	 tools.addDefinition(rootConcept, "def2", "RO");
@@ -62,23 +71,25 @@ public class Test {
 		 tools.deleteConcept(child4);
 		 
 		 tools.printAsObject(rootConcept);
+		
 		 tools.getRdfModel().printRDFModel();
+		 tools.closeProject();
 		 
-		 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());
+	//	 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());
 
 		 // Afisare prin iterarea solutiilor
-		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.getRdfModel().getRdfModel(), Globals.queryString1); 
-		 for (Object var : results.getResultVars())
-			 System.out.print(var.toString() + "\t"); 
-		 System.out.println();
-		 while(results.hasNext() == true) {
-			 QuerySolution qs = (QuerySolution)results.next();
-			 System.out.print(results.getRowNumber() + "\t");
-			 for (Object var : results.getResultVars())
-				 System.out.print(qs.get(var.toString()).toString() + "\t");
-			 System.out.println();
-		 }
-		 
+//		 ResultSet results = SparqlEndpoint.executeQueryOnModel(tools.getRdfModel().getRdfModel(), Globals.queryString1); 
+//		 for (Object var : results.getResultVars())
+//			 System.out.print(var.toString() + "\t"); 
+//		 System.out.println();
+//		 while(results.hasNext() == true) {
+//			 QuerySolution qs = (QuerySolution)results.next();
+//			 System.out.print(results.getRowNumber() + "\t");
+//			 for (Object var : results.getResultVars())
+//				 System.out.print(qs.get(var.toString()).toString() + "\t");
+//			 System.out.println();
+//		 }
+//		 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
