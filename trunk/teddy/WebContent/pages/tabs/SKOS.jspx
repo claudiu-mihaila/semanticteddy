@@ -83,19 +83,24 @@
 					</h:selectOneMenu>
 				</rich:column>
 				<rich:column>
-					<h:inputText value = "#{row.value}">
-						<a4j:support 
-							event="onchange" 
-							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
-							reRender = "alternativeTable">
-						</a4j:support>
-					</h:inputText>
+					<rich:dataList 
+						id = "def#{rkv}" 
+						var = "def" 
+						value = "#{row.value}">				
+						<h:inputText value = "#{def}">
+							<a4j:support 
+								event="onchange" 
+								actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLine}" 
+								reRender = "alternativeTable">
+							</a4j:support>
+						</h:inputText>
+					</rich:dataList>
 				</rich:column>
 			</rich:dataTable>
 
 			<rich:dataTable>
 				<f:facet name="header">
-					<h:outputText value="Hidden Labels" />
+					<h:outputText value="Definitions" />
 				</f:facet>
 			</rich:dataTable>
 		</rich:panel>

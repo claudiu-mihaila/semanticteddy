@@ -95,6 +95,8 @@ public class ConceptAdapter implements Serializable {
 		return concept;
 	}
 	
+	
+	//SKOS TAB--------------------------------------------------------------------------------------------------
 	//Preferred labels
 	public DataModel getPreferredLabelsDM (){
 		if (null==this.preferredLabelsDM){
@@ -102,7 +104,7 @@ public class ConceptAdapter implements Serializable {
 			for (Entry<String, String> x : this.concept.getPrefLabels().entrySet()){
 				aux.add(new MapEntryView<String, String>(x));
 			}
-			if (0!=this.getAvailableLangsForPreferredLabels().size())
+			if (1!=this.getAvailableLangsForPreferredLabels().size())
 				aux.add(new MapEntryView<String, String>("", ""));
 			this.preferredLabelsDM = new ListDataModel(aux);
 		}
@@ -143,9 +145,14 @@ public class ConceptAdapter implements Serializable {
 		if (null==this.alternativeLabelsDM){
 			List<MapEntryView<String,List<String>>> aux = new LinkedList<MapEntryView<String, List<String>>>();
 			for (Entry<String, List<String>> x : this.concept.getAltLabels().entrySet()){
-				aux.add(new MapEntryView<String, List<String>>(x));
+				MapEntryView<String, List<String>> y = new MapEntryView<String, List<String>>(x);
+				if (null==y.getValue() || y.getValue().isEmpty())
+					y.setValue(Arrays.asList("_"));
+				else
+					y.getValue().add("_");
+				aux.add(y);
 			}
-			if (0!=this.getAvailableLangsForPreferredLabels().size())
+			if (1!=this.getAvailableLangsForPreferredLabels().size())
 				aux.add(new MapEntryView<String, List<String>>("", new LinkedList<String>()));
 			this.alternativeLabelsDM = new ListDataModel(aux);
 		}
@@ -180,6 +187,7 @@ public class ConceptAdapter implements Serializable {
 		
 	}
 	
+	//VISUALIZATION TAB--------------------------------------------------------------------------------
 	
 	public long getTimeStamp() {
 		return new Date().getTime();
