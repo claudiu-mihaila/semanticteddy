@@ -16,22 +16,14 @@
 					</h:panelGroup>
 				</f:facet>
 				<rich:menuGroup value="New">
-					<rich:menuItem value="Empty Project" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-					<rich:menuItem value="Project from XML" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+					<rich:menuItem value="Empty Project" submitMode="ajax"/>
+					<rich:menuItem value="Project from XML" submitMode="ajax"/>
 				</rich:menuGroup>
-				<rich:menuItem value="Open" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-				<rich:menuItem value="Save" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-				<rich:menuItem value="Close" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Open" submitMode="ajax" />
+				<rich:menuItem value="Save" submitMode="ajax" />
+				<rich:menuItem value="Close" submitMode="ajax" action = "#{mainPageAdapter.close}"/>
 			</rich:dropDownMenu>
 
-			<rich:dropDownMenu>
-				<f:facet name="label">
-					<h:panelGroup>
-						<h:outputText value="Tools" />
-					</h:panelGroup>
-				</f:facet>
-				<rich:menuItem value="SPARQL" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-			</rich:dropDownMenu>
 
 			<rich:dropDownMenu>
 				<f:facet name="label">
@@ -39,23 +31,12 @@
 						<h:outputText value="About" />
 					</h:panelGroup>
 				</f:facet>
-				<rich:menuItem value="Project" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-				<rich:menuItem value="Team" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
-				<rich:menuItem value="Docs" submitMode="ajax" action = "#{mainPageController.emptyMethod}"/>
+				<rich:menuItem value="Project" submitMode="ajax"/>
+				<rich:menuItem value="Team" submitMode="ajax"/>
+				<rich:menuItem value="Docs" submitMode="ajax"/>
 			</rich:dropDownMenu>
 			
-			<rich:dropDownMenu>
-				<f:facet name="label">
-					<h:panelGroup>
-						<h:outputText value="Testing" />
-					</h:panelGroup>
-				</f:facet>
-				<rich:menuItem 
-					value="DOT" 
-					submitMode="ajax" 
-					action = "#{mainPageController.getDot}"
-					reRender = "testingDotImg"/>
-			</rich:dropDownMenu>
+		
 		</rich:toolBar>
 	</h:form>
 </ui:composition>

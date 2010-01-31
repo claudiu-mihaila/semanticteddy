@@ -1,0 +1,27 @@
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:jxee="http://www.jxee-lab.ro/jsf"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:panelGrid
+		id = "conceptMetadataPanel"
+		columns = "2">
+		<h:outputLabel value = "Author:" for = "authorMeta"/>
+		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.author}"/>
+		
+		<h:outputLabel value = "Date created:" for = "dateCreatedMeta"/>
+		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.dateCreated}"/>
+		
+		<h:outputLabel value = "Date updated:" for = "lastChangeMeta"/>
+		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeDate}"/>
+		
+		<h:outputLabel value = "Last updated by:" for = "lastChangeByMeta"/>
+		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeBy}"/>
+	</h:panelGrid>
+</ui:composition>

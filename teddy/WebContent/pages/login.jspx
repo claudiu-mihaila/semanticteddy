@@ -1,0 +1,30 @@
+<jsp:root version = "1.2"
+			xmlns:jsp="http://java.sun.com/JSP/Page"
+			xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:h="http://java.sun.com/jsf/html"
+			xmlns:f="http://java.sun.com/jsf/core"
+			xmlns:c="http://java.sun.com/jstl/core"
+			xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+			xmlns:rich="http://richfaces.org/rich"
+            xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:t="http://myfaces.apache.org/tomahawk">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Teddy Project</title>
+</head>
+	
+<body>  	
+	<f:view>
+		<h:form id = "loginForm"> 	           
+			<h:panelGrid columns = "2">
+				<h:outputLabel for = "username" value = "Username: "/>
+				<h:inputText id = "username" value = "#{loginAdapter.user.username}"/>
+				
+				<h:outputLabel for = "pass" value = "Password: "/>
+				<h:inputSecret value="#{loginAdapter.user.password}"/>
+			</h:panelGrid>
+			<h:commandButton id="login" action="#{loginAdapter.login}" value="Login" />
+		</h:form>
+	</f:view>
+</body>
+</jsp:root>
