@@ -119,6 +119,10 @@
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
 
+	<welcome-file-list>
+		<welcome-file>login.jspx</welcome-file>
+	</welcome-file-list>
+	
 	<login-config>
 		<auth-method>BASIC</auth-method>
 	</login-config>

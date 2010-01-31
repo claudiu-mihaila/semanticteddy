@@ -4,9 +4,15 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+
 import methods.ThesaurJavaMethods;
 import model.Concept;
 
+import org.ajax4jsf.context.AjaxContext;
+import org.richfaces.component.UITree;
+import org.richfaces.event.NodeSelectedEvent;
 import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
 
@@ -21,6 +27,8 @@ public class MainPageAdapter implements Serializable {
 	 */
 	private static final long serialVersionUID = 5284478227777129030L;
 
+	private User user;
+	
 	private ConceptAdapter conceptAdapter;
 		
 	private TreeNode<Concept> treeData;
@@ -41,7 +49,7 @@ public class MainPageAdapter implements Serializable {
 	}
 	
 	private Concept sample () throws Exception{
-		ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"), "G://eclipsework//teddyModel");
+		ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"),null);
 		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
     	 tools.addDefinition(rootConcept, "def2", "RO");
@@ -110,6 +118,29 @@ public class MainPageAdapter implements Serializable {
 		}
 	}
 
-
+	public void selectNode(NodeSelectedEvent event) {
+		UITree tree = (UITree) event.getComponent();
+		
+		if (tree.getTreeNode().getData() instanceof Concept){
+			Concept c = (Concept)tree.getTreeNode().getData();
+			this.getConceptAdapter().setConcept(c);
+			UIComponent richPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(richPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
+		}
+	}
 	
+	public Boolean adviseNodeOpened(UITree tree) {
+		TreeNode<Concept> node = tree.getTreeNode();
+		return null;
+	}
+	
+	public String close (){
+		return "Close";
+	}
 }

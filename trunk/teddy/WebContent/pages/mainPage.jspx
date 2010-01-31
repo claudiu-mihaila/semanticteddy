@@ -14,45 +14,48 @@
 			<ui:include src="mainTree.jspx" />
 		</ui:define>
 		<ui:define name="right">
-			<t:div rendered = "#{not(empty(mainPageAdapter.conceptAdapter.concept))}">
-				<rich:tabPanel
-					id = "appTabPanel"
-					switchType="ajax">
-					<rich:tab
-						id = "SKOSTab"
-						name = "SKOS"
-						label="SKOS">
+			<rich:tabPanel
+				id = "appTabPanel"
+				switchType="ajax">
+				<rich:tab
+					id = "SKOSTab"
+					name = "SKOS"
+					label="SKOS">
+					<c:if test = "#{not(empty(mainPageAdapter.conceptAdapter.concept))}">
 						<ui:include src="tabs/SKOS.jspx" />
-					</rich:tab>					
-					<rich:tab
-						id = "METATab"
-						name = "META"
-						label="Metadata">test2
-					</rich:tab>
-					<rich:tab
-						id = "DOTTab"
-						name = "DOT"
-						label="Vizualization">
-						<ui:include src="tabs/DOT.jspx" />
-					</rich:tab>
-					<rich:tab
-						id = "GMAPTab"
-						name = "GMAP"
-						label="Google Maps"
-						switchType="server">
-						<t:div>
-							<rich:gmap 
-								gmapVar="map" 
-								style="width:800px;height:400px" 
-								id="gmap" 
-								lat="37.4419"
-								long = "-122.1419"
-								zoom = "10"
-								onclick="addPin(map)"/>
-						</t:div>
-					</rich:tab>
-				</rich:tabPanel>
-			</t:div>
+					</c:if>
+				</rich:tab>					
+				<rich:tab
+					id = "METATab"
+					name = "META"
+					label="Metadata">
+					<c:if test = "#{not(empty(mainPageAdapter.conceptAdapter.concept))}">
+						<ui:include src="tabs/META.jspx" />
+					</c:if>
+				</rich:tab>
+				<rich:tab
+					id = "DOTTab"
+					name = "DOT"
+					label="Vizualization">
+					<ui:include src="tabs/DOT.jspx" />
+				</rich:tab>
+				<rich:tab
+					id = "GMAPTab"
+					name = "GMAP"
+					label="Google Maps"
+					switchType="server">
+					<c:if test = "#{not(empty(mainPageAdapter.conceptAdapter.concept))}">
+						<ui:include src="tabs/GMAP.jspx" />
+					</c:if>						
+				</rich:tab>
+				<rich:tab
+					id = "SPARQLTab"
+					name = "SPARQL"
+					label="SPARQL"
+					switchType="ajax">
+					<ui:include src="tabs/SPARQL.jspx" />
+				</rich:tab>
+			</rich:tabPanel>
 		</ui:define>
 		
 		<ui:define name="modals">

@@ -8,7 +8,7 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:jxee="http://www.jxee-lab.ro/jsf"
 	xmlns:rich="http://richfaces.org/rich">
-	<t:div>
+	<rich:panel>
 		<a4j:mediaOutput 
 			element="img" 
 			mimeType="image/jpeg" 
@@ -16,8 +16,8 @@
 			session="false" 
 			createContent="#{mainPageAdapter.conceptAdapter.paint}"
 			value="#{mainPageAdapter.conceptAdapter.timeStamp}"
-			style="width:100%; height:100%;">
+			style="height:550px">
 			<f:param value="#{mainPageAdapter.conceptAdapter.timeStamp}" name="time" />
 		</a4j:mediaOutput>
-	</t:div>
+	</rich:panel>
 </ui:composition>

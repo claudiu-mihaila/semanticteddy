@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +43,14 @@ public class ConceptAdapter implements Serializable {
 	private DataModel preferredLabelsDM;
 	
 	private DataModel alternativeLabelsDM;
+	
+	private DataModel definitionsDM;
+	
+	private DataModel broaderDM;
+	
+	private DataModel narrowerDM;
+	
+	private DataModel relatedDM;
 
 	public ConceptAdapter(MainPageAdapter mainPageAdapter) {
 		this.mainAdapter = mainPageAdapter;
@@ -48,6 +58,16 @@ public class ConceptAdapter implements Serializable {
 	
 	public void setConcept(Concept concept) {
 		this.concept = concept;
+		this.resetConceptRelated ();
+	}
+
+	private void resetConceptRelated() {
+		this.alternativeLabelsDM = null;
+		this.preferredLabelsDM = null;
+		this.definitionsDM = null;
+		this.broaderDM = null;
+		this.narrowerDM = null;
+		this.relatedDM = null;
 	}
 
 	public Concept getConcept() {
@@ -55,7 +75,11 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	
-	//SKOS TAB--------------------------------------------------------------------------------------------------
+	//SKOS TAB------------------------------------------------------------------------------------------------------------------------
+	public void changeName (){
+		this.mainAdapter.setTreeData(null);
+	}
+	
 	//Preferred labels
 	public DataModel getPreferredLabelsDM (){
 		if (null!=this.concept)
@@ -66,6 +90,7 @@ public class ConceptAdapter implements Serializable {
 				}
 				if (1!=this.getAvailableLangsForPreferredLabels().size())
 					aux.add(new MapEntryView<String, String>("", ""));
+				Collections.sort(aux);
 				this.preferredLabelsDM = new ListDataModel(aux);
 			}
 		return this.preferredLabelsDM;
@@ -80,7 +105,11 @@ public class ConceptAdapter implements Serializable {
 		if (null!=this.concept){
 			items.add(new SelectItem("", "", "", true, true));
 			Set<String> used = this.concept.getPrefLabels().keySet();
-			for (LanguageEnum l : LanguageEnum.values()) {
+			
+			List<LanguageEnum> listL = Arrays.asList(LanguageEnum.values());
+			Collections.sort(listL);
+			
+			for (LanguageEnum l : listL) {
 				if (!used.contains(l.toString())){
 					items.add(new SelectItem(l, l.toString()));
 				}
@@ -102,7 +131,7 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	
-	//Alternative labels--------------------------------------------------------------------------------------------------
+	//Alternative labels---------------------------------------------------------------------------------------------------------
 	public DataModel getAlternativeLabelsDM (){
 		if (null!=this.concept)
 			if (null==this.alternativeLabelsDM){
@@ -133,6 +162,7 @@ public class ConceptAdapter implements Serializable {
 					y.setValue(vList);
 					aux.add(y);
 				}
+				Collections.sort(aux);
 				this.alternativeLabelsDM = new ListDataModel(aux);
 			}
 		return this.alternativeLabelsDM;
@@ -147,7 +177,11 @@ public class ConceptAdapter implements Serializable {
 		if (null!=this.concept){
 			items.add(new SelectItem("", "", "", true, true));
 			Set<String> used = this.concept.getAltLabels().keySet();
-			for (LanguageEnum l : LanguageEnum.values()) {
+			
+			List<LanguageEnum> listL = Arrays.asList(LanguageEnum.values());
+			Collections.sort(listL);
+			
+			for (LanguageEnum l : listL) {
 				if (!used.contains(l.toString())){
 					items.add(new SelectItem(l, l.toString()));
 				}
@@ -176,8 +210,48 @@ public class ConceptAdapter implements Serializable {
 //		this.resetAlternativeLabelsDM();
 	}
 	
-	//VISUALIZATION TAB--------------------------------------------------------------------------------
+	//DEFINITIONS LIST-------------------------------------------------------------------------------------------------------
 	
+	//RELATIONS--------------------------------------------------------------------------------------------------------------
+	
+	public DataModel getBroaderDM() {
+		if (null!=concept && null==this.broaderDM)
+			this.broaderDM = new ListDataModel(this.concept.getParents());
+		return broaderDM;
+	}
+	
+	public void loadConceptBFromLink (){
+		if (this.broaderDM.getRowData() instanceof Concept)
+			this.concept =(Concept) this.broaderDM.getRowData(); 
+	}
+
+	public DataModel getNarrowerDM() {
+		if (null!=concept && null==this.narrowerDM)
+			this.narrowerDM = new ListDataModel(this.concept.getChildren());
+		return narrowerDM;
+	}
+
+	public void loadConceptNFromLink (){
+		if (this.narrowerDM.getRowData() instanceof Concept)
+			this.concept =(Concept) this.narrowerDM.getRowData(); 
+	}
+	
+	public DataModel getRelatedDM() {
+		if (null!=concept && null==this.relatedDM)
+			this.relatedDM = new ListDataModel(this.concept.getRelated());		
+		return relatedDM;
+	}
+	
+	public void loadConceptRFromLink (){
+		if (this.relatedDM.getRowData() instanceof Concept)
+			this.concept =(Concept) this.relatedDM.getRowData(); 
+	}
+	
+	
+	//VISUALIZATION TAB------------------------------------------------------------------------------------------------------
+	
+	
+
 	public long getTimeStamp() {
 		return new Date().getTime();
 	}

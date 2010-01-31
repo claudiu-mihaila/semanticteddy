@@ -17,7 +17,11 @@
 		stateVar="stateVar" 
 		ignoreDupResponses="true"
 		rightClickSelection="true" 
-		ajaxSubmitSelection="true">
+		ajaxSubmitSelection="true"
+		nodeSelectListener="#{mainPageAdapter.selectNode}"
+		adviseNodeOpened = "#{mainPageAdapter.adviseNodeOpened}"
+		ajaxSingle="true"
+		>
 		<rich:treeNode>
 			<h:outputText value="#{item}"/>
 		</rich:treeNode>

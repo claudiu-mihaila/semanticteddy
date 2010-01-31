@@ -7,6 +7,27 @@
   <managed-bean-class>adapters.MainPageAdapter</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>loginAdapter</managed-bean-name>
+  <managed-bean-class>adapters.LoginAdapter</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <navigation-rule>
+  <from-view-id>/pages/login.jspx</from-view-id>
+  <navigation-case>
+   <from-outcome>Login</from-outcome>
+   <to-view-id>/pages/mainPage.jspx</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/pages/mainPage.jspx</from-view-id>
+  <navigation-case>
+   <from-outcome>Close</from-outcome>
+   <to-view-id>/pages/login.jspx</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
  <application>
   <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
  </application>

@@ -3,7 +3,8 @@ package views;
 import java.io.Serializable;
 import java.util.Map.Entry;
 
-public class MapEntryView<K,V> implements Serializable{
+public class MapEntryView<K,V>
+	implements Comparable<MapEntryView<K, V>>, Serializable{
 
 	
 	/**
@@ -46,5 +47,10 @@ public class MapEntryView<K,V> implements Serializable{
 	@Override
 	public String toString() {
 		return "{ " + this.getKey() + ", " + this.getValue() + "}" ;
+	}
+
+	@Override
+	public int compareTo(MapEntryView<K, V> arg0) {
+		return this.getKey().toString().compareTo(arg0.toString());
 	}
 }
