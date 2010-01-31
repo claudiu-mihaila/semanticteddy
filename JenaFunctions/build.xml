@@ -43,7 +43,8 @@
 	</target>
 	
 	<target name="4_deploy" depends="3_pack">
-		<copy file="${Jena_JAR}/1_JenaFunctions.jar" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"></copy>		
+		<copy file="${Jena_JAR}/1_JenaFunctions.jar" todir="${jboss_home.dir}/server/default/deploy" overwrite="true"></copy>
+		<antcall target="5_clean"/>
 	</target>
 	
 	<target name="5_clean">
