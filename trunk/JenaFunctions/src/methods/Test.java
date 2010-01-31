@@ -14,7 +14,7 @@ public class Test {
 		try {
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"), "");
 			
-	/*	 Concept rootConcept = tools.addRootConcept("MyRoot");
+		 Concept rootConcept = tools.addRootConcept("MyRoot");
     	 tools.addDefinition(rootConcept, "def1", "RO");
     	 tools.addDefinition(rootConcept, "def2", "RO");
     	 tools.addDefinition(rootConcept, "def3", "EN");
@@ -48,7 +48,7 @@ public class Test {
 		 tools.addLatitude(child4, "23.555");
 		 tools.addLongitude(child4, "-55");		 
 		 
-		 tools.printAsObject(rootConcept);
+	//	 tools.printAsObject(rootConcept);
 		 
 		 tools.removeChildConcept(child3, subChild1);
 		 tools.removeDefinition(rootConcept, "def1", "RO");
@@ -61,9 +61,9 @@ public class Test {
 		 tools.removeAltLabel(child1, "Irina", "RO");
 		 tools.deleteConcept(child4);
 		 
-		 tools.printAsObject(rootConcept);
-		*/
-		 tools.getRdfModel().exportXML("D:\\MyTestFolderr\\XMLTry.xml");
+		// tools.printAsObject(rootConcept);
+		
+		 tools.getRdfModel().exportXML("D:\\MyTestFolderr\\sdasdad\\XMLTry.xml");
 		 tools.getRdfModel().exportTurtle(null);
 		 tools.closeProject();
 		
