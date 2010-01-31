@@ -1,5 +1,7 @@
 package utils;
 
+import com.hp.hpl.jena.vocabulary.DCTerms;
+
 
 public class Globals {
 	public static String projectFolder="C:\\Users\\Pavlos\\workspace\\teddyModel";
