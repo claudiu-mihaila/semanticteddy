@@ -45,7 +45,7 @@ public class ThesaurJavaMethods {
 	 * @return the newly created root concept
 	 */
 	public Concept addRootConcept(String name){
-		Concept rootConcept = new Concept(name,currentProfile.getProfileDefaultLanguage());
+		Concept rootConcept = new Concept(name,currentProfile.getProfileDefaultLanguage(),currentProfile.getProfileUser().getUsername());
 		currentProfile.getProfileProjects().put(rootConcept, Boolean.TRUE);
 		rdfModel.addRootConcept(rootConcept.getUUID(), name, currentProfile.getProfileDefaultLanguage(),currentProfile.getProfileUser().getUsername());
 		return rootConcept;
@@ -79,8 +79,8 @@ public class ThesaurJavaMethods {
 	 * @return the newly created child concept
 	 */
 	public Concept addChildConcept(Concept parentConcept, String name){
-		Concept childConcept = new Concept(name,currentProfile.getProfileDefaultLanguage());
-		parentConcept.getChildren().add(childConcept);
+		Concept childConcept = new Concept(name, currentProfile.getProfileDefaultLanguage(), currentProfile.getProfileUser().getUsername());
+		parentConcept.addChild(childConcept, currentProfile.getProfileUser().getUsername());
 		rdfModel.addNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), name, currentProfile.getProfileDefaultLanguage(), currentProfile.getProfileUser().getUsername());
 		return childConcept;
 	}
@@ -99,8 +99,8 @@ public class ThesaurJavaMethods {
 		if (parentConcept.getRelated().contains(childConcept) == true)
 			throw new Exception("The concepts already share a related relation!");
 		if (parentConcept.getParents().contains(childConcept) == false) {
-			parentConcept.getChildren().add(childConcept);
-			childConcept.getParents().add(parentConcept);
+			parentConcept.addChild(childConcept, currentProfile.getProfileUser().getUsername());
+			childConcept.addParent(parentConcept, currentProfile.getProfileUser().getUsername());
 			rdfModel.linkNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		}
 	}
@@ -112,8 +112,8 @@ public class ThesaurJavaMethods {
 	 * @return the parent concept without the child concept
 	 */
 	public Concept removeChildConcept(Concept parentConcept, Concept childConcept) {
-		parentConcept.getChildren().remove(childConcept);
-		childConcept.getParents().remove(parentConcept);
+		parentConcept.removeChild(childConcept, currentProfile.getProfileUser().getUsername());
+		childConcept.removeParent(parentConcept, currentProfile.getProfileUser().getUsername());
 		rdfModel.removeNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		rdfModel.removeBroaderResource(childConcept.getUUID(), parentConcept.getUUID(),currentProfile.getProfileUser().getUsername());
 		return parentConcept;
@@ -133,8 +133,8 @@ public class ThesaurJavaMethods {
 		if (childConcept.getRelated().contains(parentConcept) == true)
 			throw new Exception("The concepts already share a related relation!");
 		if (childConcept.getParents().contains(parentConcept) == false) {
-			childConcept.getParents().add(parentConcept);
-			parentConcept.getChildren().add(childConcept);
+			childConcept.addParent(parentConcept, currentProfile.getProfileUser().getUsername());
+			parentConcept.addChild(childConcept, currentProfile.getProfileUser().getUsername());
 			rdfModel.linkBroaderResource(childConcept.getUUID(), parentConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		}
 	}
@@ -146,8 +146,8 @@ public class ThesaurJavaMethods {
 	 * @return the child concept without the parent concept
 	 */
 	public Concept removeParentConcept(Concept childConcept, Concept parentConcept) {
-		childConcept.getParents().remove(parentConcept);
-		parentConcept.getChildren().remove(childConcept);
+		childConcept.removeParent(parentConcept, currentProfile.getProfileUser().getUsername());
+		parentConcept.removeChild(childConcept, currentProfile.getProfileUser().getUsername());
 		rdfModel.removeNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		rdfModel.removeBroaderResource(childConcept.getUUID(), parentConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		return childConcept;
@@ -166,8 +166,8 @@ public class ThesaurJavaMethods {
 				currentConcept.getParents().contains(relatedConcept) == true)
 			throw new Exception("The concepts already share a broader/narrower relation!");
 		if (currentConcept.getRelated().contains(relatedConcept) == false) {
-			currentConcept.getRelated().add(relatedConcept);
-			relatedConcept.getRelated().add(currentConcept);
+			currentConcept.addRelated(relatedConcept, currentProfile.getProfileUser().getUsername());
+			relatedConcept.addRelated(currentConcept, currentProfile.getProfileUser().getUsername());
 			rdfModel.linkRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		}
 	}
@@ -178,8 +178,8 @@ public class ThesaurJavaMethods {
 	 * @param relatedConcept the related concept to be removed
 	 */
 	public void removeRelatedConcept(Concept currentConcept, Concept relatedConcept) {
-		currentConcept.getRelated().remove(relatedConcept);
-		relatedConcept.getRelated().remove(currentConcept);
+		currentConcept.removeRelated(relatedConcept, currentProfile.getProfileUser().getUsername());
+		relatedConcept.removeRelated(currentConcept, currentProfile.getProfileUser().getUsername());
 		rdfModel.removeRelatedResource(currentConcept.getUUID(), relatedConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 		rdfModel.removeRelatedResource(relatedConcept.getUUID(), currentConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 	}
@@ -196,6 +196,7 @@ public class ThesaurJavaMethods {
                 definitions = new ArrayList<String>();
         definitions.add(definition);
         currentConcept.getDefinitions().put(language, definitions);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
         rdfModel.addDefinition(currentConcept.getUUID(), definition, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -211,6 +212,7 @@ public class ThesaurJavaMethods {
         int index = definitions.indexOf(oldDefinition);
         if (index >= 0) {
         	definitions.set(index, newDefinition);
+            currentConcept.setModified(currentProfile.getProfileUser().getUsername());
     		rdfModel.editDefinition(currentConcept.getUUID(), oldDefinition, newDefinition, language, currentProfile.getProfileUser().getUsername());
         }
 	}
@@ -227,6 +229,7 @@ public class ThesaurJavaMethods {
         {
             definitions.remove(definition);
             currentConcept.getDefinitions().put(language, definitions);
+            currentConcept.setModified(currentProfile.getProfileUser().getUsername());
             rdfModel.removeDefinition(currentConcept.getUUID(), definition, language, currentProfile.getProfileUser().getUsername());
         }
 	}
@@ -247,6 +250,7 @@ public class ThesaurJavaMethods {
         	if (altLabels.contains(label) == true)
         		throw new Exception("This label is already an alternative label for this language!");
         currentConcept.getPrefLabels().put(language, label);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
         rdfModel.addPrefLabel(currentConcept.getUUID(), label, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -271,6 +275,7 @@ public class ThesaurJavaMethods {
         		throw new Exception("This label is already an alternative label for this language!");	
         currentConcept.getPrefLabels().remove(language);
         currentConcept.getPrefLabels().put(language, newLabel);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
         rdfModel.editPrefLabel(currentConcept.getUUID(), oldLabel, newLabel, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -286,6 +291,7 @@ public class ThesaurJavaMethods {
         if (isLabel == null)
         	throw new Exception("There is no preferred label for this language!");
         currentConcept.getPrefLabels().remove(language);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
         rdfModel.removePrefLabel(currentConcept.getUUID(), label, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -307,6 +313,7 @@ public class ThesaurJavaMethods {
 		if (altLabels.contains(label) == false) {
 			altLabels.add(label);
 			currentConcept.getAltLabels().put(language, altLabels);
+		    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 			rdfModel.addAltLabel(currentConcept.getUUID(), label, language, currentProfile.getProfileUser().getUsername());
 		}
 	}
@@ -331,6 +338,7 @@ public class ThesaurJavaMethods {
         if (index < 0)
         	throw new Exception("This old label does not exist for this language!");
         labels.set(index, newLabel);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
     	rdfModel.editAltLabel(currentConcept.getUUID(), oldLabel, newLabel, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -349,6 +357,7 @@ public class ThesaurJavaMethods {
         	throw new Exception("The label does not exist as an alternative label for this language!");
         labels.remove(label);
         currentConcept.getDefinitions().put(language, labels);
+        currentConcept.setModified(currentProfile.getProfileUser().getUsername());
         rdfModel.removeAltLabel(currentConcept.getUUID(), label, language, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -364,6 +373,7 @@ public class ThesaurJavaMethods {
 			throw ex;
 		}
 		currentConcept.setLatitude(latitude);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.addLatitude(currentConcept.getUUID(), latitude, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -379,6 +389,7 @@ public class ThesaurJavaMethods {
 			throw ex;
 		}
 		currentConcept.setLatitude(latitude);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.editLatitude(currentConcept.getUUID(), latitude, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -388,6 +399,7 @@ public class ThesaurJavaMethods {
 	 */
 	public void removeLatitude(Concept currentConcept) {
 		currentConcept.setLatitude(null);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.removeLatitude(currentConcept.getUUID(),currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -403,6 +415,7 @@ public class ThesaurJavaMethods {
 			throw ex;
 		}
 		currentConcept.setLongitude(longitude);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.addLongitude(currentConcept.getUUID(), longitude, currentProfile.getProfileUser().getUsername());
 	}	
 	
@@ -418,6 +431,7 @@ public class ThesaurJavaMethods {
 			throw ex;
 		}
 		currentConcept.setLongitude(longitude);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.editLongitude(currentConcept.getUUID(), longitude, currentProfile.getProfileUser().getUsername());
 	}
 	
@@ -427,6 +441,7 @@ public class ThesaurJavaMethods {
 	 */
 	public void removeLongitude(Concept currentConcept) {
 		currentConcept.setLongitude(null);
+	    currentConcept.setModified(currentProfile.getProfileUser().getUsername());
 		rdfModel.removeLongitude(currentConcept.getUUID(), currentProfile.getProfileUser().getUsername());
 	}
 	

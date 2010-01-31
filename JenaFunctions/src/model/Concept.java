@@ -1,10 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import methods.ThesaurJavaMethods;
 
 public class Concept {
 
@@ -29,10 +31,15 @@ public class Concept {
 	
 	public Concept() {}
 	
-	public Concept(String name, String language){
+	public Concept(String name, String language, String user){
 		this.uuid = UUID.randomUUID();
 		this.name = name;
 		this.prefLabels.put(language, name);
+		metadata = new Metadata();
+		metadata.setDateCreated(new Date());
+		metadata.setAuthor(user);
+		metadata.setLastChangeDate(new Date());
+		metadata.setLastChangeBy(user);
 	}
 
 	public String getName() {
@@ -83,6 +90,18 @@ public class Concept {
 	public void setChildren(List<Concept> childs) {
 		this.children = childs;
 	}
+	
+	public void addChild(Concept child, String user) {
+		this.children.add(child);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
+	
+	public void removeChild(Concept child, String user) {
+		this.children.remove(child);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
 
 	public List<Concept> getParents() {
 		return parents;
@@ -91,6 +110,18 @@ public class Concept {
 	public void setParents(List<Concept> parents) {
 		this.parents = parents;
 	}
+	
+	public void addParent(Concept parent, String user) {
+		this.parents.add(parent);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
+	
+	public void removeParent(Concept parent, String user) {
+		this.parents.remove(parent);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
 
 	public List<Concept> getRelated() {
 		return related;
@@ -98,6 +129,18 @@ public class Concept {
 
 	public void setRelated(List<Concept> related) {
 		this.related = related;
+	}
+
+	public void addRelated(Concept related, String user) {
+		this.related.add(related);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
+	
+	public void removeRelated(Concept related, String user) {
+		this.related.remove(related);
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
 	}
 
 	public Map<String, String> getPrefLabels() {
@@ -123,6 +166,11 @@ public class Concept {
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}	
+	
+	public void setModified(String user) {
+		this.metadata.setLastChangeBy(user);
+		this.metadata.setLastChangeDate(new Date());
+	}
 	
 	public String toString(){
 		return this.name;
