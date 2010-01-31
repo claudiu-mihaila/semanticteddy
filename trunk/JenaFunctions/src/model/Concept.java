@@ -1,15 +1,19 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import methods.ThesaurJavaMethods;
 
-public class Concept {
+public class Concept implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1492471827021736032L;
 	//basic properties
 	private UUID uuid;
 	private String name;
