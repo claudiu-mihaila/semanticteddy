@@ -1,10 +1,18 @@
 package methods;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import model.Concept;
+import model.Metadata;
 import modelToRDF.ThesaurRDFMethods;
 import utils.Globals;
 import utils.Profile;
@@ -14,13 +22,48 @@ public class ThesaurJavaMethods {
 	
 	private ThesaurRDFMethods rdfModel ;
 	public Profile currentProfile;
+	private ArrayList<String> alluserLines = null;
 	
-	public ThesaurJavaMethods(User usr, String modelPath) throws Exception{
-		rdfModel = new ThesaurRDFMethods(modelPath);
-		//se citeste din rdf profilul coresp userului;
-		currentProfile =this.loadProfile(usr); 
-		if (currentProfile == null){
-			currentProfile = this.createProfile(usr, Globals.defaultLanguage);
+	public ThesaurJavaMethods(String username, String pass, String modelPath) throws Exception{
+		Boolean userFound = this.logUser(username, pass);
+		if (userFound){
+			rdfModel = new ThesaurRDFMethods(modelPath);
+			//currentProfile e deja completat
+			loadProjects();
+		}
+	}
+	
+	public boolean logUser(String username, String password){
+		if (alluserLines==null){
+			loadAllUsers();
+		}
+		
+		for (String str : alluserLines){
+			if (str.startsWith(username)){
+				String[] components = str.split(" ");
+				if ((components[0].equals(username)) && (components[1].equals(password)))
+				{
+				    currentProfile = new Profile(new User(username, password), components[2]);
+				    return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private void loadAllUsers(){
+		try{
+			BufferedReader myReader = new BufferedReader(new FileReader(new File(Globals.teddySecurityFilePath)));
+			String temp = myReader.readLine();
+			alluserLines = new ArrayList<String>();
+			while(temp!=null){
+				alluserLines.add(temp);
+				temp = myReader.readLine();
+			}
+			myReader.close();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
 		}
 	}
 	
@@ -29,16 +72,145 @@ public class ThesaurJavaMethods {
 	}
 	
 	public Profile createProfile(User usr, String defLanguage){
-		Profile prof = new Profile(usr,defLanguage, new HashMap<Concept, Boolean>());
+		Profile prof = new Profile(usr,defLanguage);
 		this.currentProfile = prof;
 		return prof;
 	}
 
-	//?????????????????????
-	public Profile loadProfile(User usr){
-		return null;
+	public void loadProjects(){
+		for (String project : allProjectsNames()){
+			Concept root = loadProject(project, currentProfile.getProfileDefaultLanguage());
+			currentProfile.getProfileProjects().put(root, Boolean.TRUE);
+		}
+	}
+	List<Concept> toBeLoaded = new ArrayList<Concept>();
+	
+	public Concept loadProject(String project, String defL){
+		Map<UUID, Concept> loadedConcepts = new HashMap<UUID, Concept>();
+		toBeLoaded = new ArrayList<Concept>();
+		
+		Concept rootConcept = new Concept();
+		rootConcept.setUUID(UUID.fromString(project));
+		rootConcept = loadAConcept(loadedConcepts,rootConcept, defL);
+		
+		loadedConcepts.put(rootConcept.getUUID(), rootConcept);
+		
+		int i=0;
+		while(i<toBeLoaded.size()){
+			Concept c = toBeLoaded.get(i);
+			c = loadAConcept(loadedConcepts, c, defL);
+			loadedConcepts.put(c.getUUID(), c);
+			i=i+1;
+		}
+		printAsObject(rootConcept);
+		return rootConcept;
+	}
+
+	public Concept loadAConcept(Map<UUID, Concept> loadedConcepts, Concept con, String defL){
+		con.setPrefLabels(rdfModel.getPrefLabelPropertyForUUIDConcept(con.getUUID()));
+		con.setName(con.getPrefLabels().get(defL));
+		con.setAltLabels(rdfModel.getAltLabelPropertyForUUIDConcept(con.getUUID()));
+		con.setDefinitions(rdfModel.getDefinitionPropertyForUUIDConcept(con.getUUID()));
+		
+		Metadata rootMetadata = new Metadata();
+		rootMetadata.setAuthor(rdfModel.getMetadataCreatorForUUIDConcept(con.getUUID()));
+		rootMetadata.setDateCreated(rdfModel.getMetadataDateForUUIDConcept(con.getUUID()));
+		rootMetadata.setLastChangeBy(rdfModel.getMetadataContributorForUUIDConcept(con.getUUID()));
+		rootMetadata.setLastChangeDate(rdfModel.getMetadataModifiedForUUIDConcept(con.getUUID()));
+		con.setMetadata(rootMetadata);
+		
+		//geo
+		con.setLatitude(rdfModel.getLatitudePropertyForUUIDConcept(con.getUUID()));
+		con.setLongitude(rdfModel.getLongitudePropertyForUUIDConcept(con.getUUID()));
+		
+		
+		
+		//children
+		List<String> uuidChilds = rdfModel.getNarrowerPropertyFORUUIDConcept(con.getUUID());
+		List<Concept> childs = new ArrayList<Concept>();
+		for (String str : uuidChilds){
+			if (loadedConcepts.containsKey(UUID.fromString(str))){
+				childs.add(loadedConcepts.get(UUID.fromString(str)));
+			}
+			else
+			{
+				Concept newConcept = new Concept();
+				newConcept.setUUID(UUID.fromString(str));
+				toBeLoaded.add(newConcept);
+				childs.add(newConcept);
+			}
+		}
+		con.setChildren(childs);
+		
+		//parents
+		List<String> uuidPArents = rdfModel.getBroaderPropertyFORUUIDConcept(con.getUUID());
+		List<Concept> parents = new ArrayList<Concept>();
+		for (String str : uuidPArents){
+			if (loadedConcepts.containsKey(UUID.fromString(str))){
+				parents.add(loadedConcepts.get(UUID.fromString(str)));
+			}
+			else
+			{
+				Concept newConcept = new Concept();
+				newConcept.setUUID(UUID.fromString(str));
+				toBeLoaded.add(newConcept);
+				parents.add(newConcept);
+			}
+		}
+		con.setParents(parents);
+		
+		//related
+		List<String> uuidRelateds = rdfModel.getNarrowerPropertyFORUUIDConcept(con.getUUID());
+		List<Concept> relateds = new ArrayList<Concept>();
+		for (String str : uuidRelateds){
+			if (loadedConcepts.containsKey(UUID.fromString(str))){
+				relateds.add(loadedConcepts.get(UUID.fromString(str)));
+			}else
+			{
+				Concept newConcept = new Concept();
+				newConcept.setUUID(UUID.fromString(str));
+				toBeLoaded.add(newConcept);
+				relateds.add(newConcept);
+			}
+			
+		}
+		con.setRelated(relateds);
+		
+		return con;
 	}
 	
+	public ArrayList<String> allProjectsNames(){
+		ArrayList<String> projects = new ArrayList<String>();
+		try{
+			BufferedReader myReader = new BufferedReader(new FileReader(new File(Globals.teddyProjectsFilePath)));
+			String temp = myReader.readLine();
+			while(temp!=null){
+				projects.add(temp);
+				temp = myReader.readLine();
+			}
+			myReader.close();
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return projects;
+	}
+	
+	public void storeAllProjects(ArrayList<String> projects){
+		try{
+			BufferedWriter myWriter = new BufferedWriter(new FileWriter(new File(Globals.teddyProjectsFilePath)));
+			for (String str : projects)
+			{
+				myWriter.write(str);
+				myWriter.newLine();
+			}
+			myWriter.close();
+			
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
 	/**
 	 * Creates a root concept in the model
 	 * @param name the name of the root concept
@@ -47,6 +219,11 @@ public class ThesaurJavaMethods {
 	public Concept addRootConcept(String name){
 		Concept rootConcept = new Concept(name,currentProfile.getProfileDefaultLanguage(),currentProfile.getProfileUser().getUsername());
 		currentProfile.getProfileProjects().put(rootConcept, Boolean.TRUE);
+		
+		ArrayList<String> allRoots = this.allProjectsNames();
+		allRoots.add(rootConcept.getUUID().toString());
+		this.storeAllProjects(allRoots);
+		
 		rdfModel.addRootConcept(rootConcept.getUUID(), name, currentProfile.getProfileDefaultLanguage(),currentProfile.getProfileUser().getUsername());
 		return rootConcept;
 	}

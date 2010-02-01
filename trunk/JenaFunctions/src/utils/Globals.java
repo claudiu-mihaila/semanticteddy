@@ -4,9 +4,15 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
 
 public class Globals {
-	public static String projectFolder="D:\\TeddyModel\\";
-	public static String xmlDefaultExportPath = "D:\\TeddyExport\\TeddyXML.xml";
-	public static String turtleDefaultExportPath = "D:\\TeddyExport\\TeddyTurtle.xml";
+	//caile se dau numai cu slash la stanga, iar daca e folder, se pun slashuri si la final!!!
+	public static String projectFolder="C:\\TeddyModel\\";
+	public static String xmlDefaultExportPath = "C:\\TeddyExport\\TeddyXML.xml";
+	public static String turtleDefaultExportPath = "C:\\TeddyExport\\TeddyTurtle.xml";
+	public static String projectTempPath="C:\\Temp\\XmlForTurtle.xml";
+	//acestea doua trebuie sa existe. sunt fisierele de configurare: useri si proiecte
+	public static String teddySecurityFilePath="D:\\Teddy.txt";
+	public static String teddyProjectsFilePath="D:\\TeddyProjects.txt";
+	
 	public static String projectUri= "http://Teddy#";
 	public static String SKOSURI = "http://www.w3.org/2004/02/skos/core#";
 	public static String defaultLanguage = "RO";

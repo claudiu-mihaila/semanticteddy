@@ -14,10 +14,9 @@ public class Profile {
 		
 	}
 	
-	public Profile(User  usr, String language, Map<Concept, Boolean> projects){
+	public Profile(User  usr, String language){
 		this.profileUser = usr;
 		this.profileDefaultLanguage = language;
-		this.profileProjects = projects;
 	}
 	
 	public User getProfileUser() {
