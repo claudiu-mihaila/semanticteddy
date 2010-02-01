@@ -62,7 +62,6 @@ public class ConceptAdapter implements Serializable {
 	
 	public void setConcept(Concept concept) {
 		this.concept = concept;
-//		this.resetConceptRelated ();
 	}
 
 	public void resetConceptRelated() {
