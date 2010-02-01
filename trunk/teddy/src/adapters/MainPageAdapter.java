@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import methods.ThesaurJavaMethods;
 import model.Concept;
@@ -35,21 +36,32 @@ public class MainPageAdapter implements Serializable {
 	
 	private List<Concept> roots;
 	
+	private static ThesaurJavaMethods tools;
+	
 	public MainPageAdapter() {
 		if (null==this.conceptAdapter)
 			this.conceptAdapter = new ConceptAdapter(this);
 		roots = new LinkedList<Concept>();
 		
-		try {
-			roots.add(this.sample());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		User user = (User) request.getAttribute("Usr");
+		String lang = request.getAttribute("DLang").toString();
+		
+		if (user!=null && lang!=null && !lang.isEmpty()){
+			try {
+				tools = new ThesaurJavaMethods(user.getUsername(), user.getPassword(), null);
+				roots.add(this.sample());
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+			
 		}
 	}
 	
 	private Concept sample () throws Exception{
-		ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"),null);
 		 Concept rootConcept = tools.addRootConcept("Cocktails");
     	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
     	 tools.addDefinition(rootConcept, "a style of mixed drink", "EN");
@@ -118,29 +130,41 @@ public class MainPageAdapter implements Serializable {
 		
 		if (tree.getTreeNode().getData() instanceof Concept){
 			Concept c = (Concept)tree.getTreeNode().getData();
-			this.getConceptAdapter().setConcept(c);
-			this.getConceptAdapter().resetConceptRelated();
-			UIComponent richPanel = FacesContext.getCurrentInstance().getViewRoot().
-				findComponent("applicationForm:rightPanel");
-			AjaxContext ac = AjaxContext.getCurrentInstance();
-			try {
-				ac.addComponentToAjaxRender(richPanel);
-			} catch (Exception e) {
-				System.err.print(e.getMessage());
+			if (!c.equals(this.conceptAdapter.getConcept())){
+				this.getConceptAdapter().setConcept(c);
+				this.getConceptAdapter().resetConceptRelated();
+				UIComponent richPanel = FacesContext.getCurrentInstance().getViewRoot().
+					findComponent("applicationForm:rightPanel");
+				AjaxContext ac = AjaxContext.getCurrentInstance();
+				try {
+					ac.addComponentToAjaxRender(richPanel);
+				} catch (Exception e) {
+					System.err.print(e.getMessage());
+				}
 			}
 		}
 	}
 	
 	public Boolean adviseNodeOpened(UITree tree) {
-		TreeNode<Concept> node = tree.getTreeNode();
-		if (null!=this.getConceptAdapter().getConcept())
-			if (null!=node.getChild(this.conceptAdapter.getConcept().getUUID()))
-					return Boolean.TRUE;
+//		TreeNode<Concept> node = tree.getTreeNode();
+//		if (null!=this.getConceptAdapter().getConcept())
+//			if (null!=node.getChild(this.conceptAdapter.getConcept().getUUID()))
+//					return Boolean.TRUE;
 			
-		return Boolean.FALSE;
+		return null;
 	}
 	
 	public String close (){
 		return "Close";
+	}
+	
+	public void newRoot (){
+		if (null!=tools){
+			Concept c = tools.addRootConcept("Default");
+			this.setTreeData(null);
+			this.getConceptAdapter().setConcept(c);
+			this.getConceptAdapter().resetConceptRelated();
+		}
+		
 	}
 }

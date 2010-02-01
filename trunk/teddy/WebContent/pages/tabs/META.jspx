@@ -13,15 +13,15 @@
 		id = "conceptMetadataPanel"
 		columns = "2">
 		<h:outputLabel value = "Author:" for = "authorMeta"/>
-		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.author}"/>
+		<h:outputText id = "authorMeta" value = "#{mainPageAdapter.conceptAdapter.concept.metadata.author}"/>
 		
 		<h:outputLabel value = "Date created:" for = "dateCreatedMeta"/>
-		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.dateCreated}"/>
+		<h:outputText id = "dateCreatedMeta" value = "#{mainPageAdapter.conceptAdapter.concept.metadata.dateCreated}"/>
 		
 		<h:outputLabel value = "Date updated:" for = "lastChangeMeta"/>
-		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeDate}"/>
+		<h:outputText id = "lastChangeMeta" value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeDate}"/>
 		
 		<h:outputLabel value = "Last updated by:" for = "lastChangeByMeta"/>
-		<h:outputText value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeBy}"/>
+		<h:outputText id = "lastChangeByMeta" value = "#{mainPageAdapter.conceptAdapter.concept.metadata.lastChangeBy}"/>
 	</h:panelGrid>
 </ui:composition>

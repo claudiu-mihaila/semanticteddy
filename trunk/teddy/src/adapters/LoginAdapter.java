@@ -6,10 +6,10 @@ import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.apache.commons.collections.iterators.ArrayListIterator;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import utils.Globals;
-import utils.Profile;
 import utils.User;
 
 public class LoginAdapter implements Serializable {
@@ -52,6 +52,10 @@ public class LoginAdapter implements Serializable {
 				{
 //				    currentProfile = new Profile(new User(username, password), components[2]);
 					defaultLanguage = components[2];
+					HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+					request.setAttribute("Usr", this.user);
+					request.setAttribute("DLang", defaultLanguage);
+					
 				    return "Login";
 				}
 			}

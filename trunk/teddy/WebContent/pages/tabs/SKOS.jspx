@@ -92,18 +92,14 @@
 						</a4j:support>
 					</h:selectOneMenu>
 				</rich:column>
-				<rich:column>
-					<rich:dataTable
-						var = "def" 
-						value = "#{row.value}">				
-						<h:inputText value = "#{def}">
-							<a4j:support 
-								event="onchange" 
-								actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLineLabel}" 
-								reRender = "alternativeTable">
-							</a4j:support>
-						</h:inputText>
-					</rich:dataTable>
+				<rich:column>		
+					<h:inputText value = "#{row.value}">
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewAlternativeLineLabel}" 
+							reRender = "alternativeTable">
+						</a4j:support>
+					</h:inputText>
 				</rich:column>
 				<f:facet name="footer">
 					<rich:datascroller />

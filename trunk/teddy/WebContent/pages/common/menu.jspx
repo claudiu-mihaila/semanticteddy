@@ -15,12 +15,7 @@
 						<h:outputText value="File" />
 					</h:panelGroup>
 				</f:facet>
-				<rich:menuGroup value="New">
-					<rich:menuItem value="Empty Project" submitMode="ajax"/>
-					<rich:menuItem value="Project from XML" submitMode="ajax"/>
-				</rich:menuGroup>
-				<rich:menuItem value="Open" submitMode="ajax" />
-				<rich:menuItem value="Save" submitMode="ajax" />
+				<rich:menuItem value="New" submitMode="ajax" action = "#{mainPageAdapter.newRoot}"/>
 				<rich:menuItem value="Close" submitMode="ajax" action = "#{mainPageAdapter.close}"/>
 			</rich:dropDownMenu>
 
@@ -33,7 +28,6 @@
 				</f:facet>
 				<rich:menuItem value="Project" submitMode="ajax"/>
 				<rich:menuItem value="Team" submitMode="ajax"/>
-				<rich:menuItem value="Docs" submitMode="ajax"/>
 			</rich:dropDownMenu>
 			
 		
