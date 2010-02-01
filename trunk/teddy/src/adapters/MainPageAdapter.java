@@ -119,6 +119,7 @@ public class MainPageAdapter implements Serializable {
 		if (tree.getTreeNode().getData() instanceof Concept){
 			Concept c = (Concept)tree.getTreeNode().getData();
 			this.getConceptAdapter().setConcept(c);
+			this.getConceptAdapter().resetConceptRelated();
 			UIComponent richPanel = FacesContext.getCurrentInstance().getViewRoot().
 				findComponent("applicationForm:rightPanel");
 			AjaxContext ac = AjaxContext.getCurrentInstance();

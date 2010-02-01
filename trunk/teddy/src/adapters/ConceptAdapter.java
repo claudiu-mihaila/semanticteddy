@@ -230,19 +230,21 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	public void loadConceptBFromLink (){
-		if (this.getBroaderDM().getRowData() instanceof Concept)
-			this.setConcept((Concept) this.getBroaderDM().getRowData()); 
+		if (this.getBroaderDM().getRowData() instanceof Concept){
+			this.setConcept((Concept) this.getBroaderDM().getRowData());
+			this.resetConceptRelated();
 		
-		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:leftPanel");
-		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:rightPanel");
-		AjaxContext ac = AjaxContext.getCurrentInstance();
-		try {
-			ac.addComponentToAjaxRender(leftPanel);
-			ac.addComponentToAjaxRender(rightPanel);
-		} catch (Exception e) {
-			System.err.print(e.getMessage());
+			UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:leftPanel");
+			UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(leftPanel);
+				ac.addComponentToAjaxRender(rightPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
 		}
 	}
 
@@ -253,19 +255,21 @@ public class ConceptAdapter implements Serializable {
 	}
 
 	public void loadConceptNFromLink (){
-		if (this.getNarrowerDM().getRowData() instanceof Concept)
+		if (this.getNarrowerDM().getRowData() instanceof Concept){
 			this.setConcept((Concept) this.getNarrowerDM().getRowData()); 
+			this.resetConceptRelated();
 
-		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:leftPanel");
-		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:rightPanel");
-		AjaxContext ac = AjaxContext.getCurrentInstance();
-		try {
-			ac.addComponentToAjaxRender(leftPanel);
-			ac.addComponentToAjaxRender(rightPanel);
-		} catch (Exception e) {
-			System.err.print(e.getMessage());
+			UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:leftPanel");
+			UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(leftPanel);
+				ac.addComponentToAjaxRender(rightPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
 		}
 	}
 	
@@ -276,19 +280,21 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	public void loadConceptRFromLink (){
-		if (this.getRelatedDM().getRowData() instanceof Concept)
+		if (this.getRelatedDM().getRowData() instanceof Concept){
 			this.setConcept((Concept) this.getRelatedDM().getRowData()); 
-
-		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:leftPanel");
-		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
-			findComponent("applicationForm:rightPanel");
-		AjaxContext ac = AjaxContext.getCurrentInstance();
-		try {
-			ac.addComponentToAjaxRender(leftPanel);
-			ac.addComponentToAjaxRender(rightPanel);
-		} catch (Exception e) {
-			System.err.print(e.getMessage());
+			this.resetConceptRelated();
+	
+			UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:leftPanel");
+			UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(leftPanel);
+				ac.addComponentToAjaxRender(rightPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
 		}
 	}
 	
