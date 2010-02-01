@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.apache.commons.collections.iterators.ArrayListIterator;
+
 import utils.Globals;
 import utils.Profile;
 import utils.User;
@@ -18,6 +20,7 @@ public class LoginAdapter implements Serializable {
 	private static final long serialVersionUID = 2012408009230209893L;
 	
 	private User user;
+	private String defaultLanguage;
 	private static ArrayList<String> alluserLines = null;
 
 	public LoginAdapter() {
@@ -48,6 +51,7 @@ public class LoginAdapter implements Serializable {
 				if ((components[0].equals(username)) && (components[1].equals(password)))
 				{
 //				    currentProfile = new Profile(new User(username, password), components[2]);
+					defaultLanguage = components[2];
 				    return "Login";
 				}
 			}
