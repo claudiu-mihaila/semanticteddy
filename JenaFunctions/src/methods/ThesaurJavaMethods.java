@@ -211,6 +211,14 @@ public class ThesaurJavaMethods {
 			ex.printStackTrace();
 		}
 	}
+	
+	public void exportXML(String xmlPath){
+		this.getRdfModel().exportXML(xmlPath);
+	}
+	
+	public void exportTurtle(String turtlePath){
+		this.getRdfModel().exportTurtle(turtlePath);
+	}
 	/**
 	 * Creates a root concept in the model
 	 * @param name the name of the root concept

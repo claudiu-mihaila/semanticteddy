@@ -81,7 +81,7 @@ public class ThesaurRDFMethods {
 	//altfel, daca exista modelul, din rulari anterioare de programe,
 	//atunci se va conecta la informatiile deja existente.
 	public Model loadModelOrCreate(String modelPath)throws Exception{
-		if (modelPath.equals("") || modelPath == null)
+		if ( modelPath == null ||modelPath.equals(""))
 			modelPath = Globals.projectFolder;
 		cleanAndCreateDirectors(modelPath, false);	
         if (modelPath.equals("")){
@@ -111,7 +111,7 @@ public class ThesaurRDFMethods {
 	public void exportXML(String xmlFilePath){
 		try
 		{
-			if (xmlFilePath.equals("") || xmlFilePath==null)
+			if ( xmlFilePath==null || xmlFilePath.equals(""))
 				xmlFilePath = Globals.xmlDefaultExportPath;
 			cleanAndCreateDirectors(xmlFilePath, true);
 			PrintWriter outputXML = new PrintWriter(new File(xmlFilePath));
@@ -134,7 +134,7 @@ public class ThesaurRDFMethods {
 	}
 	
 	public void exportTurtle(String turtleFilePath){
-		org.ontoware.rdf2go.model.Model model;
+	/*	org.ontoware.rdf2go.model.Model model;
 		try{
 			model = RDF2Go.getModelFactory().createModel();
 			model.open();
@@ -151,6 +151,29 @@ public class ThesaurRDFMethods {
 			catch(Exception ex){
 				ex.printStackTrace();
 			}
+			*/
+		try
+		{
+			if (turtleFilePath==null || turtleFilePath.equals(""))
+				turtleFilePath = Globals.turtleDefaultExportPath;
+			cleanAndCreateDirectors(turtleFilePath, true);
+			PrintWriter outputXML = new PrintWriter(new File(turtleFilePath));
+			
+			rdfModel.setNsPrefix("teddy", Globals.projectUri);
+			rdfModel.setNsPrefix("skos", Globals.SKOSURI);
+			rdfModel.setNsPrefix(GeoVocabulary.getPrefix(), GeoVocabulary.getUri());
+			rdfModel.setNsPrefix("dcTerms",DCTerms.getURI());
+			rdfModel.setNsPrefix("dc_10", DC_10.getURI());
+			
+			rdfModel.write(System.out, "Turtle");
+			rdfModel.write(outputXML, "Turtle");
+			outputXML.close();
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public void closeSession(){
@@ -209,7 +232,11 @@ public class ThesaurRDFMethods {
 	public String getMetadataCreatorForUUIDConcept(UUID currentUUID){
 		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
 		if(currentR != null) {
-			 return currentR.getProperty(DC_10.creator).getObject().toString();
+			 Statement st = currentR.getProperty(DC_10.creator);
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
 		}
 		return "";
 	}
@@ -217,7 +244,11 @@ public class ThesaurRDFMethods {
 	public String getMetadataDateForUUIDConcept(UUID currentUUID){
 		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
 		if(currentR != null) {
-			 return currentR.getProperty(DC_10.date).getObject().toString();
+			Statement st = currentR.getProperty(DC_10.date);
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
 		}
 		return new Date().toString();
 	}
@@ -225,7 +256,11 @@ public class ThesaurRDFMethods {
 	public String getMetadataContributorForUUIDConcept(UUID currentUUID){
 		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
 		if(currentR != null) {
-			 return currentR.getProperty(DC_10.contributor).getObject().toString();
+			Statement st = currentR.getProperty(DC_10.contributor);
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
 		}
 		return "";
 	}
@@ -233,7 +268,11 @@ public class ThesaurRDFMethods {
 	public String getMetadataModifiedForUUIDConcept(UUID currentUUID){
 		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
 		if(currentR != null) {
-			 return currentR.getProperty(DCTerms.modified).getObject().toString();
+			Statement st = currentR.getProperty(DCTerms.modified);
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
 		}
 		return new Date().toString();
 	}
