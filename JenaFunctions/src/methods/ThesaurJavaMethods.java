@@ -81,6 +81,7 @@ public class ThesaurJavaMethods {
 	public Concept addChildConcept(Concept parentConcept, String name){
 		Concept childConcept = new Concept(name, currentProfile.getProfileDefaultLanguage(), currentProfile.getProfileUser().getUsername());
 		parentConcept.addChild(childConcept, currentProfile.getProfileUser().getUsername());
+		childConcept.addParent(parentConcept, currentProfile.getProfileUser().getUsername());
 		rdfModel.addNarrowerResource(parentConcept.getUUID(), childConcept.getUUID(), name, currentProfile.getProfileDefaultLanguage(), currentProfile.getProfileUser().getUsername());
 		return childConcept;
 	}
