@@ -50,32 +50,27 @@ public class MainPageAdapter implements Serializable {
 	
 	private Concept sample () throws Exception{
 		ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"),null);
-		 Concept rootConcept = tools.addRootConcept("MyRoot");
-    	 tools.addDefinition(rootConcept, "def1", "RO");
-    	 tools.addDefinition(rootConcept, "def2", "RO");
-    	 tools.addDefinition(rootConcept, "def3", "EN");
+		 Concept rootConcept = tools.addRootConcept("Cocktails");
+    	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
+    	 tools.addDefinition(rootConcept, "a style of mixed drink", "EN");
 		 
-		 Concept child1 = tools.addChildConcept(rootConcept, "Child1");
-		 tools.addAltLabel(child1, "Irina", "RO");
-		 tools.addAltLabel(child1, "Maria", "RO");
-		 tools.addAltLabel(child1, "Irene", "EN");
+		 Concept child1 = tools.addChildConcept(rootConcept, "Pre-dinner");
+		 tools.addAltLabel(child1, "Inainte de masa", "RO");
+		 tools.addAltLabel(child1, "Before dinner", "EN");
 		 
-		 tools.addLatitude(rootConcept, "-55.2355542");
-		 tools.addLongitude(rootConcept, "44.2359957");
-		 tools.editLatitude(rootConcept, "55.2355542");
-		 tools.editLongitude(rootConcept, "-44.2359957");
+		 Concept child2 = tools.addChildConcept(rootConcept, "Long drink");
+		 tools.addDefinition(child2, "Alcohol with a large quantity of juice", "EN");
 		 
-		 Concept child2 = tools.addChildConcept(rootConcept, "Child2");
-		 tools.addDefinition(child2, "Boy", "EN");
-		 tools.addPrefLabel(child2, "Ana", "DE");
+		 Concept child3 = tools.addChildConcept(rootConcept, "After-dinner");
 		 
-		 Concept child3 = tools.addChildConcept(rootConcept, "Child3");
-		 
-		 Concept subChild1 = tools.addChildConcept(child3, "sub3_1");
-		 Concept subChild2 = tools.addChildConcept(child2, "sub3_2");
-		 tools.linkParentConcept(subChild1, rootConcept);
-		 tools.linkRelatedConcept(subChild2, child2);
-		 tools.linkRelatedConcept(subChild2, child3);
+		 Concept subChild1 = tools.addChildConcept(child3, "White Russian");
+		 Concept subChild2 = tools.addChildConcept(child2, "Tequila Sunsrise");
+		 Concept subChild3 = tools.addChildConcept(child2, "Tequila Sunset");
+
+		 tools.linkRelatedConcept(subChild2, subChild3);
+
+		 tools.addLatitude(subChild2, "33.448333");
+		 tools.addLongitude(subChild2, "-112.073889");	
 		 
 		 return rootConcept;
 	}
@@ -137,7 +132,11 @@ public class MainPageAdapter implements Serializable {
 	
 	public Boolean adviseNodeOpened(UITree tree) {
 		TreeNode<Concept> node = tree.getTreeNode();
-		return null;
+		if (null!=this.getConceptAdapter().getConcept())
+			if (null!=node.getChild(this.conceptAdapter.getConcept().getUUID()))
+					return Boolean.TRUE;
+			
+		return Boolean.FALSE;
 	}
 	
 	public String close (){

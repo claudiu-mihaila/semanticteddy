@@ -8,8 +8,8 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:jxee="http://www.jxee-lab.ro/jsf"
 	xmlns:rich="http://richfaces.org/rich">
-	<h:panelGrid columns = "2">
-		<rich:panel>
+	<h:panelGrid columns = "2" columnClasses="halfPage,halfPage">
+		<rich:panel styleClass="fullWidth">
 			<f:facet name="header">
 				<h:outputText value="Detail Info" />
 			</f:facet>
@@ -43,12 +43,11 @@
 					<h:selectOneMenu
 						id = "prefLangSelect" 
 						value = "#{row.key}" 
-						rendered = "#{empty(row.key)}"
-						>
+						rendered = "#{empty(row.key)}">
 						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForPreferredLabels}"  />
 						<a4j:support 
 							event="onchange" 
-							actionListener="#{mainPageAdapter.conceptAdapter.addNewPrefLine}" 
+							action="#{mainPageAdapter.conceptAdapter.addNewPrefLineLang}" 
 							reRender = "preferredTable">
 						</a4j:support>
 					</h:selectOneMenu>
@@ -57,7 +56,7 @@
 					<h:inputText value = "#{row.value}">
 						<a4j:support 
 							event="onchange" 
-							actionListener="#{mainPageAdapter.conceptAdapter.addNewPrefLine}" 
+							action="#{mainPageAdapter.conceptAdapter.addNewPrefLineLabel}" 
 							reRender = "preferredTable">
 						</a4j:support>
 					</h:inputText>
@@ -120,61 +119,71 @@
 		        </f:facet>
 			</rich:dataTable>
 		</rich:panel>
-		<rich:panel>
+		<rich:panel style = "width:500px">
+		
 			<f:facet name="header">
 				<h:outputText value="Relations" />
 			</f:facet>
-			<rich:dataTable
-				id = "broaderTable"
-				value="#{mainPageAdapter.conceptAdapter.broaderDM}"
-				var="row"
-				rowKeyVar="rkv"
-				rows="7">
-				<f:facet name="header">
-					<h:outputText value="Broader" />
-				</f:facet>
-				<rich:column>
-					<a4j:commandLink
-						id = "broaderCommandLink"
-						value="#{row.name}"
-						action="#{mainPageAdapter.conceptAdapter.loadConceptBFromLink}"
-						reRender="mainTree, rightPanel"/>
-				</rich:column>
-			</rich:dataTable>
-			<rich:dataTable
-				id = "narrowerTable"
-				value="#{mainPageAdapter.conceptAdapter.narrowerDM}"
-				var="row"
-				rowKeyVar="rkv"
-				rows="7">
-				<f:facet name="header">
-					<h:outputText value="Narrower" />
-				</f:facet>
-				<rich:column>
-					<a4j:commandLink
-						id = "narrowerCommandLink"
-						value="#{row.name}"
-						action="#{mainPageAdapter.conceptAdapter.loadConceptNFromLink}"
-						reRender="mainTree, rightPanel"/>
-				</rich:column>
-			</rich:dataTable>
-			<rich:dataTable
-				id = "relatedTable"
-				value="#{mainPageAdapter.conceptAdapter.relatedDM}"
-				var="row"
-				rowKeyVar="rkv"
-				rows="7">
-				<f:facet name="header">
-					<h:outputText value="Related Concepts" />
-				</f:facet>
-				<rich:column>
-					<a4j:commandLink
-						id = "relatedCommandLink"
-						value="#{row.name}"
-						actionListener="#{mainPageAdapter.conceptAdapter.loadConceptRFromLink}"
-						reRender="mainTree, rightPanel"/>
-				</rich:column>
-			</rich:dataTable>
+			<h:panelGrid columns = "3">
+				<rich:dataTable
+					id = "broaderTable"
+					value="#{mainPageAdapter.conceptAdapter.broaderDM}"
+					var="row"
+					rowKeyVar="rkv"
+					rows="7">
+					<f:facet name="header">
+						<h:outputText value="Broader" />					
+					</f:facet>
+					<rich:column>
+						<h:commandLink
+							id = "broaderCommandLink"
+							value="#{row.name}"
+							action="#{mainPageAdapter.conceptAdapter.loadConceptBFromLink}"/>
+					</rich:column>
+				</rich:dataTable>
+				<h:commandButton value = "+"></h:commandButton>
+				<h:commandButton value = "-"></h:commandButton>
+			</h:panelGrid>
+			<h:panelGrid columns="3">
+				<rich:dataTable
+					id = "narrowerTable"
+					value="#{mainPageAdapter.conceptAdapter.narrowerDM}"
+					var="row"
+					rowKeyVar="rkv"
+					rows="7">
+					<f:facet name="header">
+						<h:outputText value="Narrower" />
+					</f:facet>
+					<rich:column>
+						<h:commandLink
+							id = "narrowerCommandLink"
+							value="#{row.name}"
+							action="#{mainPageAdapter.conceptAdapter.loadConceptNFromLink}"/>
+					</rich:column>
+				</rich:dataTable>
+				<h:commandButton value = "+"></h:commandButton>
+				<h:commandButton value = "-"></h:commandButton>
+			</h:panelGrid>
+			<h:panelGrid columns = "3">
+				<rich:dataTable
+					id = "relatedTable"
+					value="#{mainPageAdapter.conceptAdapter.relatedDM}"
+					var="row"
+					rowKeyVar="rkv"
+					rows="7">
+					<f:facet name="header">
+						<h:outputText value="Related Concepts" />
+					</f:facet>
+					<rich:column>
+						<h:commandLink
+							id = "relatedCommandLink"
+							value="#{row.name}"
+							actionListener="#{mainPageAdapter.conceptAdapter.loadConceptRFromLink}"/>
+					</rich:column>
+				</rich:dataTable>
+				<h:commandButton value = "+"></h:commandButton>
+				<h:commandButton value = "-"></h:commandButton>
+			</h:panelGrid>
 		</rich:panel>
 	</h:panelGrid>
 </ui:composition>
