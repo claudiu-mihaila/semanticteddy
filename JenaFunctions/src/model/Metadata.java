@@ -9,8 +9,8 @@ public class Metadata  implements Serializable{
 	 */
 	private static final long serialVersionUID = -9223001260141880240L;
 	private String author;
-	private Date dateCreated;
-	private Date lastChangeDate;
+	private String dateCreated;
+	private String lastChangeDate;
 	private String lastChangeBy;
 	
 	public Metadata(){}
@@ -31,20 +31,22 @@ public class Metadata  implements Serializable{
 		this.lastChangeBy = lastChangeBy;
 	}
 
-	public Date getDateCreated() {
+	public String getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	public Date getLastChangeDate() {
+	public String getLastChangeDate() {
 		return lastChangeDate;
 	}
 
-	public void setLastChangeDate(Date lastChangeDate) {
+	public void setLastChangeDate(String lastChangeDate) {
 		this.lastChangeDate = lastChangeDate;
 	}
+	
+	
 	
 }

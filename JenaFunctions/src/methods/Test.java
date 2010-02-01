@@ -8,14 +8,8 @@ public class Test {
 	public static void main(String[] args) {
 		try {
 
-		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"), "E:\\My Folder\\Master\\WADe\\Teddy\\Tests");
-	//	 Model myModel = TDBFactory.createModel("C:\\MyTEstFolder2222");
-	//		Resource myR = myModel.createResource("http://testUri/sim");
-	//		myR.addProperty(FOAF.accountName, "xulescu");
-
-//		 ThesaurJavaMethods tools = new ThesaurJavaMethods(new User("SimSim", "Sim"), "");
-
-			
+		 ThesaurJavaMethods tools = new ThesaurJavaMethods("SimSim", "Sim", "E:\\My Folder\\Master\\WADe\\Teddy\\Tests");
+		
 		 Concept rootConcept = tools.addRootConcept("Cocktails");
     	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
     	 tools.addDefinition(rootConcept, "a style of mixed drink", "EN");
@@ -59,7 +53,7 @@ public class Test {
 
 //		 tools.getRdfModel().exportXML("D:\\MyTestFolderr\\sdasdad\\XMLTry.xml");
 //		 tools.getRdfModel().exportTurtle(null);
-//		 tools.closeProject();
+		 tools.closeProject();
 
 		
 	//	 SampleQueries.SampleQuery1(tools.getRdfModel().getRdfModel());

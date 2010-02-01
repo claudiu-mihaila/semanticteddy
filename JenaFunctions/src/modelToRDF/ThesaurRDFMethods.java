@@ -6,7 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.ontoware.rdf2go.RDF2Go;
@@ -135,8 +139,8 @@ public class ThesaurRDFMethods {
 			model = RDF2Go.getModelFactory().createModel();
 			model.open();
 			
-			exportXML("D:\\Temp\\XmlForTurtle.xml");
-			model.readFrom(new FileReader(new File("D:\\Temp\\XmlForTurtle.xml")));
+			exportXML(Globals.projectTempPath);
+			model.readFrom(new FileReader(new File(Globals.projectTempPath)));
 
 			if (turtleFilePath==null || turtleFilePath.equals(""))
 				turtleFilePath = Globals.turtleDefaultExportPath;
@@ -202,6 +206,38 @@ public class ThesaurRDFMethods {
 		rdfModel.removeAll(null, null, resource);
 	}
 	
+	public String getMetadataCreatorForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 return currentR.getProperty(DC_10.creator).getObject().toString();
+		}
+		return "";
+	}
+	
+	public String getMetadataDateForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 return currentR.getProperty(DC_10.date).getObject().toString();
+		}
+		return new Date().toString();
+	}
+
+	public String getMetadataContributorForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 return currentR.getProperty(DC_10.contributor).getObject().toString();
+		}
+		return "";
+	}
+
+	public String getMetadataModifiedForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 return currentR.getProperty(DCTerms.modified).getObject().toString();
+		}
+		return new Date().toString();
+	}
+	
 	public void addNarrowerResource(UUID parentUuid, UUID childUuid, String childName, String language, String user){
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid.toString());
 		if (parentResource != null){
@@ -231,6 +267,21 @@ public class ThesaurRDFMethods {
 		}
 	}
 
+	public List<String> getNarrowerPropertyFORUUIDConcept(UUID currentUUID){
+		List<String> childsUUIDs = new ArrayList<String>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getNarrowerProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				String fullURI = currentStatement.getObject().asNode().getURI();
+				String[] name  = fullURI.split(Globals.projectUri);
+				childsUUIDs.add(name[1]);
+			}
+		}
+		return childsUUIDs;
+	}
+	
 	public void linkBroaderResource(UUID childUuid, UUID parentUuid, String user){
 		Resource childResource = rdfModel.getResource(Globals.projectUri + childUuid);
 		Resource parentResource = rdfModel.getResource(Globals.projectUri + parentUuid);
@@ -249,6 +300,21 @@ public class ThesaurRDFMethods {
 			rdfModel.remove(childResource, getBroaderProperty(), parentResource.as(RDFNode.class));
 			addMetadataToOldResource(childResource, user);
 		}
+	}
+	
+	public List<String> getBroaderPropertyFORUUIDConcept(UUID currentUUID){
+		List<String> parentsUUIDs = new ArrayList<String>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getBroaderProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				String fullURI = currentStatement.getObject().asNode().getURI();
+				String[] name  = fullURI.split(Globals.projectUri);
+				parentsUUIDs.add(name[1]);
+			}
+		}
+		return parentsUUIDs;
 	}
 	
 	//related
@@ -273,6 +339,21 @@ public class ThesaurRDFMethods {
 		}
 	}
 
+	public List<String> getRelatedPropertyFORUUIDConcept(UUID currentUUID){
+		List<String> relatedsUUIDs = new ArrayList<String>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getRelatedProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				String fullURI = currentStatement.getObject().asNode().getURI();
+				String[] name  = fullURI.split(Globals.projectUri);
+				relatedsUUIDs.add(name[1]);
+			}
+		}
+		return relatedsUUIDs;
+	}
+	
 	//definition
 	public void addDefinition(UUID currentUuid, String definition, String language, String user)
 	{
@@ -310,6 +391,30 @@ public class ThesaurRDFMethods {
 		addMetadataToOldResource(currentResource, user);
 	}
 	
+	public Map<String,List<String>> getDefinitionPropertyForUUIDConcept(UUID currentUUID){
+		Map<String, List<String>> definitionsFound = new HashMap<String, List<String>>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getDefinitionProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				
+				List<String> defPerLang = null;
+				String language = currentStatement.getLiteral().getLanguage();
+				if (definitionsFound.containsKey(language))
+					defPerLang = definitionsFound.get(language);
+				else
+					defPerLang = new ArrayList<String>();
+				String fullString = currentStatement.getObject().toString();
+				defPerLang.add(fullString.substring(0,fullString.length()-3));
+				
+				definitionsFound.put(language, defPerLang);
+			}
+		}
+		return definitionsFound;
+		
+	}
+	
 	public void addPrefLabel(UUID currentUuid, String label, String language, String user){
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		if (currentResource != null) {
@@ -342,6 +447,20 @@ public class ThesaurRDFMethods {
 			}
 		}
 		addMetadataToOldResource(currentResource, user);
+	}
+	
+	public Map<String, String> getPrefLabelPropertyForUUIDConcept(UUID currentUUID){
+		Map<String, String> prefLabelsFound = new HashMap<String, String>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getPrefLabelProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				String fullString = currentStatement.getObject().toString();
+			    prefLabelsFound.put(currentStatement.getLiteral().getLanguage(), fullString.substring(0,fullString.length()-3));
+			}
+		}
+		return prefLabelsFound;
 	}
 	
 	public void addAltLabel(UUID currentUuid, String label, String language, String user){
@@ -379,6 +498,29 @@ public class ThesaurRDFMethods {
 		addMetadataToOldResource(currentResource, user);
 	}
 	
+	public Map<String,List<String>> getAltLabelPropertyForUUIDConcept(UUID currentUUID){
+		Map<String, List<String>> altLabelsFound = new HashMap<String, List<String>>();
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			StmtIterator iter = currentR.listProperties(getAltLabelProperty());
+			while (iter.hasNext()) {
+				Statement currentStatement = iter.nextStatement();
+				
+				List<String> labelsPerLang = null;
+				String language = currentStatement.getLiteral().getLanguage();
+				if (altLabelsFound.containsKey(language))
+					labelsPerLang = altLabelsFound.get(language);
+				else
+					labelsPerLang = new ArrayList<String>();
+				String fullString = currentStatement.getObject().toString();
+				labelsPerLang.add(fullString.substring(0,fullString.length()-3));
+				
+				altLabelsFound.put(language, labelsPerLang);
+			}
+		}
+		return altLabelsFound;
+	}
+	
 	public void addLatitude(UUID currentUuid, String latitude, String user) {
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		currentResource.addProperty(getLatitudeProperty(), latitude);
@@ -398,6 +540,18 @@ public class ThesaurRDFMethods {
 		addMetadataToOldResource(currentResource, user);
 	}
 	
+	public String getLatitudePropertyForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 Statement st = currentR.getProperty(getLatitudeProperty());
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
+		}
+		return "";
+	}
+	
 	public void addLongitude(UUID currentUuid, String longitude, String user) {
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		currentResource.addProperty(getLongitudeProperty(), longitude);
@@ -415,6 +569,18 @@ public class ThesaurRDFMethods {
 		Resource currentResource = rdfModel.getResource(Globals.projectUri + currentUuid.toString());
 		currentResource.removeAll(getLongitudeProperty());
 		addMetadataToOldResource(currentResource, user);
+	}
+	
+	public String getLongitudePropertyForUUIDConcept(UUID currentUUID){
+		Resource currentR = rdfModel.getResource(Globals.projectUri + currentUUID.toString());
+		if(currentR != null) {
+			 Statement st = currentR.getProperty(getLongitudeProperty());
+			 if (st!=null)
+				 return st.getObject().toString();
+			 else
+				 return "";
+		}
+		return "";
 	}
 	
 	public Model getRdfModel() {

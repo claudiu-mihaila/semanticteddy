@@ -40,9 +40,9 @@ public class Concept implements Serializable{
 		this.name = name;
 		this.prefLabels.put(language, name);
 		metadata = new Metadata();
-		metadata.setDateCreated(new Date());
+		metadata.setDateCreated(new Date().toString());
 		metadata.setAuthor(user);
-		metadata.setLastChangeDate(new Date());
+		metadata.setLastChangeDate(new Date().toString());
 		metadata.setLastChangeBy(user);
 	}
 
@@ -98,13 +98,13 @@ public class Concept implements Serializable{
 	public void addChild(Concept child, String user) {
 		this.children.add(child);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 	
 	public void removeChild(Concept child, String user) {
 		this.children.remove(child);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 
 	public List<Concept> getParents() {
@@ -118,13 +118,13 @@ public class Concept implements Serializable{
 	public void addParent(Concept parent, String user) {
 		this.parents.add(parent);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 	
 	public void removeParent(Concept parent, String user) {
 		this.parents.remove(parent);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 
 	public List<Concept> getRelated() {
@@ -138,13 +138,13 @@ public class Concept implements Serializable{
 	public void addRelated(Concept related, String user) {
 		this.related.add(related);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 	
 	public void removeRelated(Concept related, String user) {
 		this.related.remove(related);
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 
 	public Map<String, String> getPrefLabels() {
@@ -173,7 +173,7 @@ public class Concept implements Serializable{
 	
 	public void setModified(String user) {
 		this.metadata.setLastChangeBy(user);
-		this.metadata.setLastChangeDate(new Date());
+		this.metadata.setLastChangeDate(new Date().toString());
 	}
 	
 	public String toString(){
