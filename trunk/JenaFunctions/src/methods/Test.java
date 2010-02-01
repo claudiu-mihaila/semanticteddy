@@ -10,7 +10,7 @@ public class Test {
 
 		 ThesaurJavaMethods tools = new ThesaurJavaMethods("simina", "simina", "E:\\My Folder\\Master\\WADe\\Teddy\\Tests\\");
 		
-		 Concept rootConcept = tools.addRootConcept("Cocktails");
+	/*	 Concept rootConcept = tools.addRootConcept("Cocktails");
     	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
     	 tools.addDefinition(rootConcept, "a style of mixed drink", "EN");
 		 
@@ -31,10 +31,12 @@ public class Test {
 
 		 tools.addLatitude(subChild2, "33.448333");
 		 tools.addLongitude(subChild2, "-112.073889");		 
-		 
+	*/	 
 		// tools.printAsObject(rootConcept);
 		
-		 tools.getRdfModel().getRdfModel().write(System.out, "TURTLE");
+		 tools.exportXML("C:\\t1\\txml.xml");
+		 //tools.getRdfModel().getRdfModel().write(System.out, "TURTLE");
+		 tools.exportTurtle("C:\\t1\\tutle.xml");
 		 tools.closeProject();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
