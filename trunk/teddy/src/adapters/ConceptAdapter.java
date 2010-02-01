@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -23,6 +25,8 @@ import javax.faces.model.SelectItem;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+
+import org.ajax4jsf.context.AjaxContext;
 
 import model.Concept;
 import model.LanguageEnum;
@@ -58,10 +62,10 @@ public class ConceptAdapter implements Serializable {
 	
 	public void setConcept(Concept concept) {
 		this.concept = concept;
-		this.resetConceptRelated ();
+//		this.resetConceptRelated ();
 	}
 
-	private void resetConceptRelated() {
+	public void resetConceptRelated() {
 		this.alternativeLabelsDM = null;
 		this.preferredLabelsDM = null;
 		this.definitionsDM = null;
@@ -118,12 +122,27 @@ public class ConceptAdapter implements Serializable {
 		return items;
 	}
 	
-	public void addNewPrefLine (ActionEvent evt){
+	public void addNewPrefLineLang (){
 		MapEntryView<String, String> x = null;
-		if (null!=this.concept && this.preferredLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
+		if (null!=this.concept && null!=this.preferredLabelsDM && this.preferredLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
 			x = (MapEntryView<String, String>) this.preferredLabelsDM.getRowData();
 			if (null!= x.getKey() && !x.getKey().isEmpty())
 				this.concept.getPrefLabels().put(x.getKey(), x.getValue());
+		}
+		this.resetPreferredLabelsDM();
+		
+		
+	}
+	public void addNewPrefLineLabel (){
+		MapEntryView<String, String> x = null;
+		if (null!=this.concept && null!=this.preferredLabelsDM &&  this.preferredLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
+			x = (MapEntryView<String, String>) this.preferredLabelsDM.getRowData();
+			if (null!= x.getKey() && !x.getKey().isEmpty())
+				if (null!=x.getValue() && !x.getValue().isEmpty())
+					this.concept.getPrefLabels().put(x.getKey(), x.getValue());
+				else
+					this.concept.getPrefLabels().remove(x.getKey());
+				
 		}
 		this.resetPreferredLabelsDM();
 		
@@ -135,31 +154,18 @@ public class ConceptAdapter implements Serializable {
 	public DataModel getAlternativeLabelsDM (){
 		if (null!=this.concept)
 			if (null==this.alternativeLabelsDM){
-				List<MapEntryView<String,List<String>>> aux = new LinkedList<MapEntryView<String, List<String>>>();
-				
-				for (Entry<String, List<String>> x : this.concept.getAltLabels().entrySet()){
-					
-					MapEntryView<String, List<String>> y = new MapEntryView<String, List<String>>(x);
-					
-					if (null==y.getValue() || y.getValue().isEmpty()){
-						List<String> vList = new LinkedList<String>();
-						vList.add("aaa");
-						vList.add("bbb");
-						y.setValue(vList);
-					}
+				List<MapEntryView<String,String>> aux = new LinkedList<MapEntryView<String, String>>();	
+				for (Entry<String, List<String>> x : this.concept.getAltLabels().entrySet()){					
+					MapEntryView<String,String> y = new MapEntryView<String, String>();
+					y.setKey(x.getKey());
+					if (x.getValue().size()>0)
+						y.setValue(x.getValue().get(0));
 					else
-						if (!y.getValue().contains("_"))
-							y.getValue().add("_");
+						y.setValue("");
 					aux.add(y);
 				}
 				if (1!=this.getAvailableLangsForPreferredLabels().size()){
-					MapEntryView<String, List<String>> y = new MapEntryView<String, List<String>>();
-					y.setKey("");
-					List<String> vList = new LinkedList<String>();
-					vList.add("11_");
-					vList.add("22_");
-	
-					y.setValue(vList);
+					MapEntryView<String, String> y = new MapEntryView<String, String>("","");
 					aux.add(y);
 				}
 				Collections.sort(aux);
@@ -191,23 +197,26 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	public void addNewAlternativeLineLang (ActionEvent evt){
-		MapEntryView<String, List<String>> x = null;
-		if (null!=this.concept && this.alternativeLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
-			x = (MapEntryView<String, List<String>>) this.alternativeLabelsDM.getRowData();
+		MapEntryView<String, String> x = null;
+		if (null!=this.concept && null!=this.alternativeLabelsDM && this.alternativeLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
+			x = (MapEntryView<String, String>) this.alternativeLabelsDM.getRowData();
 			if (null!= x.getKey() && !x.getKey().isEmpty())
-				this.concept.getAltLabels().put(x.getKey(), x.getValue());
+				this.concept.getAltLabels().put(x.getKey(), Arrays.asList(x.getValue()));
 		}
 		this.resetAlternativeLabelsDM();		
 	}
 	
 	public void addNewAlternativeLineLabel(ActionEvent evt){
-		MapEntryView<String, List<String>> x = null;
-		if (null!=this.concept && this.alternativeLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
-			x = (MapEntryView<String, List<String>>) this.alternativeLabelsDM.getRowData();
-//			if (null!= x.getKey() && !x.getKey().isEmpty())
-//				this.concept.getAltLabels().put(x.getKey(), x.getValue());
+		MapEntryView<String, String> x = null;
+		if (null!=this.concept && null!=this.alternativeLabelsDM && this.alternativeLabelsDM.getRowData() instanceof MapEntryView<?, ?>){
+			x = (MapEntryView<String,String>) this.alternativeLabelsDM.getRowData();
+			if (null!= x.getKey() && !x.getKey().isEmpty())
+				if (null!=x.getValue() && !x.getValue().isEmpty())
+					this.concept.getAltLabels().put(x.getKey(), Arrays.asList(x.getValue()));
+				else
+					this.concept.getAltLabels().remove(x.getKey());
 		}
-//		this.resetAlternativeLabelsDM();
+		this.resetAlternativeLabelsDM();
 	}
 	
 	//DEFINITIONS LIST-------------------------------------------------------------------------------------------------------
@@ -221,8 +230,20 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	public void loadConceptBFromLink (){
-		if (this.broaderDM.getRowData() instanceof Concept)
-			this.concept =(Concept) this.broaderDM.getRowData(); 
+		if (this.getBroaderDM().getRowData() instanceof Concept)
+			this.setConcept((Concept) this.getBroaderDM().getRowData()); 
+		
+		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:leftPanel");
+		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:rightPanel");
+		AjaxContext ac = AjaxContext.getCurrentInstance();
+		try {
+			ac.addComponentToAjaxRender(leftPanel);
+			ac.addComponentToAjaxRender(rightPanel);
+		} catch (Exception e) {
+			System.err.print(e.getMessage());
+		}
 	}
 
 	public DataModel getNarrowerDM() {
@@ -232,8 +253,20 @@ public class ConceptAdapter implements Serializable {
 	}
 
 	public void loadConceptNFromLink (){
-		if (this.narrowerDM.getRowData() instanceof Concept)
-			this.concept =(Concept) this.narrowerDM.getRowData(); 
+		if (this.getNarrowerDM().getRowData() instanceof Concept)
+			this.setConcept((Concept) this.getNarrowerDM().getRowData()); 
+
+		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:leftPanel");
+		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:rightPanel");
+		AjaxContext ac = AjaxContext.getCurrentInstance();
+		try {
+			ac.addComponentToAjaxRender(leftPanel);
+			ac.addComponentToAjaxRender(rightPanel);
+		} catch (Exception e) {
+			System.err.print(e.getMessage());
+		}
 	}
 	
 	public DataModel getRelatedDM() {
@@ -243,14 +276,24 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	public void loadConceptRFromLink (){
-		if (this.relatedDM.getRowData() instanceof Concept)
-			this.concept =(Concept) this.relatedDM.getRowData(); 
+		if (this.getRelatedDM().getRowData() instanceof Concept)
+			this.setConcept((Concept) this.getRelatedDM().getRowData()); 
+
+		UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:leftPanel");
+		UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+			findComponent("applicationForm:rightPanel");
+		AjaxContext ac = AjaxContext.getCurrentInstance();
+		try {
+			ac.addComponentToAjaxRender(leftPanel);
+			ac.addComponentToAjaxRender(rightPanel);
+		} catch (Exception e) {
+			System.err.print(e.getMessage());
+		}
 	}
 	
 	
 	//VISUALIZATION TAB------------------------------------------------------------------------------------------------------
-	
-	
 
 	public long getTimeStamp() {
 		return new Date().getTime();

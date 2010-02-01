@@ -42,5 +42,10 @@ body{
 }
 .mainPanelGrid {
 	width: 100%;
-	
+}
+.halfPage {
+	width:50%;
+}	
+.fullWidth{
+	width:100%;
 }
