@@ -50,6 +50,7 @@ public class LoginAdapter implements Serializable {
 				String[] components = str.split(" ");
 				if ((components[0].equals(username)) && (components[1].equals(password)))
 				{
+					user = new User(username, password);
 //				    currentProfile = new Profile(new User(username, password), components[2]);
 					defaultLanguage = components[2];
 				    return "Login";
