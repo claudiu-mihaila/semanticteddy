@@ -8,7 +8,7 @@ public class Test {
 	public static void main(String[] args) {
 		try {
 
-		 ThesaurJavaMethods tools = new ThesaurJavaMethods("SimSim", "Sim", "E:\\My Folder\\Master\\WADe\\Teddy\\Tests");
+		 ThesaurJavaMethods tools = new ThesaurJavaMethods("simina", "simina", "E:\\My Folder\\Master\\WADe\\Teddy\\Tests");
 		
 		 Concept rootConcept = tools.addRootConcept("Cocktails");
     	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
