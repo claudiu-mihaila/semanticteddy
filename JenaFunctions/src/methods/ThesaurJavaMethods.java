@@ -33,6 +33,12 @@ public class ThesaurJavaMethods {
 		}
 	}
 	
+	public ThesaurJavaMethods(User usr, String language, String modelPath) throws Exception{
+			rdfModel = new ThesaurRDFMethods(modelPath);
+			currentProfile = this.createProfile(usr, language);
+			loadProjects();
+	}
+	
 	public boolean logUser(String username, String password){
 		if (alluserLines==null){
 			loadAllUsers();
@@ -72,6 +78,9 @@ public class ThesaurJavaMethods {
 	}
 	
 	public Profile createProfile(User usr, String defLanguage){
+		if (defLanguage==null || defLanguage.equals(""))
+			defLanguage = Globals.defaultLanguage;
+		
 		Profile prof = new Profile(usr,defLanguage);
 		this.currentProfile = prof;
 		return prof;
