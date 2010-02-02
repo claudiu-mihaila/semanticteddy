@@ -40,21 +40,25 @@ public class LoginAdapter implements Serializable {
 		return user;
 	}
 	
-	public String login(String username, String password) {
+	public String login() {
 		if (alluserLines==null){
 			loadAllUsers();
 		}
 		
 		for (String str : alluserLines){
-			if (str.startsWith(username)){
+			if (str.startsWith(this.user.getUsername())){
 				String[] components = str.split(" ");
-				if ((components[0].equals(username)) && (components[1].equals(password)))
+				if ((components[0].equals(this.user.getUsername())) && (components[1].equals(this.user.getPassword())))
 				{
 //				    currentProfile = new Profile(new User(username, password), components[2]);
 					defaultLanguage = components[2];
-					HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-					request.setAttribute("Usr", this.user);
-					request.setAttribute("DLang", defaultLanguage);
+//					HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//					request.setAttribute("Usr", this.user);
+//					request.setAttribute("DLang", defaultLanguage);
+//					
+//					MainPageAdapter adapter = (MainPageAdapter) FacesContext.getCurrentInstance().geta.getAttribute("mainPageAdapter");
+//					adapter.doLogin(this.getUser(), defaultLanguage);
+					
 					
 				    return "Login";
 				}

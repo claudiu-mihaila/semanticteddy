@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import model.Concept;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -130,11 +132,42 @@ public class SampleQueries {
 
 	public static void main(String[] args) {
 
-		Model model = init();
-		SampleQuery1(model);
-		SampleQuery2(model);
-		SampleQuery3(model);
-		SampleQuery4(model);
+		try {
+			ThesaurJavaMethods tools =  new ThesaurJavaMethods("laura", "laura", null);
+			
+			 Concept rootConcept = tools.addRootConcept("Cocktails");
+			 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
+			 tools.addDefinition(rootConcept, "a style of mixed drink", "EN");
+			 
+			 Concept child1 = tools.addChildConcept(rootConcept, "Pre-dinner");
+			 tools.addAltLabel(child1, "Inainte de masa", "RO");
+			 tools.addAltLabel(child1, "Before dinner", "EN");
+			 
+			 Concept child2 = tools.addChildConcept(rootConcept, "Long drink");
+			 tools.addDefinition(child2, "Alcohol with a large quantity of juice", "EN");
+			 
+			 Concept child3 = tools.addChildConcept(rootConcept, "After-dinner");
+			 
+			 Concept subChild1 = tools.addChildConcept(child3, "White Russian");
+			 Concept subChild2 = tools.addChildConcept(child2, "Tequila Sunsrise");
+			 Concept subChild3 = tools.addChildConcept(child2, "Tequila Sunset");
+
+			 tools.linkRelatedConcept(subChild2, subChild3);
+
+			 tools.addLatitude(subChild2, "33.448333");
+			 tools.addLongitude(subChild2, "-112.073889");	
+			 
+			SampleQuery1(tools.getRdfModel().getRdfModel());
+			SampleQuery2(tools.getRdfModel().getRdfModel());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		SampleQuery3(model);
+//		SampleQuery4(model);
 	}
 
 }

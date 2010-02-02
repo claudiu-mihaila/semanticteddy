@@ -8,5 +8,14 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:jxee="http://www.jxee-lab.ro/jsf"
 	xmlns:rich="http://richfaces.org/rich">
-	SPARQL
+	<h:inputTextarea style = "width:100%" id = "sparqlText" value = "#{mainPageAdapter.query}">
+	</h:inputTextarea>
+	<br/>
+	<h:commandButton id="execSparql"
+		action="#{mainPageAdapter.executeQuery}"
+		value="SPARQL" target = "_blank"
+		>
+	</h:commandButton>
+	<br/>
+	
 </ui:composition>

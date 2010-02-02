@@ -16,6 +16,11 @@
 					</h:panelGroup>
 				</f:facet>
 				<rich:menuItem value="New" submitMode="ajax" action = "#{mainPageAdapter.newRoot}"/>
+				<rich:menuGroup value="Export AS...">
+					<rich:menuItem value="XML" submitMode="ajax" action = "#{mainPageAdapter.doExportModel}" target="_blank"/>
+					<rich:menuItem value="TURTLE" submitMode="ajax" action = "#{mainPageAdapter.doExportModelT}" target="_blank"/>				
+					<rich:menuItem value="N3" submitMode="ajax" action = "#{mainPageAdapter.doExportModelN}" target="_blank"/>				
+				</rich:menuGroup>
 				<rich:menuItem value="Close" submitMode="ajax" action = "#{mainPageAdapter.close}"/>
 			</rich:dropDownMenu>
 
