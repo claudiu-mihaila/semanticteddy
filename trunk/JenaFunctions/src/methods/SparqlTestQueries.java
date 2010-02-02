@@ -234,8 +234,8 @@ public static void PopulateQuery()
 	Query query = QueryFactory.create(queryString);
 	QueryExecution qe = QueryExecutionFactory.create(query, model);
 	ResultSet results = qe.execSelect();
-	for(String var : results.getResultVars()) {
-		System.out.println(var);
+	for(Object var : results.getResultVars()) {
+		System.out.println(var.toString());
 	}
 	while (results.hasNext())
 	{

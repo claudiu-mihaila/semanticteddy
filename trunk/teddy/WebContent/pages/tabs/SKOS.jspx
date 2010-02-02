@@ -106,10 +106,41 @@
 		        </f:facet>
 			</rich:dataTable>
 
-			<rich:dataTable rows = "4">
+			<rich:dataTable 
+				id = "definitionsTable"
+				value="#{mainPageAdapter.conceptAdapter.definitionsDM}"
+				var="row"
+				rowKeyVar="rkv"
+				rows = "4">
 				<f:facet name="header">
 					<h:outputText value="Definitions" />
 				</f:facet>
+				<rich:column>
+					<h:outputText 
+						id = "defLang" 
+						value = "#{row.key}" 
+						rendered = "#{not(empty(row.key))}"/>
+					<h:selectOneMenu
+						id = "defLangSelect" 
+						value = "#{row.key}" 
+						rendered = "#{empty(row.key)}">
+						<f:selectItems value="#{mainPageAdapter.conceptAdapter.availableLangsForDefinitions}"  />
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewDefinitionLineLang}" 
+							reRender = "definitionsTable">
+						</a4j:support>
+					</h:selectOneMenu>
+				</rich:column>
+				<rich:column>		
+					<h:inputText value = "#{row.value}">
+						<a4j:support 
+							event="onchange" 
+							actionListener="#{mainPageAdapter.conceptAdapter.addNewDefinitionLineLabel}" 
+							reRender = "definitionsTable">
+						</a4j:support>
+					</h:inputText>
+				</rich:column>
 				<f:facet name="footer">
 					<rich:datascroller />
 		        </f:facet>
@@ -120,7 +151,7 @@
 			<f:facet name="header">
 				<h:outputText value="Relations" />
 			</f:facet>
-			<h:panelGrid columns = "3">
+			<h:panelGrid columns = "1">
 				<rich:dataTable
 					id = "broaderTable"
 					value="#{mainPageAdapter.conceptAdapter.broaderDM}"
@@ -137,10 +168,8 @@
 							action="#{mainPageAdapter.conceptAdapter.loadConceptBFromLink}"/>
 					</rich:column>
 				</rich:dataTable>
-				<h:commandButton value = "+"></h:commandButton>
-				<h:commandButton value = "-"></h:commandButton>
 			</h:panelGrid>
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="2">
 				<rich:dataTable
 					id = "narrowerTable"
 					value="#{mainPageAdapter.conceptAdapter.narrowerDM}"
@@ -157,10 +186,9 @@
 							action="#{mainPageAdapter.conceptAdapter.loadConceptNFromLink}"/>
 					</rich:column>
 				</rich:dataTable>
-				<h:commandButton value = "+"></h:commandButton>
-				<h:commandButton value = "-"></h:commandButton>
+				<h:commandButton value = "+" action = "#{mainPageAdapter.conceptAdapter.addChild}"></h:commandButton>
 			</h:panelGrid>
-			<h:panelGrid columns = "3">
+			<h:panelGrid columns = "1">
 				<rich:dataTable
 					id = "relatedTable"
 					value="#{mainPageAdapter.conceptAdapter.relatedDM}"
@@ -177,8 +205,6 @@
 							actionListener="#{mainPageAdapter.conceptAdapter.loadConceptRFromLink}"/>
 					</rich:column>
 				</rich:dataTable>
-				<h:commandButton value = "+"></h:commandButton>
-				<h:commandButton value = "-"></h:commandButton>
 			</h:panelGrid>
 		</rich:panel>
 	</h:panelGrid>

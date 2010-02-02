@@ -10,8 +10,8 @@ public class Globals {
 	public static String turtleDefaultExportPath = "C:\\TeddyExport\\TeddyTurtle.xml";
 	public static String projectTempPath="C:\\Temp\\XmlForTurtle.xml";
 	//acestea doua trebuie sa existe. sunt fisierele de configurare: useri si proiecte
-	public static String teddySecurityFilePath="D:\\Teddy.txt";
-	public static String teddyProjectsFilePath="D:\\TeddyProjects.txt";
+	public static String teddySecurityFilePath="G:\\eclipsework\\teddyModel\\Teddy.txt";
+	public static String teddyProjectsFilePath="G:\\eclipsework\\teddyModel\\TeddyProjects.txt";
 	
 	public static String projectUri= "http://Teddy#";
 	public static String SKOSURI = "http://www.w3.org/2004/02/skos/core#";

@@ -1,13 +1,17 @@
 package adapters;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import methods.SparqlEndpoint;
 import methods.ThesaurJavaMethods;
 import model.Concept;
 
@@ -18,6 +22,9 @@ import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
 
 import utils.User;
+
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 
 public class MainPageAdapter implements Serializable {
 
@@ -36,20 +43,28 @@ public class MainPageAdapter implements Serializable {
 	
 	private List<Concept> roots;
 	
-	private static ThesaurJavaMethods tools;
+	public static ThesaurJavaMethods tools;
+	
+	private String query;
+
+	private String executeQueryResult;
 	
 	public MainPageAdapter() {
 		if (null==this.conceptAdapter)
 			this.conceptAdapter = new ConceptAdapter(this);
 		roots = new LinkedList<Concept>();
 		
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		User user = (User) request.getAttribute("Usr");
-		String lang = request.getAttribute("DLang").toString();
+//		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//		User user = (User) request.getAttribute("Usr");
+//		String lang = (String)request.getAttribute("DLang");
+		doLogin(new User("laura", "laura"), "RO");
 		
-		if (user!=null && lang!=null && !lang.isEmpty()){
+	}
+	
+	public void doLogin (User usr, String lang){
+		if (usr!=null && lang!=null && !lang.isEmpty()){
 			try {
-				tools = new ThesaurJavaMethods(user.getUsername(), user.getPassword(), null);
+				tools = new ThesaurJavaMethods(usr.getUsername(), usr.getPassword(), null);
 				roots.add(this.sample());
 				
 			} catch (Exception e1) {
@@ -60,7 +75,6 @@ public class MainPageAdapter implements Serializable {
 			
 		}
 	}
-	
 	private Concept sample () throws Exception{
 		 Concept rootConcept = tools.addRootConcept("Cocktails");
     	 tools.addDefinition(rootConcept, "un stil de bãuturã amestecatã", "RO");
@@ -161,10 +175,129 @@ public class MainPageAdapter implements Serializable {
 	public void newRoot (){
 		if (null!=tools){
 			Concept c = tools.addRootConcept("Default");
+			this.roots.add(c);
 			this.setTreeData(null);
 			this.getConceptAdapter().setConcept(c);
 			this.getConceptAdapter().resetConceptRelated();
+			
+			UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:leftPanel");
+			UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(leftPanel);
+				ac.addComponentToAjaxRender(rightPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
 		}
 		
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+	
+//	public void executeQuery (){
+//		if (null!=tools && null!=this.query)		
+//		this.executeQueryResult = SparqlEndpoint.executeQueryOnModelAsText(tools.getRdfModel().getRdfModel(), this.getQuery());
+//	}
+//	
+//	public String getExecuteQueryResult (){
+//		return this.executeQueryResult;
+//		
+//	}
+//	public void setExecuteQueryResult(String executeQueryResult) {
+//	}
+	
+	public void doExportModel (){
+		BufferedOutputStream out = null;
+		try {
+			out = new BufferedOutputStream(((HttpServletResponse)
+					FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (null!=out){
+		this.tools.getRdfModel().getRdfModel().write(out);
+		
+	 	((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+	 		setContentType("application/octet-stream");	 	
+		((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+			addHeader( "Content-Disposition","attachment;filename=export");
+    	FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	public void doExportModelT (){
+		BufferedOutputStream out = null;
+		try {
+			out = new BufferedOutputStream(((HttpServletResponse)
+					FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (null!=out){
+		this.tools.getRdfModel().getRdfModel().write(out, "TURTLE");
+		
+	 	((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+	 		setContentType("application/octet-stream");	 	
+		((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+			addHeader( "Content-Disposition","attachment;filename=export");
+    	FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	public void doExportModelN (){
+		BufferedOutputStream out = null;
+		try {
+			out = new BufferedOutputStream(((HttpServletResponse)
+					FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (null!=out){
+		this.tools.getRdfModel().getRdfModel().write(out, "N3");
+		
+	 	((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+	 		setContentType("application/octet-stream");	 	
+		((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+			addHeader( "Content-Disposition","attachment;filename=export");
+    	FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	
+	public void executeQuery (){
+		BufferedOutputStream out = null;
+		try {
+			out = new BufferedOutputStream(((HttpServletResponse)
+					FacesContext.getCurrentInstance().getExternalContext().getResponse()).getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (null!=out){
+		SparqlEndpoint.executeQueryOnModelToOut(tools.getRdfModel().getRdfModel(), this.getQuery(), out);
+		
+	 	((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+	 		setContentType("application/octet-stream");	 	
+		((HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse()).
+			addHeader( "Content-Disposition","attachment;filename=export");
+    	FacesContext.getCurrentInstance().responseComplete();
+		}
+	}
+	
+	public List<Concept> getRoots() {
+		return roots;
 	}
 }

@@ -13,9 +13,9 @@
 			gmapVar="map" 
 			style="width:800px;height:400px" 
 			id="gmap" 
-			lat="37.4419"
-			long = "-122.1419"
-			zoom = "10"
+			lat="#{mainPageAdapter.conceptAdapter.concept.latitude}"
+			lng="#{mainPageAdapter.conceptAdapter.concept.latitude}"
+			zoom = "13"
 			onclick="addPin(map)"/>
 	</rich:panel>
 </ui:composition>

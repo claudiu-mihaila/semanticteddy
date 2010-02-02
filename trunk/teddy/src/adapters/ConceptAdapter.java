@@ -163,7 +163,7 @@ public class ConceptAdapter implements Serializable {
 						y.setValue("");
 					aux.add(y);
 				}
-				if (1!=this.getAvailableLangsForPreferredLabels().size()){
+				if (1!=this.getAvailableLangsForAlternativeLabels().size()){
 					MapEntryView<String, String> y = new MapEntryView<String, String>("","");
 					aux.add(y);
 				}
@@ -219,6 +219,73 @@ public class ConceptAdapter implements Serializable {
 	}
 	
 	//DEFINITIONS LIST-------------------------------------------------------------------------------------------------------
+	public DataModel getDefinitionsDM (){
+		if (null!=this.concept)
+			if (null==this.definitionsDM){
+				List<MapEntryView<String,String>> aux = new LinkedList<MapEntryView<String, String>>();	
+				for (Entry<String, List<String>> x : this.concept.getDefinitions().entrySet()){					
+					MapEntryView<String,String> y = new MapEntryView<String, String>();
+					y.setKey(x.getKey());
+					if (x.getValue().size()>0)
+						y.setValue(x.getValue().get(0));
+					else
+						y.setValue("");
+					aux.add(y);
+				}
+				if (1!=this.getAvailableLangsForDefinitions().size()){
+					MapEntryView<String, String> y = new MapEntryView<String, String>("","");
+					aux.add(y);
+				}
+				Collections.sort(aux);
+				this.definitionsDM = new ListDataModel(aux);
+			}
+		return this.definitionsDM;
+	}
+	
+	public void resetDefinitionsDM (){
+		this.definitionsDM = null;
+	}
+	
+	public List<SelectItem> getAvailableLangsForDefinitions(){
+		List<SelectItem> items = new LinkedList<SelectItem>();
+		if (null!=this.concept){
+			items.add(new SelectItem("", "", "", true, true));
+			Set<String> used = this.concept.getDefinitions().keySet();
+			
+			List<LanguageEnum> listL = Arrays.asList(LanguageEnum.values());
+			Collections.sort(listL);
+			
+			for (LanguageEnum l : listL) {
+				if (!used.contains(l.toString())){
+					items.add(new SelectItem(l, l.toString()));
+				}
+			}
+		}
+		return items;
+	}
+	
+	public void addNewDefinitionLineLang (ActionEvent evt){
+		MapEntryView<String, String> x = null;
+		if (null!=this.concept && null!=this.definitionsDM && this.definitionsDM.getRowData() instanceof MapEntryView<?, ?>){
+			x = (MapEntryView<String, String>) this.definitionsDM.getRowData();
+			if (null!= x.getKey() && !x.getKey().isEmpty())
+				this.concept.getDefinitions().put(x.getKey(), Arrays.asList(x.getValue()));
+		}
+		this.resetDefinitionsDM();		
+	}
+	
+	public void addNewDefinitionLineLabel(ActionEvent evt){
+		MapEntryView<String, String> x = null;
+		if (null!=this.concept && null!=this.definitionsDM && this.definitionsDM.getRowData() instanceof MapEntryView<?, ?>){
+			x = (MapEntryView<String,String>) this.definitionsDM.getRowData();
+			if (null!= x.getKey() && !x.getKey().isEmpty())
+				if (null!=x.getValue() && !x.getValue().isEmpty())
+					this.concept.getDefinitions().put(x.getKey(), Arrays.asList(x.getValue()));
+				else
+					this.concept.getDefinitions().remove(x.getKey());
+		}
+		this.resetDefinitionsDM();
+	}
 	
 	//RELATIONS--------------------------------------------------------------------------------------------------------------
 	
@@ -424,5 +491,28 @@ public class ConceptAdapter implements Serializable {
 		return result;
 	}
 
+	public void addChild (){
+		if (null!=mainAdapter.tools){
+			Concept c = mainAdapter.tools.addChildConcept(this.concept, "Default");
+			this.mainAdapter.setTreeData(null);
+			this.setConcept(c);
+			this.resetConceptRelated();
+			
+			UIComponent leftPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:leftPanel");
+			UIComponent rightPanel = FacesContext.getCurrentInstance().getViewRoot().
+				findComponent("applicationForm:rightPanel");
+			AjaxContext ac = AjaxContext.getCurrentInstance();
+			try {
+				ac.addComponentToAjaxRender(leftPanel);
+				ac.addComponentToAjaxRender(rightPanel);
+			} catch (Exception e) {
+				System.err.print(e.getMessage());
+			}
+		}
+		
+	}
+	
+	
 	
 }
