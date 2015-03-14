@@ -1,0 +1,1 @@
+Web application for intuitive editing of taxonomies and thesauri. It offers support for RDFS and SKOS vocabularies. The taxonomies and thesauri can be represented graphically, and may be exported as RDF/XML, Turtle and N3.
